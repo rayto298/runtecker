@@ -1,0 +1,54 @@
+export const RoutePath = {
+  Home: {
+    path: "/",
+    name: "ホーム",
+  },
+  Login: {
+    path: "/login",
+    name: "ログイン",
+  },
+  Users: {
+    path: "/users",
+    name: "ユーザー一覧",
+  },
+  UsersNew: {
+    path: "/users/new",
+    name: "新規登録"
+  },
+  UsersShow: {
+    path: (id = ':id') => `/users/${id}`,
+    name: "プロフィール",
+  },
+  Curriculums: {
+    path: "/curriculums",
+    name: "カリキュラム",
+  },
+  JobMeasures: {
+    path: "/job_measures",
+    name: "就活対策",
+  },
+  JobMeasuresShow: {
+    path: (id = ':id') => `/job_measures/:${id}`,
+    name: "就活対策詳細",
+  },
+  Events: {
+    path: "/events",
+    name: "イベント",
+  },
+  EventsShow: {
+    path: (id = ':id') => `/events/:${id}`,
+    name: "イベント詳細",
+  },
+  Recruits: {
+    path: "/recruits",
+    name: "求人",
+  },
+  RecruitsShow: {
+    path: (id = ':id') => `/recruits/:${id}`,
+    name: "求人詳細",
+  },
+  NotFound: {
+    path: "*",
+    name: "NotFound",
+  },
+}

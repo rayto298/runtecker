@@ -2,16 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --runteq-primary: #fc7400;
+  --runteq-primary-light: #ff9d4d;
+  --runteq-primary-dark: #c24e00;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+/* デバイス標準フォント。RUNTEQと同じものを使用 */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica,
+    Hiragino Sans, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial,
+    "メイリオ", Meiryo, sans-serif;
+}
+
+/* RUNTEQカラー */
+.bg-runteq-primary {
+  background-color: var(--runteq-primary);
+}
+
+.text-runteq-primary {
+  color: var(--runteq-primary);
+}
+
+.border-runteq-primary {
+  border-color: var(--runteq-primary);
+}
+
+/* RUNTEQカラー明るめ */
+.bg-runteq-primary-light {
+  background-color: var(--runteq-primary-light);
+}
+
+.text-runteq-primary-light {
+  color: var(--runteq-primary-light);
+}
+
+.border-runteq-primary-light {
+  border-color: var(--runteq-primary-light);
+}
+
+/* RUNTEQカラー暗め */
+.bg-runteq-primary-dark {
+  background-color: var(--runteq-primary-dark);
+}
+
+.text-runteq-primary-dark {
+  color: var(--runteq-primary-dark);
+}
+
+.border-runteq-primary-dark {
+  border-color: var(--runteq-primary-dark);
 }
