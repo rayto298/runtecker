@@ -8,7 +8,7 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     # フロントも追記する
-    origins "localhost:8001", "runtecker-frontend-1bc1378eedd1.herokuapp.com"
+    origins "localhost:8000", "runtecker-frontend-1bc1378eedd1.herokuapp.com"
 
     resource "*",
       headers: :any,
