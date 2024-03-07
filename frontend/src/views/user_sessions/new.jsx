@@ -17,7 +17,7 @@ export const UserSessionsNew = () => {
               <button className="bg-black text-white py-2.5 px-5 rounded my-4" onClick={handleGitHubAuth}>
                 <div className="flex items-center">
                   {/* TODO : GitHubアイコンがfont awesomeを利用しており、こちらのプロジェクトにまだ入れていないので一旦アイコン削除しています */}
-                  UNTECKERを利用する
+                  RUNTECKERを利用する
                 </div>
               </button>
             </div>
