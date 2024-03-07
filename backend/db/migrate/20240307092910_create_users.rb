@@ -8,8 +8,6 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.bigint :term_id
       t.string :github_account
       t.bigint :prefecture_id
-      t.datetime :created_at
-      t.datetime :updated_at
 
       t.timestamps
     end
