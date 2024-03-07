@@ -3,6 +3,7 @@ import { MainLayout } from "views/layouts/main_layout"
 import { _Loading } from "views/layouts/components/_loading"
 import { Outlet } from "react-router-dom"
 import { RoutePath } from "config/route_path"
+import { UserSessionsNew } from "views/user_sessions/new"
 import { CurriculumsIndex } from "views/curriculums"
 import { EventsIndex } from "views/events"
 import { EventsShow } from "views/events/show"
@@ -30,6 +31,7 @@ export const PROTECTED_ROUTES = [
     path: RoutePath.Home.path,
     element: <App />,
     children: [
+      { path: RoutePath.Login.path, element: <UserSessionsNew /> },
       { path: RoutePath.Home.path, element: <StaticPagesIndex /> },
       { path: RoutePath.Curriculums.path, element: <CurriculumsIndex /> },
       { path: RoutePath.Events.path, element: <EventsIndex /> },
