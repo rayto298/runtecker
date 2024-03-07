@@ -15,6 +15,7 @@ import { UsersNew } from "views/users/new"
 import { UsersShow } from "views/users/show"
 import { StaticPagesIndex } from "views/static_pages"
 import { StaticPagesNotfound } from "views/static_pages/not_found"
+import { UserSessionsNew } from "views/user_sessions/new"
 
 const App = () => {
   return (
@@ -25,11 +26,13 @@ const App = () => {
   )
 }
 
+//  TODO : ユーザー認証確定するまでルーティングを暫定的に設定しています。
 export const PUBLIC_ROUTES = [
   {
     path: RoutePath.Home.path,
     element: <App />,
     children: [
+      { path: RoutePath.Login.path, element: <UserSessionsNew /> },
       { path: RoutePath.Home.path, element: <StaticPagesIndex /> },
       { path: RoutePath.Curriculums.path, element: <CurriculumsIndex /> },
       { path: RoutePath.Events.path, element: <EventsIndex /> },
