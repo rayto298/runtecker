@@ -29,3 +29,6 @@ tmp/storage/*
 config/master.key
 
 config/credentials/production.key
+
+.env.local
+.env
