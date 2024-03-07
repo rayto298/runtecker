@@ -8,9 +8,9 @@ export const _Headers = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!auth) {
-      navigate(RoutePath.Login.path);
-    }
+    // if (!auth) {
+    //   navigate(RoutePath.Login.path);
+    // }
   }, [auth]);
 
   const handleClick = () => {
