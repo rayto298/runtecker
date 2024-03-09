@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
+import { _UsersEdit } from "./components/_edit"
 import { _UsersDetail } from "./components/_user_detail"
 
 export const UsersShow = () => {
@@ -73,7 +74,7 @@ export const UsersShow = () => {
     <article className="max-w-screen-lg w-full m-auto my-10">
       <section className="bg-white rounded p-12 w-full max-w-screen-md m-auto">
         {isEdit ?
-          <_UserEdit user={user} setUser={setUser} toggleEdit={toggleEdit} />
+          <_UsersEdit user={user} setUser={setUser} toggleEdit={toggleEdit} />
           : <_UsersDetail user={user} toggleEdit={toggleEdit} />
         }
       </section>
