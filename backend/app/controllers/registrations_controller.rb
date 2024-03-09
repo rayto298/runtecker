@@ -5,6 +5,7 @@ class RegistrationsController < ApplicationController
 
   def create
     # ユーザー情報をリクエストパラメータから取得
+    # TO DO ユーザー登録の実装時に精緻化
     user_params = params.require(:user).permit(:name, :email, :password)
 
     ActiveRecord::Base.transaction do
@@ -21,4 +22,7 @@ class RegistrationsController < ApplicationController
   rescue => e
     render json: { errors: e.message }, status: :unprocessable_entity
   end
+
+
+  # TO DO ユーザー登録実装時にストロングパラメータを追加
 end

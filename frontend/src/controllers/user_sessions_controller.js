@@ -1,4 +1,6 @@
 // src/components/Login.js
+// こちらのコンポーネントは不要かもしれません、user_session/newでログインしています
+
 import React from "react";
 
 function Login() {

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../providers/auth';
+import { RoutePath } from "config/route_path"
 
 export const UserSessionsNew = () => {
   const navigate = useNavigate();
@@ -14,13 +15,14 @@ export const UserSessionsNew = () => {
     if (token) {
       setAuth(token); 
       localStorage.setItem('auth', token); 
-      navigate('/users/new'); 
+      navigate(RoutePath.UsersNew.path); 
     }
   }, [setAuth, navigate]);
   
 
   const handleGitHubAuth = () => {
     // Rails APIの認証エンドポイントにリダイレクト
+    // TO DO 環境変数化
     window.location.href = "http://localhost:3000/auth/github";
   };
 

@@ -14,6 +14,10 @@ class SessionsController < ApplicationController
 
     # トークンをクエリパラメーターとして付加
     # フロントエンドのユーザー本登録フォームページにリダイレクト
+    # TO DO 開発検証完了次第環境変数で対応する
+    # base_url = ENV['REDIRECT_URL']
+    # redirect_url = "#{base_url}?token=#{token}"
+    # redirect_to redirect_url
     redirect_to "http://localhost:8000/users/new?token=#{token}"
     
   end
