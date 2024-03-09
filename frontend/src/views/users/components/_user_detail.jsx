@@ -29,12 +29,11 @@ export const _UsersDetail = ({ user, toggleEdit }) => {
           <h2 className="text-2xl font-semibold">{user.nickname}</h2>
           <p className="text-sm">（旧：{user.pastname}）</p>
         </div>
-        <div className="w-1/2 flex justify-center items-center">
-          <Link to={`${RoutePath.Users.path}?term=${user.term_id}`} className="text-2xl text-end">{user.term}</Link>
-          <div>
-            <Link to={`${RoutePath.Users.path}?prefecture=19`}>
-            </Link>
-          </div>
+        <div className="w-1/2 flex justify-center items-center text-2xl gap-2">
+          <Link to={`${RoutePath.Users.path}?term=${user.term_id}`}>{user.term}</Link>
+          <Link to={`${RoutePath.Users.path}?prefecture=19`}>
+            長野県
+          </Link>
         </div>
       </div>
       <div className="py-4 w-full">
