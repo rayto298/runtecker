@@ -7,11 +7,11 @@ export const _Headers = () => {
   const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!auth) {
-      navigate(RoutePath.Login.path);
-    }
-  }, [auth]);
+  //useEffect(() => {
+    //if (!auth) {
+      //navigate(RoutePath.Login.path);
+    //}
+  //}, [auth]);
 
   const handleClick = () => {
     alert('ログアウトしました');
