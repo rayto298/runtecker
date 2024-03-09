@@ -1,9 +1,29 @@
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../providers/auth';
+
 export const UserSessionsNew = () => {
+  const navigate = useNavigate();
+  const { setAuth } = useAuth();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    console.log(token); // Ensure this logs the expected token
+
+    if (token) {
+      setAuth(token); // Update authentication state
+      localStorage.setItem('auth', token); // Persist token for session or longer term
+      navigate('/dashboard'); // Adjust as necessary for your routing
+    }
+  }, [setAuth, navigate]);
+  
 
   const handleGitHubAuth = () => {
-    // TODO : ボタンを押したあとの処理をここに書く
-    console.log("ボタンが押されました");
+    // Rails APIの認証エンドポイントにリダイレクト
+    window.location.href = "http://localhost:3000/auth/github";
   };
+
 
   return (
     <article className="pt-12 pb-12 max-w-[65%] m-auto">
@@ -15,9 +35,10 @@ export const UserSessionsNew = () => {
             </div>
             <div className="text-center">
               <button className="bg-black text-white py-2.5 px-5 rounded my-4" onClick={handleGitHubAuth}>
-                <div className="flex items-center">
-                  {/* TODO : GitHubアイコンがfont awesomeを利用しており、こちらのプロジェクトにまだ入れていないので一旦アイコン削除しています */}
-                  RUNTECKERを利用する
+                <div className="flex items-center justify-center">
+                  {/* GitHubアイコンを追加する場合は次の行のコメントを解除 */}
+                  {/* <FaGithub className="text-xl" /> */}
+                  <span>RUNTECKERを利用する</span>
                 </div>
               </button>
             </div>
@@ -26,4 +47,4 @@ export const UserSessionsNew = () => {
       </div>
     </article>
   );
-}
+};

@@ -1,32 +1,31 @@
 class SessionsController < ApplicationController
-	skip_before_action :authenticate_request, only: [:create]
+  skip_before_action :authenticate_request, only: [:create]
+
   def create
     # OmniAuthで提供される認証情報を取得
     user_info = request.env['omniauth.auth']
-    user = UserAuthentication.find_or_create_from_auth_hash(user_info)
+    
+    # GitHubのユーザーIDを取得
+    github_user_id = user_info.uid
+    provider = "github"
 
-    # トークン生成（JWTなど）。このコードの後半で定義している
-    token = generate_token_for_user(user)
+    # GitHubのユーザーIDを使ってトークンを生成
+    token = generate_token_with_github_user_id(github_user_id, provider)
 
-    # フロントエンドにリダイレクトし、トークンをクエリパラメーターとして付加
-		# フロントのURLに応じて変更
-    redirect_to "http://localhost:8000/auth?token=#{token}"
+    # トークンをクエリパラメーターとして付加
+    # フロントエンドのユーザー本登録フォームページにリダイレクト
+    redirect_to "http://localhost:8000/users/new?token=#{token}"
+    
   end
 
   private
 
-  def generate_token_for_user(user)
-    # トークンの有効期限を設定（例: 24時間）
+  # トークンを暗号化の上で生成する
+  def generate_token_with_github_user_id(github_user_id, provider)
     exp = Time.now.to_i + 24 * 3600
-
-    # トークンに含めるペイロードの設定
-    payload = { user_id: user.id, exp: exp }
-
-    # 秘密鍵（環境変数やRailsの秘密情報から取得することを推奨）
+    payload = { github_user_id: github_user_id, provider: provider, exp: exp }
     hmac_secret = ENV['JWT_SECRET_KEY']
-
-    # JWTトークンの生成
-    token = JWT.encode(payload, hmac_secret, 'HS256')
-    token
+    JWT.encode(payload, hmac_secret, 'HS256')
   end
+
 end
