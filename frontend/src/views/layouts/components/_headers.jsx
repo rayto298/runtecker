@@ -1,9 +1,17 @@
 import { useAuth } from 'providers/auth';
 import { RoutePath } from 'config/route_path';
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export const _Headers = () => {
   const { auth, setAuth } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!auth) {
+      navigate(RoutePath.Login.path);
+    }
+  }, [auth]);
 
   const handleClick = () => {
     alert('ログアウトしました');
