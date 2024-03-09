@@ -32,7 +32,7 @@ export const _UsersDetail = ({ user, toggleEdit }) => {
         <div className="w-1/2 flex justify-center items-center text-2xl gap-2">
           <Link to={`${RoutePath.Users.path}?term=${user.term_id}`}>{user.term}</Link>
           <Link to={`${RoutePath.Users.path}?prefecture=19`}>
-            長野県
+            {user.prefecture}
           </Link>
         </div>
       </div>
