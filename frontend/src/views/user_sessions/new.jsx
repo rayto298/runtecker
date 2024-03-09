@@ -9,12 +9,12 @@ export const UserSessionsNew = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
-    console.log(token); // Ensure this logs the expected token
+    console.log(token); // TO DO 本番時は削除　確認用
 
     if (token) {
-      setAuth(token); // Update authentication state
-      localStorage.setItem('auth', token); // Persist token for session or longer term
-      navigate('/dashboard'); // Adjust as necessary for your routing
+      setAuth(token); 
+      localStorage.setItem('auth', token); 
+      navigate('/users/new'); 
     }
   }, [setAuth, navigate]);
   
