@@ -73,12 +73,7 @@ export const UsersShow = () => {
     <article className="max-w-screen-lg w-full m-auto my-10">
       <section className="bg-white rounded p-12 w-full max-w-screen-md m-auto">
         {isEdit ?
-          <>
-            { /* ここに編集画面を実装 */}
-            <div div className="w-full text-end">
-              <button onClick={toggleEdit} className="btn text-xs">保存</button>
-            </div>
-          </>
+          <_UserEdit user={user} setUser={setUser} toggleEdit={toggleEdit} />
           : <_UsersDetail user={user} toggleEdit={toggleEdit} />
         }
       </section>
