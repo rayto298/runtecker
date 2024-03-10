@@ -8,5 +8,13 @@ Rails.application.routes.draw do
   # root "articles#index"
   root "static_pages#index"
   # OmniAuthのルート
+
+  # ユーザー登録のルート(API)
+  namespace :api do
+    namespace :v1 do
+      resources :users
+      # 他のリソースもここに追加
+    end
+  end
  
 end
