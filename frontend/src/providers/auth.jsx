@@ -1,31 +1,31 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
-export const AppProvider = ({ children }) => {
-  const [auth, setAuth] = useState(localStorage.getItem('auth') || false);
+export const useAuth = () => useContext(AuthContext);
+
+export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState("");
 
   useEffect(() => {
-    // URLからクエリパラメーターを解析してトークンを取得
+    // URLからクエリパラメータを解析してトークンを取得
     const query = new URLSearchParams(window.location.search);
-    const token = query.get('token');
-    if (token) {
-      setAuth(token);
-      localStorage.setItem('auth', token); // トークンをlocalStorageに保存
+    const tokenFromUrl = query.get("token");
+    if (tokenFromUrl) {
+      setToken(tokenFromUrl);
     }
   }, []);
 
-  // setAuth関数をラップして、localStorageにもトークンを保存する
-  const updateAuth = (newAuth) => {
-    setAuth(newAuth);
-    localStorage.setItem('auth', newAuth);
+  // トークンを設定するメソッド
+  const saveToken = (token) => {
+    setToken(token);
   };
+  // トークン取得状況確認用
+  //console.log(token);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth: updateAuth }}>
+    <AuthContext.Provider value={{ token, saveToken }}>
       {children}
     </AuthContext.Provider>
   );
-}
-
-export const useAuth = () => useContext(AuthContext);
+};

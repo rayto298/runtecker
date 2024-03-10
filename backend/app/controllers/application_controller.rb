@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   # User登録処理が固まるまでの暫定
   before_action :authenticate_request
   protect_from_forgery with: :exception
+  skip_before_action :verify_authenticity_token
   
   protected
   

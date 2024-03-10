@@ -12,14 +12,17 @@ class SessionsController < ApplicationController
     # GitHubのユーザーIDを使ってトークンを生成
     token = generate_token_with_github_user_id(github_user_id, provider)
 
-    # トークンをクエリパラメーターとして付加
-    # フロントエンドのユーザー本登録フォームページにリダイレクト
-    # TO DO 開発検証完了次第環境変数で対応する
-    # base_url = ENV['REDIRECT_URL']
-    # redirect_url = "#{base_url}?token=#{token}"
-    # redirect_to redirect_url
-    redirect_to "http://localhost:8000/users/new?token=#{token}"
-    
+    # GitHubのユーザーIDを使ってUserAuthenticationテーブルを検索
+    user_authentication = UserAuthentication.find_by(uid: github_user_id, provider: provider)
+    Rails.logger.info(user_authentication)
+
+    if user_authentication
+      # 既に存在する場合は、特定のページにリダイレクト
+      redirect_to "http://localhost:8000/users?token=#{token}"
+    else
+      # ユーザー登録フォームページにリダイレクト
+      redirect_to "http://localhost:8000/users/new?token=#{token}"
+    end
   end
 
   private
