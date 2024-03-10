@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../providers/auth";
 
-// 都道府県のデータ
+// 都道府県のデータ　TO DO データベース管理
 const prefectures = [
   { id: 1, name: "北海道" },
   { id: 2, name: "青森県" },
@@ -13,6 +13,7 @@ const prefectures = [
   { id: 48, name: "その他" },
 ];
 
+// 入学時期のデータ　TO DO データベース管理
 const terms = [
   { id: 1, name: "運営" },
   { id: 2, name: "48期" },
