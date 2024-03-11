@@ -4,6 +4,8 @@ const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
+// auth.jsx 内
+
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState("");
 
@@ -13,18 +15,17 @@ export const AuthProvider = ({ children }) => {
     const tokenFromUrl = query.get("token");
     if (tokenFromUrl) {
       setToken(tokenFromUrl);
+      localStorage.setItem("authToken", tokenFromUrl); // トークンをlocalStorageに保存
     }
   }, []);
 
-  // トークンを設定するメソッド
-  const saveToken = (token) => {
-    setToken(token);
+  const logout = () => {
+    setToken(""); // トークンをクリア
+    localStorage.removeItem("authToken"); // localStorageからトークンを削除
   };
-  // トークン取得状況確認用
-  //console.log(token);
 
   return (
-    <AuthContext.Provider value={{ token, saveToken }}>
+    <AuthContext.Provider value={{ token, logout }}>
       {children}
     </AuthContext.Provider>
   );
