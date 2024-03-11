@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { RoutePath } from "config/route_path.js";
 import { useEffect, useState } from "react";
+import { PrefecturesController } from "controllers/prefectures_controller";
 
 const usersData = [...Array(20).keys()].map((val) => {
   return {
@@ -47,9 +48,23 @@ const usersData = [...Array(20).keys()].map((val) => {
 export const UsersIndex = () => {
   const [searchWord, setSearchWord] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [prefecture, setPrefecture] = useState([]);
   const [users, setUsers] = useState(usersData);
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let prefectures = new PrefecturesController();
+    prefectures.getPrefectures().then((data) => {
+      setPrefecture(data);
+    });
+
+    return () => {
+      // 明示的にメモリ解放
+      prefectures = null;
+      setPrefecture([]);
+    }
+  }, []);
 
   useEffect(() => {
     const url = new URLSearchParams(location.search);
@@ -67,7 +82,10 @@ export const UsersIndex = () => {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    if (searchWord === "" && searchTerm === "") return;
+    if (searchWord === "" && searchTerm === "") {
+      navigate(RoutePath.Users.path);
+      return;
+    }
 
     let query = "?";
     if (searchWord !== "") {
@@ -95,16 +113,11 @@ export const UsersIndex = () => {
       <section className="flex flex-col justify-center items-end m-7 mr-20">
         <form className="flex gap-2" onSubmit={handleOnSubmit}>
           <input type="text" onChange={handleSearchWord} placeholder="Rails React" className="input rounded  border-orange-300 focus:outline-orange-500" id="search_word" value={searchWord} />
-          {/* TODO : ここをどう実装するか。そもそも必要かは検討したほうがよさげ */}
-          <select className="select select-bordered rounded border-orange-200 focus:outline-orange-500" id="search_term" value={searchTerm} onChange={handleSearchTerm}>
-            <option value="">入学期</option>
-            <option value="50a">50期A</option>
-            <option value="50b">50期B</option>
-            <option value="51a">51期A</option>
-            <option value="51b">51期B</option>
-            <option value="52a">52期A</option>
-            <option value="pro1">pro1</option>
-            <option value="52b">52期B</option>
+          <select className="select select-bordered border-runteq-primary focus:outline-orange-500 rounded-sm w-full max-w-xs" id="search_term" value={searchTerm} onChange={handleSearchTerm}>
+            <option value="">未選択</option>
+            {prefecture.map((pref) =>
+              <option key={pref.id} value={pref.id}>{pref.name}</option>
+            )}
           </select>
           <button className="btn bg-runteq-primary text-white px-6 tracking-wider">検索</button>
           <Link to={RoutePath.Users.path} className="btn bg-runteq-primary text-white px-6 tracking-wider">リセット</Link>
