@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   # post '/auth/:provider', to: 'omniauth_callbacks#redirect_to_provider', as: :auth_provider
   get '/auth/:provider/callback', to: 'sessions#create'
   mount ActionCable.server => '/ws'
+  post '/registrations', to: 'registrations#create'
   
   # Defines the root path route ("/")
   # root "articles#index"

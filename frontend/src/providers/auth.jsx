@@ -1,31 +1,32 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
-export const AppProvider = ({ children }) => {
-  const [auth, setAuth] = useState(localStorage.getItem('auth') || false);
+export const useAuth = () => useContext(AuthContext);
+
+// auth.jsx 内
+
+export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState("");
 
   useEffect(() => {
-    // URLからクエリパラメーターを解析してトークンを取得
+    // URLからクエリパラメータを解析してトークンを取得
     const query = new URLSearchParams(window.location.search);
-    const token = query.get('token');
-    if (token) {
-      setAuth(token);
-      localStorage.setItem('auth', token); // トークンをlocalStorageに保存
+    const tokenFromUrl = query.get("token");
+    if (tokenFromUrl) {
+      setToken(tokenFromUrl);
+      localStorage.setItem("authToken", tokenFromUrl); // トークンをlocalStorageに保存
     }
   }, []);
 
-  // setAuth関数をラップして、localStorageにもトークンを保存する
-  const updateAuth = (newAuth) => {
-    setAuth(newAuth);
-    localStorage.setItem('auth', newAuth);
+  const logout = () => {
+    setToken(""); // トークンをクリア
+    localStorage.removeItem("authToken"); // localStorageからトークンを削除
   };
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth: updateAuth }}>
+    <AuthContext.Provider value={{ token, logout }}>
       {children}
     </AuthContext.Provider>
   );
-}
-
-export const useAuth = () => useContext(AuthContext);
+};
