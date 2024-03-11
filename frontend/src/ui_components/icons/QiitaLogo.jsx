@@ -1,7 +1,7 @@
 import React from 'react'
 
-export const QiitaLogo = () => {
+export const QiitaLogo = ({width = 60}) => {
   return (
-    <img src="/assets/logo/qiita.png" className="w-[60px]" />
+    <img src="/assets/logo/qiita.png" width={width} />
   )
 }
