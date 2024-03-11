@@ -16,7 +16,7 @@ prefectures = [
   "鳥取県", "島根県", "岡山県", "広島県", "山口県", 
   "徳島県", "香川県", "愛媛県", "高知県", "福岡県", 
   "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", 
-  "鹿児島県", "沖縄県"
+  "鹿児島県", "沖縄県", "その他", "-"
 ] 
 prefectures.each do |pref_name|
   Prefecture.find_or_create_by(name: pref_name)
