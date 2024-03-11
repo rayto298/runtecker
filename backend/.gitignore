@@ -32,3 +32,4 @@ config/credentials/production.key
 
 .env.local
 .env
+.DS_Store
