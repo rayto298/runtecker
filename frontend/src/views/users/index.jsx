@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { RoutePath } from "config/route_path.js";
 import { useEffect, useState } from "react";
 
@@ -49,53 +49,26 @@ export const UsersIndex = () => {
   const [searchWord, setSearchWord] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState(usersData);
-  const [isSearch, setIsSearch] = useState(false);
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // リロードではURLを取得できないため、window.location.hrefで取得
-    // TODO : リロードで検索初期化するのかどうかで実装変更
-    const url = window.location.href;
-    const query = url.split("?")[1];
-    // // query が存在しない場合、空文字列にフォールバック
-    let queryWord = query
-      ? decodeURIComponent(
-          query
-            .split("&")
-            .find((param) => param.startsWith("word="))
-            ?.split("=")[1] || ""
-        )
-      : "";
-    let queryTerm = query
-      ? decodeURIComponent(
-          query
-            .split("&")
-            .find((param) => param.startsWith("term="))
-            ?.split("=")[1] || ""
-        )
-      : "";
+
+    const url = new URLSearchParams(location.search);
+    let queryWord = url.get("word") ?? "";
+    let queryTerm = url.get("term") ?? "";
+    let queryPrefecture = url.get("prefecture") ?? "";
+    let queryTag = url.get("tag") ?? "";
+
 
     // TODO : 検索でのユーザー取得処理
-    console.log(queryWord, queryTerm);
+    console.log(queryWord, queryTerm, queryPrefecture, queryTag);
 
     setSearchWord(queryWord);
     setSearchTerm(queryTerm);
-    setUsers(usersData); // 検索で取得したユーザーデータをセット
-    setIsSearch(false);
-  }, []);
 
-  useEffect(() => {
-    if (!isSearch) return;
-    const queryWord =
-      searchWord && searchWord !== undefined ? searchWord.split(",") : "";
-    const queryTerm = searchTerm && searchTerm !== undefined ? searchTerm : "";
+  }, [location]);
 
-    // TODO : 検索でのユーザー取得処理
-    console.log(queryWord, queryTerm);
-
-    setUsers(usersData); // 検索で取得したユーザーデータをセット
-    setIsSearch(false);
-  }, [isSearch]);
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
@@ -115,8 +88,9 @@ export const UsersIndex = () => {
       query += query === "?" ? `term=${searchTerm}` : `&term=${searchTerm}`;
     }
     navigate(RoutePath.Users.path + query);
-    setIsSearch(true);
-  };
+
+  }
+
 
   const handleSearchWord = (e) => {
     setSearchWord(e.target.value);
@@ -124,7 +98,9 @@ export const UsersIndex = () => {
 
   const handleSearchTerm = (e) => {
     setSearchTerm(e.target.value);
-  };
+
+  }
+
 
   return (
     <>
@@ -178,19 +154,15 @@ export const UsersIndex = () => {
               {user.term}
             </Link>
             <div className="flex px-2 items-center gap-4">
-              <img
-                src={user.avatar}
-                class="w-32 group-hover:w-36 group-hover:h-36 h-32 object-center object-cover rounded-full transition-all duration-200 delay-200 transform"
+
+              <img src={user.avatar}
+                className="w-32 group-hover:w-36 group-hover:h-36 h-32 object-center object-cover rounded-full transition-all duration-200 delay-200 transform"
                 alt="Avatar"
               />
-              <div class="p-4 transition-all transform duration-200">
-                <h1 class="card-title font-bold">
-                  <Link
-                    to={RoutePath.UsersShow.path(user.id)}
-                    className="hover:opacity-50 transition-all"
-                  >
-                    {user.nickname}
-                  </Link>
+              <div className="p-4 transition-all transform duration-200">
+                <h1 className="card-title font-bold">
+                  <Link to={RoutePath.UsersShow.path(user.id)} className="hover:opacity-50 transition-all">{user.nickname}</Link>
+
                 </h1>
                 <p className="text-sm">（旧：{user.pastname}）</p>
                 <Link
@@ -211,21 +183,14 @@ export const UsersIndex = () => {
               </div>
             </div>
             <ul className="flex gap-3 justify-end items-center px-2">
-              <li>
-                <Link to="#" className="hover:opacity-50 transition-all">
-                  X<i className="fa-brands fa-x-twitter fa-xl" />
-                </Link>
-              </li>
-              <li>
-                <Link to="#" className="hover:opacity-50 transition-all">
-                  MattermostLogo
-                </Link>
-              </li>
+
+              <li><Link to='#' className="hover:opacity-50 transition-all">X<i className="fa-brands fa-x-twitter fa-xl" /></Link></li>
+              <li><Link to='#' className="hover:opacity-50 transition-all">MattermostLogo</Link></li>
             </ul>
             <div className="px-2 pt-2 ml-auto group-hover:opacity-100 opacity-0 transform transition-all delay-300 duration-200">
               <Link to={RoutePath.UsersShow.path(user.id)}>詳細 →</Link>
             </div>
-            {user.user_tags?.length > 0 && (
+            {user.user_tags?.length > 0 &&
               <div className="p-2 m-4 border-t border-black">
                 {user.user_tags.map((tag, index) => (
                   <Link
