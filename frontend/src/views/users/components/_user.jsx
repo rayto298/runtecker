@@ -6,7 +6,7 @@ export const _User = (user) => {
   return (
     <div
       key={userData.id}
-      className="card w-96 border border-black m-4 shadow-xl overflow-hidden hover:shadow-2xl group rounded-xl p-5 transition-all duration-200 transform"
+      className="card w-96 border border-[#CED4DA] m-4 shadow-xl overflow-hidden hover:shadow-2xl group rounded-xl p-5 transition-all duration-200 transform bg-white"
     >
       <Link
         to={`${RoutePath.Users.path}?term=${userData.term.id}`}
