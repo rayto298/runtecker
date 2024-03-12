@@ -59,7 +59,7 @@ export const _Headers = () => {
         {token ? (
           <button onClick={handleClick} className="px-4">ログアウト</button>
         ) : (
-          <Link to={RoutePath.Login.path}>{RoutePath.Login.name}</Link>
+          <Link to={RoutePath.Login.path} className="px-4">{RoutePath.Login.name}</Link>
         )}
       </div>
     </header>
