@@ -56,10 +56,21 @@ export const UsersIndex = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const url = new URLSearchParams(location.search);
+    const token = url.get("token");
+    // TODO : 認証周りとコンフリクト起こしそうなのでローカルストレージで保存してます。
+    // useAuthとかで設定できたらいいなぁ
+    if (token) {
+      console.log(token);
+      localStorage.setItem("token", token);
+      navigate(RoutePath.Users.path);
+    }
+
     let prefectures = new PrefecturesController();
-    prefectures.getPrefectures().then((data) => {
-      setPrefecture(data);
-    });
+    // prefectures.getPrefectures().then((data) => {
+    //   setPrefecture(data);
+    // });
+    setPrefecture([{ id: 1, name: "北海道" }])
 
     return () => {
       // 明示的にメモリ解放
