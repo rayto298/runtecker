@@ -6,49 +6,6 @@ import { TermsController } from "controllers/terms_controller";
 import { UsersController } from "controllers/users_controller";
 import { useAuth } from "providers/auth";
 
-const usersData = [...Array(20).keys()].map((val) => {
-  return {
-    id: val,
-    name: "とぴ",
-    nickname: `とぴ${val}`,
-    pastname: "とっぴ",
-    term: "52期A",
-    term_id: 52,
-    github_account: "topi0247",
-    prefecture: "長野県",
-    prefecture_id: 20,
-    avatar:
-      "https://pbs.twimg.com/profile_images/1750171124573540352/19Gfg3oh_400x400.jpg",
-    user_tags: [
-      {
-        id: 1,
-        name: "Ruby",
-        position: "1",
-      },
-      {
-        id: 2,
-        name: "Ruby on Rails",
-        position: "2",
-      },
-      {
-        id: 3,
-        name: "JavaScript",
-        position: "3",
-      },
-    ],
-    user_social_service: [
-      {
-        name: "twitter",
-        account_name: "topi_log",
-      },
-      {
-        name: "times",
-        account_name: "52a_nishina_kanae",
-      },
-    ],
-  };
-});
-
 export const UsersIndex = () => {
   const { setToken } = useAuth();
   const [searchWord, setSearchWord] = useState("");
