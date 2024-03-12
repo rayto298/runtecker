@@ -2,6 +2,7 @@ import { useAuth } from "providers/auth";
 import { RoutePath } from "config/route_path";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { SiGoogleforms } from "react-icons/si";
 
 export const _Headers = () => {
   const { token, setToken, logout } = useAuth();
@@ -51,12 +52,12 @@ export const _Headers = () => {
           </ul>
         </nav>
       </div>
-      <div className="flex gap-3 items-center pr-7 h-full">
-        <Link className="flex justify-center items-center bg-runteq-primary px-4 h-full text-white">
-          お問い合わせ
+      <div className="flex items-center h-full">
+        <Link className="flex justify-center items-center bg-runteq-primary px-4 h-full text-white text-sm">
+          <span className="text-xl mr-2"><SiGoogleforms /></span>お問い合わせ
         </Link>
         {token ? (
-          <button onClick={handleClick}>ログアウト</button>
+          <button onClick={handleClick} className="px-4">ログアウト</button>
         ) : (
           <Link to={RoutePath.Login.path}>{RoutePath.Login.name}</Link>
         )}
