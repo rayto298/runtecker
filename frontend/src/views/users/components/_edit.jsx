@@ -12,7 +12,6 @@ export const _UsersEdit = ({ user, toggleEdit }) => {
     inputElement.onchange = (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      å;
       const reader = new FileReader();
       reader.onload = (e) => {
         // プレビュー用にデータを取得・表示
