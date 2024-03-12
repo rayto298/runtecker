@@ -3,6 +3,8 @@ import { RoutePath } from "config/route_path.js";
 import { useEffect, useState } from "react";
 import { _User } from "./components/_user";
 import { TermsController } from "controllers/terms_controller";
+import { UsersController } from "controllers/users_controller";
+import { useAuth } from "providers/auth";
 
 const usersData = [...Array(20).keys()].map((val) => {
   return {
@@ -13,7 +15,7 @@ const usersData = [...Array(20).keys()].map((val) => {
     term: "52期A",
     term_id: 52,
     github_account: "topi0247",
-    term: "長野県",
+    prefecture: "長野県",
     prefecture_id: 20,
     avatar:
       "https://pbs.twimg.com/profile_images/1750171124573540352/19Gfg3oh_400x400.jpg",
@@ -48,10 +50,11 @@ const usersData = [...Array(20).keys()].map((val) => {
 });
 
 export const UsersIndex = () => {
+  const { setToken } = useAuth();
   const [searchWord, setSearchWord] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [term, setTerm] = useState([]);
-  const [users, seUsers] = useState(usersData);
+  const [users, seUsers] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -62,6 +65,7 @@ export const UsersIndex = () => {
     // useAuthとかで設定できたらいいなぁ
     if (token) {
       console.log(token);
+      setToken(token);
       localStorage.setItem("authToken", token);
       navigate(RoutePath.Users.path);
     }
@@ -89,6 +93,14 @@ export const UsersIndex = () => {
     let queryPrefecture = url.get("term") ?? "";
     let queryTag = url.get("tag") ?? "";
 
+    let users = new UsersController();
+    users.getPrefectures().then((data) => {
+      if (data) {
+        seUsers(data);
+      } else {
+        seUsers([]);
+      }
+    });
 
     // TODO : 検索でのユーザー取得処理
     console.log(queryWord, queryTerm, queryPrefecture, queryTag);
@@ -156,7 +168,7 @@ export const UsersIndex = () => {
           </Link>
         </form>
       </section>
-      <section className="flex flex-wrap">
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 grid-auto-flow justify-center items-center m-auto">
         {users.map((user) => (
           <_User key={user.id} user={user} />
         ))}

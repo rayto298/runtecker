@@ -2,31 +2,32 @@ import { RoutePath } from "config/route_path"
 import { Link } from "react-router-dom"
 
 export const _User = (user) => {
+  const userData = user.user;
   return (
     <div
-      key={user.id}
+      key={userData.id}
       className="card w-96 border border-black m-4 shadow-xl overflow-hidden hover:shadow-2xl group rounded-xl p-5 transition-all duration-200 transform"
     >
       <Link
-        to={`${RoutePath.Users.path}?term=${user.term_id}`}
+        to={`${RoutePath.Users.path}?term=${userData.term.id}`}
         className="text-xl px-2 ml-auto hover:opacity-50 transition-all"
       >
-        {user.term}
+        {userData.term.name}
       </Link>
       <div className="flex px-2 items-center gap-4">
 
-        <img src={user.avatar}
+        <img src={userData.avatar ?? "https://via.placeholder.com/300"}
           className="w-32 group-hover:w-36 group-hover:h-36 h-32 object-center object-cover rounded-full transition-all duration-200 delay-200 transform"
           alt="Avatar"
         />
         <div className="p-4 transition-all transform duration-200">
           <h1 className="card-title font-bold">
-            <Link to={RoutePath.UsersShow.path(user.id)} className="hover:opacity-50 transition-all">{user.nickname}</Link>
+            <Link to={RoutePath.UsersShow.path(userData.id)} className="hover:opacity-50 transition-all">{userData.nickname}</Link>
 
           </h1>
-          <p className="text-sm">（旧：{user.pastname}）</p>
+          {userData.pastname ? <p className="text-sm">（旧：{userData.pastname}）</p> : ""}
           <Link
-            to={`${RoutePath.Users.path}?prefecture=${user.prefecture_id}`}
+            to={`${RoutePath.Users.path}?prefecture=${userData.prefecture.id}`}
             className="inline-flex item-center text-sm py-4 hover:opacity-50 transition-all"
           >
             <svg
@@ -38,7 +39,7 @@ export const _User = (user) => {
             >
               <path d="M5.64 16.36a9 9 0 1 1 12.72 0l-5.65 5.66a1 1 0 0 1-1.42 0l-5.65-5.66zm11.31-1.41a7 7 0 1 0-9.9 0L12 19.9l4.95-4.95zM12 14a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
             </svg>
-            {user.prefecture}
+            {userData.prefecture.name}
           </Link>
         </div>
       </div>
@@ -48,11 +49,11 @@ export const _User = (user) => {
         <li><Link to='#' className="hover:opacity-50 transition-all">MattermostLogo</Link></li>
       </ul>
       <div className="px-2 pt-2 ml-auto group-hover:opacity-100 opacity-0 transform transition-all delay-300 duration-200">
-        <Link to={RoutePath.UsersShow.path(user.id)}>詳細 →</Link>
+        <Link to={RoutePath.UsersShow.path(userData.id)}>詳細 →</Link>
       </div>
-      {user.user_tags?.length > 0 &&
+      {userData.user_tags?.length > 0 &&
         <div className="p-2 m-4 border-t border-black">
-          {user.user_tags.map((tag, index) => (
+          {userData.user_tags.map((tag, index) => (
             <Link
               to={`${RoutePath.Users.path}?tag=${tag.id}`}
               key={index}
