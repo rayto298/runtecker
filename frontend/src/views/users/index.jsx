@@ -1,8 +1,8 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { RoutePath } from "config/route_path.js";
 import { useEffect, useState } from "react";
-import { PrefecturesController } from "controllers/prefectures_controller";
 import { _User } from "./components/_user";
+import { TermsController } from "controllers/terms_controller";
 
 const usersData = [...Array(20).keys()].map((val) => {
   return {
@@ -13,7 +13,7 @@ const usersData = [...Array(20).keys()].map((val) => {
     term: "52期A",
     term_id: 52,
     github_account: "topi0247",
-    prefecture: "長野県",
+    term: "長野県",
     prefecture_id: 20,
     avatar:
       "https://pbs.twimg.com/profile_images/1750171124573540352/19Gfg3oh_400x400.jpg",
@@ -50,8 +50,8 @@ const usersData = [...Array(20).keys()].map((val) => {
 export const UsersIndex = () => {
   const [searchWord, setSearchWord] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [prefecture, setPrefecture] = useState([]);
-  const [users, setUsers] = useState(usersData);
+  const [term, setTerm] = useState([]);
+  const [users, seUsers] = useState(usersData);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -62,20 +62,23 @@ export const UsersIndex = () => {
     // useAuthとかで設定できたらいいなぁ
     if (token) {
       console.log(token);
-      localStorage.setItem("token", token);
+      localStorage.setItem("authToken", token);
       navigate(RoutePath.Users.path);
     }
 
-    let prefectures = new PrefecturesController();
-    // prefectures.getPrefectures().then((data) => {
-    //   setPrefecture(data);
-    // });
-    setPrefecture([{ id: 1, name: "北海道" }])
+    let terms = new TermsController();
+    terms.getPrefectures().then((data) => {
+      if (data) {
+        setTerm(data);
+      } else {
+        setTerm([]);
+      }
+    });
 
     return () => {
       // 明示的にメモリ解放
-      prefectures = null;
-      setPrefecture([]);
+      terms = null;
+      setTerm([]);
     }
   }, []);
 
@@ -83,7 +86,7 @@ export const UsersIndex = () => {
     const url = new URLSearchParams(location.search);
     let queryWord = url.get("word") ?? "";
     let queryTerm = url.get("term") ?? "";
-    let queryPrefecture = url.get("prefecture") ?? "";
+    let queryPrefecture = url.get("term") ?? "";
     let queryTag = url.get("tag") ?? "";
 
 
@@ -138,7 +141,7 @@ export const UsersIndex = () => {
           <input type="text" onChange={handleSearchWord} placeholder="Rails React" className="input rounded  border-orange-300 focus:outline-orange-500" id="search_word" value={searchWord} />
           <select className="select select-bordered border-runteq-primary focus:outline-orange-500 rounded-sm w-full max-w-xs" id="search_term" value={searchTerm} onChange={handleSearchTerm}>
             <option value="">未選択</option>
-            {prefecture.map((pref) =>
+            {term.map((pref) =>
               <option key={pref.id} value={pref.id}>{pref.name}</option>
             )}
           </select>
