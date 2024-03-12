@@ -11,7 +11,15 @@ class ApplicationController < ActionController::Base
     header = header.split(' ').last if header
     begin
       @decoded = JwtService.decode(header)
-      @current_user = User.find(@decoded[:user_id])
+      # UserAuthenticationをGitHubのuser_idで検索
+      user_auth = UserAuthentication.find_by(github_user_id: @decoded[:user_id])
+      # UserAuthenticationから関連するUserを取得
+      @current_user = user_auth.user if user_auth
+      Rails.logger.info(@current_user)
+      unless @current_user
+        # @current_userが見つからない場合のエラー処理
+        raise ActiveRecord::RecordNotFound, 'User not found'
+      end
     rescue ActiveRecord::RecordNotFound, JWT::DecodeError => e
       Rails.logger.error "Authentication error: #{e.message}"
       render json: { errors: e.message }, status: :unauthorized

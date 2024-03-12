@@ -32,16 +32,19 @@ class RegistrationsController < ApplicationController
           # 成功時の処理
           render json: { success: true, user: user.as_json.merge(authentication: user_authentication.as_json) }, status: :created
         else
-          # user_authenticationの保存に失敗した場合
-          render json: { errors: user_authentication.errors.full_messages.join(", ") }, status: :unprocessable_entity
+          # user_authenticationの保存に失敗した場合のエラーメッセージをログに出力
+        Rails.logger.error("User_authenticationの保存に失敗: #{user_authentication.errors.full_messages.join(", ")}")
+        render json: { errors: user_authentication.errors.full_messages.join(", ") }, status: :unprocessable_entity
         end
       else
-        # userの保存に失敗した場合
-        render json: { errors: user.errors.full_messages.join(", ") }, status: :unprocessable_entity
+        # userの保存に失敗した場合のエラーメッセージをログに出力
+      Rails.logger.error("Userの保存に失敗: #{user.errors.full_messages.join(", ")}")
+      render json: { errors: user.errors.full_messages.join(", ") }, status: :unprocessable_entity
       end
     end
   rescue => e
-    # 例外発生時のエラーハンドリング
+    # 例外発生時のエラーハンドリングとしてのエラーメッセージをログに出力
+    Rails.logger.error("例外発生: #{e.message}")
     render json: { errors: e.message }, status: :unprocessable_entity
   end
 end
