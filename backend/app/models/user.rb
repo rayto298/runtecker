@@ -5,8 +5,8 @@ class User < ApplicationRecord
   has_many :user_social_services, dependent: :destroy
   belongs_to :term
   belongs_to :prefecture
-  # has_one :user_authentication    
-  # validates :email, presence: true, uniqueness: true
-  # validates :name, presence: true
+  has_one :user_authentication    
+  validates :email, presence: true, uniqueness: true
+  validates :name, presence: true
   # 他にも必要に応じてバリデーションを追加してください
 end
