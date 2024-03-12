@@ -18,8 +18,7 @@ export const UsersIndex = () => {
   useEffect(() => {
     const url = new URLSearchParams(location.search);
     const token = url.get("token");
-    // TODO : 認証周りとコンフリクト起こしそうなのでローカルストレージで保存してます。
-    // useAuthとかで設定できたらいいなぁ
+
     if (token) {
       console.log(token);
       setToken(token);
