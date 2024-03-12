@@ -1,10 +1,17 @@
 import { useAuth } from "providers/auth";
 import { RoutePath } from "config/route_path";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export const _Headers = () => {
-  const { token, logout } = useAuth();
+  const { token, setToken, logout } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // TODO : 暫定処理
+    // もっといい方法あったら教えてください
+    setToken(localStorage.getItem("authToken"));
+  }, [localStorage.getItem("authToken")])
 
   const handleClick = () => {
     logout(); // トークンをクリアしてログアウト処理
@@ -12,38 +19,42 @@ export const _Headers = () => {
   };
 
   return (
-    <header className="bg-white pt-0 pb-0 h-16 flex justify-between items-center drop-shadow-md">
+    <header className="bg-white h-16 flex justify-between items-center drop-shadow-md">
       <div className="flex gap-3 m-4 items-center">
         <h1 className="text-runteq-primary text-xl font-semibold">
-          <Link to={RoutePath.Home.path}>RUNTECKER</Link>
+          {/* ログイン済みであればユーザー一覧を表示するようにしています */}
+          <Link to={token ? RoutePath.Users.path : RoutePath.Home.path}>RUNTECKER</Link>
         </h1>
         <nav className="m-7">
           <ul className="flex gap-7">
             <li>
-              <Link to={RoutePath.Curriculums.path}>
+              <p to={RoutePath.Curriculums.path} className="text-gray-400">
                 {RoutePath.Curriculums.name}
-              </Link>
+              </p>
             </li>
             <li>
-              <Link to={RoutePath.JobMeasures.path}>
+              <p to={RoutePath.JobMeasures.path} className="text-gray-400">
                 {RoutePath.JobMeasures.name}
-              </Link>
+              </p>
             </li>
             <li>
-              <Link to={RoutePath.Events.path}>{RoutePath.Events.name}</Link>
+              <p to={RoutePath.Events.path} className="text-gray-400">{RoutePath.Events.name}</p>
             </li>
             <li>
-              <Link to={RoutePath.Recruits.path}>
+              <p to={RoutePath.Recruits.path} className="text-gray-400">
                 {RoutePath.Recruits.name}
-              </Link>
+              </p>
+            </li>
+            <li>
+              <Link to={RoutePath.Users.path}>{RoutePath.Users.name}</Link>
             </li>
           </ul>
         </nav>
       </div>
-      <div className="flex gap-3 m-4 items-center">
-        <button className="bg-runteq-primary p-2 px-4 rounded text-white">
-          無料体験
-        </button>
+      <div className="flex gap-3 items-center pr-7 h-full">
+        <Link className="flex justify-center items-center bg-runteq-primary px-4 h-full text-white">
+          お問い合わせ
+        </Link>
         {token ? (
           <button onClick={handleClick}>ログアウト</button>
         ) : (
