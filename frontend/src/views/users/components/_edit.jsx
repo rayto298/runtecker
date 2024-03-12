@@ -2,7 +2,7 @@ import { RoutePath } from "config/route_path";
 import { Link } from "react-router-dom";
 import { _UsersEditService } from "./_edit_service";
 
-export const _UsersEdit = ({ user, toggleEdit }) => {
+export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
   // プレビュー用
   const handleClickImagePreview = () => {
     let inputElement = document.createElement("input");
