@@ -30,3 +30,4 @@ social_services = [
 social_services.each do |service_name|
   SocialService.find_or_create_by(name: service_name, service_type: "default")
 end
+

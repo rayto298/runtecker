@@ -4,6 +4,7 @@ import { _UsersEdit } from "./components/_edit"
 import { _UsersDetail } from "./components/_user_detail"
 
 export const UsersShow = () => {
+  // ここでuseParamsを使ってURLからidを取得します
   const { id } = useParams();
   const [user, setUser] = useState({});
   const [isEdit, setIsEdit] = useState(false);
@@ -62,9 +63,24 @@ export const UsersShow = () => {
   }
 
   useEffect(() => {
-    // TODO : ユーザー情報を取得する処理を実装
-    setUser(userData);
-  }, []);
+    const fetchUserData = async () => {
+      try {
+        // 特定のユーザーの詳細情報を取得するエンドポイントに修正
+        const response = await fetch(`http://localhost:3000/api/v1/users/${id}`);
+        if (!response.ok) {
+          throw new Error('ネットワークレスポンスがOKではありません');
+        }
+        const data = await response.json();
+        // 取得したデータをユーザー状態にセット
+        setUser(data);
+      } catch (error) {
+        console.error("ユーザーデータの取得中にエラーが発生しました:", error);
+        setUser(userData); // ここでfallbackのuserDataを使用
+      }
+    };
+  
+    fetchUserData();
+  }, [id]); // idが変わったときに再度フェッチするために依存配列にidを含める
 
   const toggleEdit = () => {
     setIsEdit(!isEdit);

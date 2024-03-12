@@ -32,7 +32,7 @@ class SessionsController < ApplicationController
     else
       # ユーザー登録フォームページにリダイレクト
       Rails.logger.info("RunteqのGithubメンバーで、まだアプリユーザー登録されていない")
-      redirect_to "http://localhost:8000/users/new?token=#{token}"
+      redirect_to "http://localhost:8000/users/new?token=#{token}" 
     end
   end
 
