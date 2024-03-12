@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from '../../providers/auth';
-import { RoutePath } from "config/route_path"
+import { useAuth } from "../../providers/auth";
+import { RoutePath } from "config/route_path";
 
 export const UserSessionsNew = () => {
   const navigate = useNavigate();
@@ -9,23 +9,21 @@ export const UserSessionsNew = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
+    const token = params.get("token");
     console.log(token); // TO DO 本番時は削除　確認用
 
     if (token) {
-      setAuth(token); 
-      localStorage.setItem('auth', token); 
-      navigate(RoutePath.UsersNew.path); 
+      setAuth(token);
+      localStorage.setItem("auth", token);
+      navigate(RoutePath.UsersNew.path);
     }
   }, [setAuth, navigate]);
-  
 
   const handleGitHubAuth = () => {
     // Rails APIの認証エンドポイントにリダイレクト
     // TO DO 環境変数化
     window.location.href = "http://localhost:3000/auth/github";
   };
-
 
   return (
     <article className="pt-12 pb-12 max-w-[65%] m-auto">
@@ -36,7 +34,10 @@ export const UserSessionsNew = () => {
               <h2 className="text-2xl font-semibold">GitHub認証</h2>
             </div>
             <div className="text-center">
-              <button className="bg-black text-white py-2.5 px-5 rounded my-4" onClick={handleGitHubAuth}>
+              <button
+                className="bg-black text-white py-2.5 px-5 rounded my-4"
+                onClick={handleGitHubAuth}
+              >
                 <div className="flex items-center justify-center">
                   {/* GitHubアイコンを追加する場合は次の行のコメントを解除 */}
                   {/* <FaGithub className="text-xl" /> */}

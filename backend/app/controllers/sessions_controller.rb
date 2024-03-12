@@ -7,25 +7,40 @@ class SessionsController < ApplicationController
     
     # GitHubのユーザーIDを取得
     github_user_id = user_info.uid
+    # 組織メンバー検索用にNicknameを取得（ネスト構造）
+    github_username = user_info.info.nickname
     provider = "github"
+
+    # 組織メンバーかどうかをチェック
+    unless GithubOrgMemberCheckService.new(github_username: github_username).member?
+      Rails.logger.info("RunteqのGithubメンバーでない")
+      # 組織のメンバーでなければフロントのindexに遷移
+      redirect_to "http://localhost:8000"
+    end
 
     # GitHubのユーザーIDを使ってトークンを生成
     token = generate_token_with_github_user_id(github_user_id, provider)
 
-    # トークンをクエリパラメーターとして付加
-    # フロントエンドのユーザー本登録フォームページにリダイレクト
-    # TO DO 開発検証完了次第環境変数で対応する
-    # base_url = ENV['REDIRECT_URL']
-    # redirect_url = "#{base_url}?token=#{token}"
-    # redirect_to redirect_url
-    redirect_to "http://localhost:8000/users/new?token=#{token}"
-    
+    # GitHubのユーザーIDを使ってUserAuthenticationテーブルを検索
+    user_authentication = UserAuthentication.find_by(uid: github_user_id, provider: provider)
+    Rails.logger.info(user_authentication)
+
+    if user_authentication
+      # 既に存在する場合は、特定のページにリダイレクト
+      Rails.logger.info("RunteqのGithubメンバーで、かつアプリユーザー登録されている")
+      redirect_to "http://localhost:8000/users?token=#{token}"
+    else
+      # ユーザー登録フォームページにリダイレクト
+      Rails.logger.info("RunteqのGithubメンバーで、まだアプリユーザー登録されていない")
+      redirect_to "http://localhost:8000/users/new?token=#{token}"
+    end
   end
 
   private
 
-  # トークンを暗号化の上で生成する
+  # Json Web Tokenを暗号化の上で生成する
   def generate_token_with_github_user_id(github_user_id, provider)
+    # Json Web Tokenの有効期間は1日限り
     exp = Time.now.to_i + 24 * 3600
     payload = { github_user_id: github_user_id, provider: provider, exp: exp }
     hmac_secret = ENV['JWT_SECRET_KEY']
