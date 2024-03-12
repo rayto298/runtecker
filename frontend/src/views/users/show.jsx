@@ -65,22 +65,33 @@ export const UsersShow = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // 特定のユーザーの詳細情報を取得するエンドポイントに修正
         const response = await fetch(`http://localhost:3000/api/v1/users/${id}`);
         if (!response.ok) {
           throw new Error('ネットワークレスポンスがOKではありません');
         }
         const data = await response.json();
-        // 取得したデータをユーザー状態にセット
-        setUser(data);
+        
+        // 加工処理を調整
+        const processedData = {
+          ...data,
+          term: data.term.name, // term情報を名前のみに加工
+          prefecture: data.prefecture.name, // prefecture情報を名前のみに加工
+          //user_tags: data.user_tags.map(tag => tag.name), // タグ名のみを配列に抽出
+          user_social_services: data.user_social_services.map(service => {
+            // ソーシャルサービス情報を加工してオブジェクトの配列に
+            return { name: service.social_service.name, account_name: service.account_name };
+          })
+        };
+  
+        setUser(processedData); // 加工後のデータをセット
       } catch (error) {
         console.error("ユーザーデータの取得中にエラーが発生しました:", error);
-        setUser(userData); // ここでfallbackのuserDataを使用
+        setUser(userData); // エラー時のフォールバックデータ
       }
     };
-  
+    
     fetchUserData();
-  }, [id]); // idが変わったときに再度フェッチするために依存配列にidを含める
+  }, [id]);// idが変わったときに再度フェッチするために依存配列にidを含める
 
   const toggleEdit = () => {
     setIsEdit(!isEdit);

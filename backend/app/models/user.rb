@@ -9,4 +9,8 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :name, presence: true
   # 他にも必要に応じてバリデーションを追加してください
+def pastname
+    past_nicknames.last.nickname unless past_nicknames.empty?
+  end
 end
+

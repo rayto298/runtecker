@@ -1,4 +1,5 @@
 class Api::V1::UsersController < ApplicationController
+  skip_before_action :authenticate_request, only: [:show, :create] #ログインができるのに送られない為　仮置きです。
     
     # GET /api/v1/users
     def index
@@ -9,7 +10,7 @@ class Api::V1::UsersController < ApplicationController
     # GET /api/v1/users/:id
     def show
       @user = User.find(params[:id])
-      render json: @user
+      render json: @user, include: [:past_nicknames, :user_social_services, :user_tags, :term, :prefecture], methods: [:pastname]
     end
   
     # POST /api/v1/users
