@@ -202,7 +202,7 @@ export const UsersIndex = () => {
                   </Link>
                 ))}
               </div>
-            )}
+            }
           </div>
         ))}
       </section>
