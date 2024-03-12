@@ -1,5 +1,5 @@
 export class TermsController {
-  getPrefectures = async () => {
+  getTerms = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/v1/terms`, {
         method: "GET",

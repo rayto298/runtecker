@@ -7,7 +7,7 @@ import { UsersController } from "controllers/users_controller";
 import { useAuth } from "providers/auth";
 
 export const UsersIndex = () => {
-  const { setToken } = useAuth();
+  //const { setToken } = useAuth();
   const [searchWord, setSearchWord] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [term, setTerm] = useState([]);
@@ -21,13 +21,13 @@ export const UsersIndex = () => {
 
     if (token) {
       console.log(token);
-      setToken(token);
+      //setToken(token);
       localStorage.setItem("authToken", token);
       navigate(RoutePath.Users.path);
     }
 
     let terms = new TermsController();
-    terms.getPrefectures().then((data) => {
+    terms.getTerms().then((data) => {
       if (data) {
         setTerm(data);
       } else {
@@ -59,7 +59,7 @@ export const UsersIndex = () => {
     });
 
     // TODO : 検索でのユーザー取得処理
-    console.log(queryWord, queryTerm, queryPrefecture, queryTag);
+    // console.log(queryWord, queryTerm, queryPrefecture, queryTag);
 
     setSearchWord(queryWord);
     setSearchTerm(queryTerm);
