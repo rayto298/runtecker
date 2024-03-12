@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
     begin
       @decoded = JwtService.decode(header)
       # UserAuthenticationをGitHubのuser_idで検索
-      user_auth = UserAuthentication.find_by(github_user_id: @decoded[:user_id])
+      user_auth = UserAuthentication.find_by(uid: @decoded[:github_user_id])
       # UserAuthenticationから関連するUserを取得
       @current_user = user_auth.user if user_auth
       Rails.logger.info(@current_user)
