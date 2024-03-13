@@ -15,7 +15,8 @@ class SessionsController < ApplicationController
     unless GithubOrgMemberCheckService.new(github_username: github_username).member?
       Rails.logger.info("RunteqのGithubメンバーでない")
       # 組織のメンバーでなければフロントのindexに遷移
-      redirect_to "http://localhost:8000"
+      redirect_to "http://localhost:8000/not_runtecker"
+      return
     end
 
     # GitHubのユーザーIDを使ってトークンを生成

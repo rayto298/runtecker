@@ -9,14 +9,14 @@ export const RoutePath = {
   },
   Users: {
     path: "/users",
-    name: "ユーザー一覧",
+    name: "一覧",
   },
   UsersNew: {
     path: "/users/new",
-    name: "新規登録"
+    name: "新規登録",
   },
   UsersShow: {
-    path: (id = ':id') => `/users/${id}`,
+    path: (id = ":id") => `/users/${id}`,
     name: "プロフィール",
   },
   Curriculums: {
@@ -28,7 +28,7 @@ export const RoutePath = {
     name: "就活対策",
   },
   JobMeasuresShow: {
-    path: (id = ':id') => `/job_measures/:${id}`,
+    path: (id = ":id") => `/job_measures/:${id}`,
     name: "就活対策詳細",
   },
   Events: {
@@ -36,7 +36,7 @@ export const RoutePath = {
     name: "イベント",
   },
   EventsShow: {
-    path: (id = ':id') => `/events/:${id}`,
+    path: (id = ":id") => `/events/:${id}`,
     name: "イベント詳細",
   },
   Recruits: {
@@ -44,11 +44,15 @@ export const RoutePath = {
     name: "求人",
   },
   RecruitsShow: {
-    path: (id = ':id') => `/recruits/:${id}`,
+    path: (id = ":id") => `/recruits/:${id}`,
     name: "求人詳細",
   },
   NotFound: {
     path: "*",
     name: "NotFound",
   },
-}
+  NotRuntecker: {
+    path: "/not_runtecker",
+    name: "Runteq案内",
+  },
+};
