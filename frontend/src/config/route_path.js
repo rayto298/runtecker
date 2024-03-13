@@ -9,7 +9,7 @@ export const RoutePath = {
   },
   Users: {
     path: "/users",
-    name: "ユーザー一覧",
+    name: "一覧",
   },
   UsersNew: {
     path: "/users/new",
