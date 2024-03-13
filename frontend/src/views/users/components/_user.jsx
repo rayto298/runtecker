@@ -51,9 +51,9 @@ export const _User = (user) => {
       <div className="px-2 pt-2 ml-auto group-hover:opacity-100 opacity-0 transform transition-all delay-300 duration-200">
         <Link to={RoutePath.UsersShow.path(userData.id)}>詳細 →</Link>
       </div>
-      {userData.user_tags?.length > 0 &&
+      {userData.tags?.length > 0 &&
         <div className="p-2 m-4 border-t border-black">
-          {userData.user_tags.map((tag, index) => (
+          {userData.tags.map((tag, index) => (
             <Link
               to={`${RoutePath.Users.path}?tag=${tag.id}`}
               key={index}

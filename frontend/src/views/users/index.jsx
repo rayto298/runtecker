@@ -124,7 +124,7 @@ export const UsersIndex = () => {
             ))}
           </section>
         </div>
-        <section className="flex justify-start items-center text-md">
+        <section className="flex justify-start items-center text-md mb-12">
           <div className="join rounded">
             <span className="join-item btn cursor-text hover:bg-[#5050D9] bg-[#5050D9] text-white font-normal min-h-0 h-auto px-3 py-3">1</span>
             <Link className="join-item btn bg-white text-[#5050D9] font-normal min-h-0 h-auto px-3 py-3">2</Link>
