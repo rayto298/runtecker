@@ -1,7 +1,7 @@
-export class UsersController {
-  getPrefectures = async () => {
+export class TermsController {
+  getTerms = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/v1/users`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/v1/terms`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
