@@ -70,28 +70,45 @@ export const UsersShow = () => {
           throw new Error('ネットワークレスポンスがOKではありません');
         }
         const data = await response.json();
-        
-        // 加工処理を調整
-        const processedData = {
-          ...data,
-          term: data.term.name, // term情報を名前のみに加工
-          prefecture: data.prefecture.name, // prefecture情報を名前のみに加工
-          //user_tags: data.user_tags.map(tag => tag.name), // タグ名のみを配列に抽出
-          user_social_services: data.user_social_services.map(service => {
-            // ソーシャルサービス情報を加工してオブジェクトの配列に
-            return { name: service.social_service.name, account_name: service.account_name };
-          })
+  
+        // 既存の加工処理
+      const processedData = {
+        ...data,
+        term: data.term.name, // term情報を名前のみに加工
+        prefecture: data.prefecture.name, // prefecture情報を名前のみに加工
+        user_social_services: data.user_social_services.map(service => {
+          // ソーシャルサービス情報がundefinedでないことを確認し、加工してオブジェクトの配列に
+          return {
+             name: service.social_service ? service.social_service.name : 'Unknown Service', // social_serviceがundefinedの場合はデフォルト値を使用
+             account_name: service.account_name
+          };
+         })
+        };
+
+        console.log(processedData); // ここで加工後のデータをコンソールに出力
+  
+        // 足りない部分をダミーデータで補完
+        const supplementedData = {
+          ...processedData,
+          // ここで足りない部分をダミーデータや既に定義されているuserDataから補完
+          // 例: user_tagsが足りない場合
+          user_tags: processedData.user_tags || userData.user_tags,
+          avatar: processedData.avatar || userData.avatar,
+          // 他に足りないデータがあれば、同様に補完
         };
   
-        setUser(processedData); // 加工後のデータをセット
+        setUser({
+          ...supplementedData,
+          user_social_service: supplementedData.user_social_services // ここでプロパティ名を調整
+        });// 加工後のデータをセット
       } catch (error) {
         console.error("ユーザーデータの取得中にエラーが発生しました:", error);
         setUser(userData); // エラー時のフォールバックデータ
       }
     };
-    
+  
     fetchUserData();
-  }, [id]);// idが変わったときに再度フェッチするために依存配列にidを含める
+  }, [id]); // idが変わったときに再度フェッチするために依存配列にidを含める// idが変わったときに再度フェッチするために依存配列にidを含める
 
   const toggleEdit = () => {
     setIsEdit(!isEdit);

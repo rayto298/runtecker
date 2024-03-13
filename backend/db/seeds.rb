@@ -46,7 +46,7 @@ user = User.create!(
 
 # ソーシャルサービスの関連付け
 social_services = [
-  { name: "Twitter", account_name: "topi_log" },
+  { name: "X", account_name: "topi_log" },
   { name: "Times", account_name: "52a_nishina_kanae" },
   { name: "Qiita", account_name: "topi_log" },
   { name: "Note", account_name: "topi_log" },
@@ -62,11 +62,4 @@ social_services.each do |social_service|
   else
     Rails.logger.warn "Failed to create UserSocialService for #{social_service[:name]}"
   end
-end
-
-# タグの関連付け
-tags = ["Ruby", "Ruby on Rails", "JavaScript"]
-tags.each_with_index do |tag_name, index|
-  tag = Tag.find_or_create_by(name: tag_name)
-  UserTag.create(user: user, tag: tag, position: index + 1)
 end
