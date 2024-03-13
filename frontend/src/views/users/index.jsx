@@ -7,7 +7,7 @@ import { UsersController } from "controllers/users_controller";
 import { useAuth } from "providers/auth";
 
 export const UsersIndex = () => {
-  //const { setToken } = useAuth();
+  const { setToken } = useAuth();
   const [searchWord, setSearchWord] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [term, setTerm] = useState([]);
@@ -21,7 +21,7 @@ export const UsersIndex = () => {
 
     if (token) {
       console.log(token);
-      //setToken(token);
+      setToken(token);
       localStorage.setItem("authToken", token);
       navigate(RoutePath.Users.path);
     }
@@ -46,8 +46,8 @@ export const UsersIndex = () => {
     const url = new URLSearchParams(location.search);
     let queryWord = url.get("word") ?? "";
     let queryTerm = url.get("term") ?? "";
-    let queryPrefecture = url.get("term") ?? "";
-    let queryTag = url.get("tag") ?? "";
+    //let queryPrefecture = url.get("term") ?? "";
+    //let queryTag = url.get("tag") ?? "";
 
     let users = new UsersController();
     users.getPrefectures().then((data) => {
