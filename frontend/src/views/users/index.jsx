@@ -44,17 +44,16 @@ export const UsersIndex = () => {
 
   useEffect(() => {
     const url = new URLSearchParams(location.search);
-    let queryWord = url.get("word") ?? "";
-    let queryTerm = url.get("term") ?? "";
-    //let queryPrefecture = url.get("term") ?? "";
-    //let queryTag = url.get("tag") ?? "";
+    const queryWord = url.get("word") ?? "";
+    const queryTerm = url.get("term") ?? "";
+    //const queryPrefecture = url.get("term") ?? "";
+    //const queryTag = url.get("tag") ?? "";
 
+    // TODO : 検索結果をもとにしたユーザーデータ取得は未実装
     let users = new UsersController();
     users.getPrefectures().then((data) => {
       if (data) {
         seUsers(data);
-      } else {
-        seUsers([]);
       }
     });
 
@@ -124,6 +123,7 @@ export const UsersIndex = () => {
             ))}
           </section>
         </div>
+        {/* TODO : ページネーションは今後追加できたらいいな */}
         <section className="flex justify-start items-center text-md mb-12">
           <div className="join rounded">
             <span className="join-item btn cursor-text hover:bg-[#5050D9] bg-[#5050D9] text-white font-normal min-h-0 h-auto px-3 py-3">1</span>
@@ -135,8 +135,8 @@ export const UsersIndex = () => {
             <Link className="join-item btn bg-white text-[#5050D9] font-normal min-h-0 h-auto px-3 py-3">次へ</Link>
             <Link className="join-item btn bg-white text-[#5050D9] font-normal min-h-0 h-auto px-3 py-3">最後</Link>
           </div>
-        </section>
-      </div>
+        </section >
+      </div >
     </>
   );
 };

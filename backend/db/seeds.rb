@@ -30,3 +30,32 @@ social_services = [
 social_services.each do |service_name|
   SocialService.find_or_create_by(name: service_name, service_type: "default")
 end
+
+# タグのダミーデータ作成
+tags = [
+  "Ruby", "Ruby on Rails", "JavaScript", "TypeScript", "Vue.js","Nuxt.js",  "React", "Next.js", "Docker", "AWS", "php", "Laravel", "Python",
+]
+tags.each do |tag_name|
+  Tag.find_or_create_by(name: tag_name)
+end
+
+# ユーザーのダミーデータ作成
+30.times do |i|
+  user = User.find_or_create_by(
+    email: "test#{i + 1}@example.com",
+    name: "ユーザー#{i + 1}",
+    nickname: "ダミー#{i + 1}",
+    profile: "ダミーユーザー#{i+1}です。よろしくお願いします！",
+    term_id: Term.find_by(name: terms.sample).id,
+    prefecture_id:  Prefecture.find_by(name: prefectures.sample).id
+  )
+  # ユーザータグのダミーデータ作成
+  count = rand(1..5)
+  count.times do |j|
+    UserTag.find_or_create_by(
+      user_id: user.id,
+      tag_id: Tag.find_by(name: tags.sample).id,
+      position: j + 1
+    )
+  end
+end
