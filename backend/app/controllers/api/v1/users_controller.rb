@@ -1,6 +1,6 @@
-class Api::V1::UsersController < ApplicationController
+class Api::V1::UsersController < ApplicationController    
     
-    # GET /api/v1/users
+   # GET /api/v1/users
     def index
       @users = User.includes(:prefecture, :term, user_tags: :tag).all
       render json: @users.as_json(include: %i[prefecture term tags])
@@ -9,7 +9,14 @@ class Api::V1::UsersController < ApplicationController
     # GET /api/v1/users/:id
     def show
       @user = User.find(params[:id])
-      render json: @user
+      render json: @user, include: {
+        past_nicknames: {},
+        user_social_services: {
+          #include: :social_service # これでUserSocialService経由でSocialServiceのデータを含める
+        },
+        term: {},
+        prefecture: {}
+      }, methods: [:pastname]
     end
   
     # POST /api/v1/users
