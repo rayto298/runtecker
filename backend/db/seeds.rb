@@ -32,34 +32,38 @@ social_services.each do |service_name|
 end
 
 
-# ユーザーの作成
-user = User.create!(
-  email: "aexample@example.com",
-  name: "とぴ",
-  nickname: "とぴ",
-  profile: "春～夏はダークモカチップフラペチーノ、秋～冬はカフェモカを飲んでいます。ただ近くにスタバがないので、月一に大きい街へ行くときのとっておきです。もっと近くにあったら嬉しいのですが、残念ながら最短でも車で40分近くかかりそうで気軽にいけません。非常に残念です。そこそこ田舎の山際に住んでいるので、最寄りのコンビニまで徒歩1時間超え、スーパーも徒歩40分ほど、最寄り駅まで徒歩1時間30分（自転車だと行きは15分、帰りは30分）と、車社会の世界で生きています。その世界に生きているにも関わらず、私は自分の車をもっていません。RUNTEQに入るお金で中古車1台帰ると気づいたのは、入学して1ヶ月経ったときのことでした。給付金制度でお金が返ってはきますが、そのお金でMacを買うか悩んでいます。業界標準がMacだと聞いて入るものの、普段がWindowsなので業務でしか使わなそうな気がしており、それはそれで良いのですが会社支給があれば嬉しいなと下心満載です。いぇあ",
-  term: Term.find_or_create_by(name: "52期A"),
-  github_account: "topi0247",
-  prefecture: Prefecture.find_or_create_by(name: "長野県"),
-  # avatar を削除しました
-)
+# テストユーザーの作成
+#user = User.create!(
+ # email: "kzkio@examp.com",
+ # name: "kzkio",
+ # nickname: "かずちゃん",
+ # profile: " スタバでは、春から冬も期間限定のフラペチーノを飲んでいます。3/13現在の期間限定は
+ # キャラメリーミルクコーヒーフラペチーノです。
+ # ちなみに、家からスタバまで3分ぐらいで行ける所にあります。私の住んでいる場所は山市でお茶が有名ですが
+ # 実は、狭山茶の一番の産地は入間市になります。狭山茶は、三大銘茶に入っており味が良いと言われてます。
+ # あとは、特に狭山市の紹介はないですね!!比較的に近くの市で有名なのは川越が有名で小江戸と言われ、
+ # 昔からの建物や時の鐘などが見られ食べ物だとサツマイモが有名です。
+ # そのほかにも、お菓子横丁などもあり観光には凄く良い所なので暇だったら行ってみてください！！
+ # 全然、関係ない話になりますがゲームが好きで、最近はエルデンリングをプレイしていました。
+ # エルデンリングは、ダークソウルのようなゲームで、難易度が高いですが、それがまた面白いです。
+ # とりあえず、皆さんもエルデンリングをプレイしてみてください！！楽しいですよ！！",
+ # term: Term.find_or_create_by(name: "50期A"),
+ # github_account: "kzkio114",
+ # prefecture: Prefecture.find_or_create_by(name: "埼玉県")
+#)
 
 # ソーシャルサービスの関連付け
-social_services = [
-  { name: "X", account_name: "topi_log" },
-  { name: "Times", account_name: "52a_nishina_kanae" },
-  { name: "Qiita", account_name: "topi_log" },
-  { name: "Note", account_name: "topi_log" },
-  { name: "Zenn", account_name: "topi_log" }
-]
+#social_services_data = [
+#  { name: "X", account_name: "kzkio_0114" },
+#  { name: "Qiita", account_name: "kzkio" },
+#  { name: "Zenn", account_name: "kzkio" },
+#  { name: "Notion", account_name: "kzkio" },  
+#  { name: "Mattermost", account_name: "ito_kazuki_50a" }  
+#]
 
-PastNickname.create!(user: user, nickname: "とっぴ")
+#PastNickname.create!(user: user, nickname: "kzkio")
 
-social_services.each do |social_service|
-  service = SocialService.find_or_create_by(name: social_service[:name])
-  if service.persisted? && user.persisted?
-    UserSocialService.create(user: user, social_service: service, account_name: social_service[:account_name])
-  else
-    Rails.logger.warn "Failed to create UserSocialService for #{social_service[:name]}"
-  end
-end
+#social_services_data.each do |social_service_data|
+#  service = SocialService.find_by(name: social_service_data[:name])
+#  UserSocialService.find_or_create_by(user: user, social_service: service, account_name: social_service_data[:account_name])
+#end

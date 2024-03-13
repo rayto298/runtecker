@@ -8,7 +8,7 @@ export const UsersShow = () => {
   const { id } = useParams();
   const [user, setUser] = useState({});
   const [isEdit, setIsEdit] = useState(false);
-
+ // ここでダミーデータを使ってユーザーデータを取得します
   const userData = {
     id: id,
     name: "とぴ",
@@ -65,7 +65,17 @@ export const UsersShow = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/v1/users/${id}`);
+        // 環境変数からAPI URLを取得し、ローカルストレージからトークンを取得
+        const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:3000";
+        const token = localStorage.getItem("authToken");
+  
+        const response = await fetch(`${apiUrl}/api/v1/users/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // トークンをヘッダーに含める
+          },
+        });
         if (!response.ok) {
           throw new Error('ネットワークレスポンスがOKではありません');
         }
@@ -93,7 +103,7 @@ export const UsersShow = () => {
           // ここで足りない部分をダミーデータや既に定義されているuserDataから補完
           // 例: user_tagsが足りない場合
           user_tags: processedData.user_tags || userData.user_tags,
-          avatar: processedData.avatar || userData.avatar,
+          avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/ed28808e-3784-4b35-a4cf-dc378a3cb987-profile_image-300x300.png",
           // 他に足りないデータがあれば、同様に補完
         };
   
