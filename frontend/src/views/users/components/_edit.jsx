@@ -1,9 +1,37 @@
 import { RoutePath } from "config/route_path";
 import { Link } from "react-router-dom";
 import { _UsersEditService } from "./_edit_service";
+import { useState } from "react";
 
 export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
-  // プレビュー用
+  // 都道府県の仮データ
+  const prefectures = [
+    { id: 1, name: "北海道" },
+    { id: 2, name: "青森県" },
+    { id: 3, name: "岩手県" },
+    { id: 4, name: "宮城県" },
+    { id: 5, name: "長野県" },
+    { id: 6, name: "山形県" },
+    { id: 7, name: "福島県" },
+    { id: 8, name: "茨城県" },
+    { id: 9, name: "栃木県" },
+    { id: 10, name: "群馬県" },
+  ];
+
+  // ニックネーム
+  const [nickname, setNickname] = useState(user.nickname);
+  const handleNicknameChange = (e) => {
+    setNickname(e.target.value);
+  };
+
+  // 都道府県
+  const [prefecture, setPrefecture] = useState(user.prefecture);
+  const handlePrefectureChange = (e) => {
+    setPrefecture(e.target.value);
+  };
+
+  // アバター
+  const [avatar, setAvatar] = useState(user.avatar);
   const handleClickImagePreview = () => {
     let inputElement = document.createElement("input");
     inputElement.type = "file";
@@ -14,18 +42,18 @@ export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
       if (!file) return;
       const reader = new FileReader();
       reader.onload = (e) => {
-        // プレビュー用にデータを取得・表示
-        setUser({ ...user, image: e.target.result });
+        // 読み込まれた画像データを状態にセット
+        setAvatar(e.target.result);
       };
       reader.readAsDataURL(file);
     };
   };
 
-  // サービス名をセット
-  const serviceNames = ["X", "MatterMost", "Qiita", "note", "Zenn"];
-
-  // アカウント名をセット
-  const accountNames = ["rayto-x", "", "rayto-qiita", "", "rayto-zenn"];
+  // 自己紹介
+  const [profile, setProfile] = useState(user.profile);
+  const handleProfileChange = (e) => {
+    setProfile(e.target.value);
+  };
 
   return (
     <>
@@ -34,27 +62,38 @@ export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
           戻る
         </button>
       </div>
+
+      {/* ニックネーム */}
       <div className="flex justify-between w-full">
         <div className="flex w-1/2 flex-col items-center justify-center">
           <input
             type="text"
-            placeholder={user.nickname}
+            placeholder="ニックネーム"
+            value={nickname}
+            onChange={handleNicknameChange}
             className="input text-center w-4/5 max-w-xs rounded-md text-2xl"
           />
           <p className="text-sm">（旧：{user.pastname}）</p>
         </div>
+
+        {/* 都道府県 */}
         <div className="w-1/2 flex justify-center items-center text-2xl gap-2">
           <p>{user.term}</p>
-          <select className="ms-1 select text-center w-2/5 max-w-xs rounded-md text-lg">
-            <option>長野県</option>
-            <option>東京都</option>
-            <option>大阪府</option>
-            <option>愛知県</option>
-            <option>北海道</option>
-            <option>沖縄県</option>
+          <select
+            className="ms-1 select text-center w-2/5 max-w-xs rounded-md text-lg"
+            value={prefecture}
+            onChange={handlePrefectureChange}
+          >
+            {prefectures.map((prefecture) => (
+              <option key={prefecture.id} value={prefecture.name}>
+                {prefecture.name}
+              </option>
+            ))}
           </select>
         </div>
       </div>
+
+      {/* アバター */}
       <div className="py-4 w-full">
         <figure className="w-full">
           <div className="text-center flex justify-center items-center">
@@ -63,22 +102,27 @@ export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
               onClick={handleClickImagePreview}
             >
               <img
-                src={user.avatar}
+                src={avatar}
                 className="m-auto h-[300px] opacity-60 hover:opacity-40 transition-all"
+                alt="プロフィール画像"
               />
             </button>
           </div>
         </figure>
       </div>
+
+      {/* サービスのリンク */}
       <div>
-        {serviceNames.map((serviceName, index) => (
+        {user.user_social_service.map((service, index) => (
           <_UsersEditService
             key={index}
-            serviceName={serviceName}
-            accountName={accountNames[index]}
+            serviceName={service.name}
+            accountName={service.account_name}
           />
         ))}
       </div>
+
+      {/* タグ */}
       {user.user_tags?.length > 0 && (
         <div className="text-center my-2">
           {user.user_tags.map((tag, index) => (
@@ -92,10 +136,13 @@ export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
           ))}
         </div>
       )}
+
+      {/* 自己紹介 */}
       <textarea
         className="textarea w-full rounded-md"
         rows={10}
-        defaultValue={user.profile}
+        value={profile}
+        onChange={handleProfileChange}
       />
       <div className="w-full text-center">
         <button onClick={toggleEdit} className="btn btn-primary text-xs mt-3">
