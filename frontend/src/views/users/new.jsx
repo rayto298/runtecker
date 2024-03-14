@@ -1,50 +1,53 @@
 // UsersNew.js
 import { RoutePath } from "config/route_path";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../providers/auth";
-
-// 都道府県のデータ　TO DO データベース管理
-const prefectures = [
-  { id: 1, name: "北海道" },
-  { id: 2, name: "青森県" },
-  { id: 3, name: "岩手県" },
-  { id: 47, name: "沖縄県" },
-  { id: 48, name: "その他" },
-];
-
-// 入学時期のデータ　TO DO データベース管理
-const terms = [
-  { id: 1, name: "運営" },
-  { id: 2, name: "48期" },
-  { id: 3, name: "49期" },
-  { id: 4, name: "50期" },
-  { id: 5, name: "51期" },
-  { id: 6, name: "52期" },
-  { id: 7, name: "pro1期" },
-  { id: 8, name: "pro2期" },
-];
+import { TermsController } from "controllers/terms_controller";
+import { PrefecturesController } from "controllers/prefectures_controller";
 
 export const UsersNew = () => {
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
-  const [term, setTerm] = useState(""); // 入学時期用のstate
+  const [term, setTerm] = useState([]); // 入学時期用のstate
+  const [prefecture, setPrefecture] = useState([]); // 都道府県用のstate
   const [prefectureId, setPrefectureId] = useState(""); // 都道府県ID用のstate
   const navigate = useNavigate();
-  const [termId, setTermId] = useState("");
+  const [termId, setTermId] = useState(""); // 入学時期ID用のstate
   const { token } = useAuth();
 
   // 各フォームのonChangeイベントハンドラ
   const onChangeName = (e) => setName(e.target.value);
   const onChangeNickname = (e) => setNickname(e.target.value);
   const onChangeEmail = (e) => setEmail(e.target.value);
-  const onChangeTerm = (e) => setTerm(e.target.value);
+  const onChangeTerm = (e) => setTermId(e.target.value);
   const onChangePrefectureId = (e) => setPrefectureId(e.target.value);
+
+  useEffect (() => {
+    let terms = new TermsController();
+    terms.getTerms().then((data)=>{
+      if (data) {
+        setTerm(data);
+      } else {
+        setTerm([]);
+      }
+    });
+
+    let prefectures = new PrefecturesController();
+    prefectures.getPrefectures().then((data)=>{
+      if (data) {
+        setPrefecture(data);
+      } else {
+        setPrefecture([]);
+      }
+    })
+  
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // フォームのデフォルト送信を防ぐ
-
+  
     const user = {
       name,
       nickname,
@@ -145,13 +148,13 @@ export const UsersNew = () => {
                   name="term_id"
                   required
                   value={termId}
-                  onChange={(e) => setTermId(e.target.value)}
+                  onChange={onChangeTerm}
                   className="h-10 px-2 mt-1 block w-full rounded-md border border-gray-300 shadow-sm"
                 >
                   <option value="">選択してください</option>
-                  {terms.map((term) => (
-                    <option key={term.id} value={term.id}>
-                      {term.name}
+                  {term.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.name}
                     </option>
                   ))}
                 </select>
@@ -170,13 +173,13 @@ export const UsersNew = () => {
                   name="prefecture_id"
                   required
                   value={prefectureId}
-                  onChange={(e) => setPrefectureId(e.target.value)}
+                  onChange={onChangePrefectureId}
                   className="h-10 px-2 mt-1 block w-full rounded-md border border-gray-300 shadow-sm"
                 >
                   <option value="">選択してください</option>
-                  {prefectures.map((prefecture) => (
-                    <option key={prefecture.id} value={prefecture.id}>
-                      {prefecture.name}
+                  {prefecture.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
                     </option>
                   ))}
                 </select>
