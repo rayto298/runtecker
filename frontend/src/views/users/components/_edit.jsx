@@ -1,8 +1,8 @@
 import { RoutePath } from "config/route_path";
 import { Link } from "react-router-dom";
 import { _UsersEditService } from "./_edit_service";
-import { useState } from "react";
-import {
+import { useState, useCallback } from "react";
+import { //ここからdnd-kit
   DndContext,
   closestCenter, 
   MouseSensor,
@@ -30,6 +30,56 @@ export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
     { id: 9, name: "栃木県" },
     { id: 10, name: "群馬県" },
   ];
+
+  //タグの仮データ
+  const tagData = [
+    { id: 1, name: "Ruby"},
+    { id: 2, name: "Ruby on Railssssssssssssssss"}, 
+    { id: 3, name: "JavaScript"},
+    { id: 4, name: "TypeScript"},
+    { id: 5, name: "Vue.js"},
+    { id: 6, name: "Nuxt.js"},
+    { id: 7, name: "React"},
+    { id: 8, name: "Next.js"},
+    { id: 9, name: "Docker"},
+    { id: 10, name: "AWS"}, 
+    { id: 11, name: "php"}, 
+    { id: 12, name: "Laravel"},
+    { id: 13, name: "Python"},
+  ]
+  const [tags, setTags] = useState(tagData);
+  const [activeId, setActiveId] = useState(null);
+  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+
+  //ドラッグが始まったときの処理
+  const handleDragStart = useCallback((event) => {
+    console.log('つかんだタグ: ' + event.active.id);
+    setActiveId(event.active.id);
+  }, []);
+
+  //ドラッグが終わる時の処理
+  const handleDragEnd = useCallback((event) => {
+    if(event.active && event.over){ //これナシだと，掴まず軽くタップした時にエラーになる
+      const { active, over } = event; 
+      if (active.id !== over?.id) {
+        console.log('active.id = ' + active.id)
+        console.log('over.id = ' + over.id)
+        setTags((tags) => {
+          const activeTag = tags.findIndex(tag => tag.id === active.id);
+          const overTag = tags.findIndex(tag => tag.id === over.id);
+          const newTags = arrayMove(tags, activeTag, overTag);
+          newTags.forEach(tags => console.log(tags.id + ' : ' + tags.name));
+          return newTags;
+        })
+      }
+    }
+    setActiveId(null); //activeIdをリセット      
+  }, []);
+
+  //ドラッグがキャンセルされた時の処理（activeIdをリセットするだけ）
+  const handleDragCancel = useCallback(() => {
+    setActiveId(null);
+  }, []);
 
   // ニックネーム
   const [nickname, setNickname] = useState(user.nickname);
@@ -136,7 +186,7 @@ export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
       </div>
 
       {/* タグ */}
-      {user.user_tags?.length > 0 && (
+      {/* {user.user_tags?.length > 0 && (
         <div className="text-center my-2">
           {user.user_tags.map((tag, index) => (
             <Link
@@ -148,8 +198,29 @@ export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
             </Link>
           ))}
         </div>
-      )}
-
+      )} */}
+      {/* タグ（仮データ） */}
+      <div className="sortable-item-wrapper" style={{ margin: '4px', width: 'auto' }}>
+        <DndContext
+          sensors={sensors} 
+          collisionDetection={closestCenter}
+          onDragStart={handleDragStart} 
+          onDragEnd={handleDragEnd} 
+          onDragCancel={handleDragCancel}
+        >
+          <SortableContext items={tags} strategy={rectSortingStrategy}>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(5, 1fr)',
+                margin: '20px', 
+                }}>
+                  {tags.map((tag) => (
+                    <SortableItem  key={tag.id} tag={tag}/>
+                  ))}
+              </div>
+          </SortableContext>
+        </DndContext>
+      </div>
       {/* 自己紹介 */}
       <textarea
         className="textarea w-full rounded-md"
@@ -166,4 +237,40 @@ export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
   );
 };
 
+
+export const SortableItem = ({ tag }) => {
+  const {
+    attributes, //これによって要素がドラッグ可能に
+    isDragging, //現在の要素がドラッグ中かどうかを示すbool値
+    listeners, //ドラッグ中に発生したイベントリスナー
+    setNodeRef, //ドラッグ可能な要素のDOMノードを設定するための関数
+    transform, //ドラッグ中の要素の変換情報。ドラッグ中に移動させるためのスタイルを設定できる
+    transition //ドラッグ中の要素に対する遷移情報。要素の移動にトランジションを追加できる
+  } = useSortable({ id: tag.id });
+
+  return (
+    <div className="bg-gray-200 text-s text-center px-2 py-1 rounded-full m-1 hover:transform hover:-translate-y-0.5"
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Translate.toString(transform), //これで掴んで動かすアニメーションが実現
+        transition: transition || undefined,
+        cursor: isDragging ? 'grabbing' : 'grab',
+        width: 'auto',
+        padding: '4px 8px',
+        margin: '6px',
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        overflow: 'hidden', //以下3つで長い文字列を省略する形に
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap'
+      }}
+      
+      {...attributes}
+      {...listeners}
+    >
+      { tag.name } 
+    </div>
+  )
+}
 
