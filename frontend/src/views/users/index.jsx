@@ -20,7 +20,6 @@ export const UsersIndex = () => {
     const token = url.get("token");
 
     if (token) {
-      console.log(token);
       setToken(token);
       localStorage.setItem("authToken", token);
       navigate(RoutePath.Users.path);
@@ -46,12 +45,18 @@ export const UsersIndex = () => {
     const url = new URLSearchParams(location.search);
     const queryWord = url.get("word") ?? "";
     const queryTerm = url.get("term") ?? "";
-    //const queryPrefecture = url.get("term") ?? "";
-    //const queryTag = url.get("tag") ?? "";
+    const queryPrefecture = url.get("prefecture") ?? "";
+    const queryTag = url.get("tag") ?? "";
 
-    // TODO : 検索結果をもとにしたユーザーデータ取得は未実装
+    const query = new URLSearchParams({
+      word: queryWord,
+      term: queryTerm,
+      prefecture: queryPrefecture,
+      tag: queryTag
+    });
+
     let users = new UsersController();
-    users.getPrefectures().then((data) => {
+    users.getUsers(query.toString()).then((data) => {
       if (data) {
         seUsers(data);
       }

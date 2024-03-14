@@ -1,7 +1,9 @@
+
 export class UsersController {
-  getPrefectures = async () => {
+  getUsers = async (params) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/v1/users`, {
+      console.log(params);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/v1/users?${params}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
