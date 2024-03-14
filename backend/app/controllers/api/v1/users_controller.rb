@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController    
-    
-   # GET /api/v1/users
+
+  # GET /api/v1/users
     def index
       @users = User.includes(:prefecture, :term, user_tags: :tag).all
       render json: @users.as_json(include: %i[prefecture term tags])

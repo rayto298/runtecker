@@ -2,6 +2,19 @@ import { RoutePath } from "config/route_path";
 import { Link } from "react-router-dom";
 import { _UsersEditService } from "./_edit_service";
 import { useState } from "react";
+import {
+  DndContext,
+  closestCenter, 
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors } from "@dnd-kit/core";
+import { 
+  useSortable,
+  arrayMove, 
+  SortableContext, 
+  rectSortingStrategy } from "@dnd-kit/sortable";
+import { CSS } from '@dnd-kit/utilities'
 
 export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
   // 都道府県の仮データ
@@ -152,3 +165,5 @@ export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
     </>
   );
 };
+
+

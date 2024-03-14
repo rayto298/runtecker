@@ -53,7 +53,13 @@ export const UsersShow = () => {
           ...processedData,
           // ここで足りない部分をダミーデータや既に定義されているuserDataから補完
           avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/ed28808e-3784-4b35-a4cf-dc378a3cb987-profile_image-300x300.png",
+          user_tags: [{id: 1, name: 'タグ1'}, 
+                      {id: 2, name: 'タグ2'},
+                      {id: 3, name: 'タグ3'},
+                      {id: 4, name: 'タグ4'},
+                    ]
           // 他に足りないデータがあれば、同様に補完
+          
         };
   
         setUser({
