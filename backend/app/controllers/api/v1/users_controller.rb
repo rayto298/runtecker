@@ -1,8 +1,8 @@
 class Api::V1::UsersController < ApplicationController
   # GET /api/v1/users
   def index
-    @users = User.search(search_params)
-    render json: @users.as_json(include: %i[prefecture term tags])
+    users = search_params_values_present? ? User.search(search_params) : User.all.order(created_at: :desc)
+    render json: users.as_json(include: %i[prefecture term tags])
   end
 
   # GET /api/v1/users/:id
@@ -52,7 +52,11 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def search_params
-    params.delete(:user)
-    params.permit(:word, :term, :prefecture, :tag)
+    params.delete(:user) # なぜかuserが入ってくるので削除
+    params.permit(:nickname, :term, :prefecture, :tag_id, :tag_name)
+  end
+
+  def search_params_values_present?
+    search_params.to_h.any?{ |_, value| value.present?}
   end
 end

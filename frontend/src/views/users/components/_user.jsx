@@ -1,7 +1,8 @@
 import { RoutePath } from "config/route_path"
+import { memo } from "react";
 import { Link } from "react-router-dom"
 
-export const _User = (user) => {
+export const _User = memo((user) => {
   const userData = user.user;
   return (
     <div
@@ -66,4 +67,4 @@ export const _User = (user) => {
       }
     </div>
   )
-}
+})
