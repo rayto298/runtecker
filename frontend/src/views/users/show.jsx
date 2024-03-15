@@ -53,7 +53,23 @@ export const UsersShow = () => {
           ...processedData,
           // ここで足りない部分をダミーデータや既に定義されているuserDataから補完
           avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/ed28808e-3784-4b35-a4cf-dc378a3cb987-profile_image-300x300.png",
+          user_tags: [
+                      { id: 1, name: "Ruby"},
+                      { id: 2, name: "Ruby on Railssssssssssssssss"}, 
+                      { id: 3, name: "JavaScript"},
+                      { id: 4, name: "TypeScript"},
+                      { id: 5, name: "Vue.js"},
+                      { id: 6, name: "Nuxt.js"},
+                      { id: 7, name: "React"},
+                      { id: 8, name: "Next.js"},
+                      { id: 9, name: "Docker"},
+                      { id: 10, name: "AWS"}, 
+                      { id: 11, name: "php"}, 
+                      { id: 12, name: "Laravel"},
+                      { id: 13, name: "Python"},
+                    ]
           // 他に足りないデータがあれば、同様に補完
+          
         };
   
         setUser({
