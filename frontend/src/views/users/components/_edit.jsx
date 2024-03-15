@@ -2,19 +2,22 @@ import { RoutePath } from "config/route_path";
 import { Link } from "react-router-dom";
 import { _UsersEditService } from "./_edit_service";
 import { useState, useCallback } from "react";
-import { //ここからdnd-kit
+import {
+  //ここからdnd-kit
   DndContext,
-  closestCenter, 
+  closestCenter,
   MouseSensor,
   TouchSensor,
   useSensor,
-  useSensors } from "@dnd-kit/core";
-import { 
+  useSensors,
+} from "@dnd-kit/core";
+import {
   useSortable,
-  arrayMove, 
-  SortableContext, 
-  rectSortingStrategy } from "@dnd-kit/sortable";
-import { CSS } from '@dnd-kit/utilities'
+  arrayMove,
+  SortableContext,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
   // 都道府県の仮データ
@@ -33,47 +36,48 @@ export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
 
   //タグの仮データ
   const tagData = [
-    { id: 1, name: "Ruby"},
-    { id: 2, name: "Ruby on Railssssssssssssssss"}, 
-    { id: 3, name: "JavaScript"},
-    { id: 4, name: "TypeScript"},
-    { id: 5, name: "Vue.js"},
-    { id: 6, name: "Nuxt.js"},
-    { id: 7, name: "React"},
-    { id: 8, name: "Next.js"},
-    { id: 9, name: "Docker"},
-    { id: 10, name: "AWS"}, 
-    { id: 11, name: "php"}, 
-    { id: 12, name: "Laravel"},
-    { id: 13, name: "Python"},
-  ]
+    { id: 1, name: "Ruby" },
+    { id: 2, name: "Ruby on Railssssssssssssssss" },
+    { id: 3, name: "JavaScript" },
+    { id: 4, name: "TypeScript" },
+    { id: 5, name: "Vue.js" },
+    { id: 6, name: "Nuxt.js" },
+    { id: 7, name: "React" },
+    { id: 8, name: "Next.js" },
+    { id: 9, name: "Docker" },
+    { id: 10, name: "AWS" },
+    { id: 11, name: "php" },
+    { id: 12, name: "Laravel" },
+    { id: 13, name: "Python" },
+  ];
   const [tags, setTags] = useState(tagData);
   const [activeId, setActiveId] = useState(null);
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   //ドラッグが始まったときの処理
   const handleDragStart = useCallback((event) => {
-    console.log('つかんだタグ: ' + event.active.id);
+    console.log("つかんだタグ: " + event.active.id);
     setActiveId(event.active.id);
   }, []);
 
   //ドラッグが終わる時の処理
   const handleDragEnd = useCallback((event) => {
-    if(event.active && event.over){ //これナシだと，掴まず軽くタップした時にエラーになる
-      const { active, over } = event; 
+    if (event.active && event.over) {
+      //これナシだと，掴まず軽くタップした時にエラーになる
+      const { active, over } = event;
       if (active.id !== over?.id) {
-        console.log('active.id = ' + active.id)
-        console.log('over.id = ' + over.id)
+        console.log("active.id = " + active.id);
+        console.log("over.id = " + over.id);
         setTags((tags) => {
-          const activeTag = tags.findIndex(tag => tag.id === active.id);
-          const overTag = tags.findIndex(tag => tag.id === over.id);
+          const activeTag = tags.findIndex((tag) => tag.id === active.id);
+          const overTag = tags.findIndex((tag) => tag.id === over.id);
           const newTags = arrayMove(tags, activeTag, overTag);
-          newTags.forEach(tags => console.log(tags.id + ' : ' + tags.name));
+          newTags.forEach((tags) => console.log(tags.id + " : " + tags.name));
           return newTags;
-        })
+        });
       }
     }
-    setActiveId(null); //activeIdをリセット      
+    setActiveId(null); //activeIdをリセット
   }, []);
 
   //ドラッグがキャンセルされた時の処理（activeIdをリセットするだけ）
@@ -175,14 +179,17 @@ export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
       </div>
 
       {/* サービスのリンク */}
-      <div>
-        {user.user_social_service.map((service, index) => (
-          <_UsersEditService
-            key={index}
-            serviceName={service.name}
-            accountName={service.account_name}
-          />
-        ))}
+      <div className="flex justify-center">
+        <div className="w-5/12 pe-8">
+          <_UsersEditService serviceName="Mattermost" user={user} />
+          <_UsersEditService serviceName="GitHub" user={user} />
+          <_UsersEditService serviceName="X" user={user} />
+        </div>
+        <div className="w-5/12">
+          <_UsersEditService serviceName="Qiita" user={user} />
+          <_UsersEditService serviceName="Zenn" user={user} />
+          <_UsersEditService serviceName="note" user={user} />
+        </div>
       </div>
 
       {/* タグ */}
@@ -200,24 +207,29 @@ export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
         </div>
       )} */}
       {/* タグ（仮データ） */}
-      <div className="sortable-item-wrapper" style={{ margin: '4px', width: 'auto' }}>
+      <div
+        className="sortable-item-wrapper"
+        style={{ margin: "4px", width: "auto" }}
+      >
         <DndContext
-          sensors={sensors} 
+          sensors={sensors}
           collisionDetection={closestCenter}
-          onDragStart={handleDragStart} 
-          onDragEnd={handleDragEnd} 
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
           onDragCancel={handleDragCancel}
         >
           <SortableContext items={tags} strategy={rectSortingStrategy}>
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(5, 1fr)',
-                margin: '20px', 
-                }}>
-                  {tags.map((tag) => (
-                    <SortableItem  key={tag.id} tag={tag}/>
-                  ))}
-              </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(5, 1fr)",
+                margin: "20px",
+              }}
+            >
+              {tags.map((tag) => (
+                <SortableItem key={tag.id} tag={tag} />
+              ))}
+            </div>
           </SortableContext>
         </DndContext>
       </div>
@@ -237,7 +249,6 @@ export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
   );
 };
 
-
 export const SortableItem = ({ tag }) => {
   const {
     attributes, //これによって要素がドラッグ可能に
@@ -245,32 +256,31 @@ export const SortableItem = ({ tag }) => {
     listeners, //ドラッグ中に発生したイベントリスナー
     setNodeRef, //ドラッグ可能な要素のDOMノードを設定するための関数
     transform, //ドラッグ中の要素の変換情報。ドラッグ中に移動させるためのスタイルを設定できる
-    transition //ドラッグ中の要素に対する遷移情報。要素の移動にトランジションを追加できる
+    transition, //ドラッグ中の要素に対する遷移情報。要素の移動にトランジションを追加できる
   } = useSortable({ id: tag.id });
 
   return (
-    <div className="bg-gray-200 text-s text-center px-2 py-1 rounded-full m-1 hover:transform hover:-translate-y-0.5"
+    <div
+      className="bg-gray-200 text-s text-center px-2 py-1 rounded-full m-1 hover:transform hover:-translate-y-0.5"
       ref={setNodeRef}
       style={{
         transform: CSS.Translate.toString(transform), //これで掴んで動かすアニメーションが実現
         transition: transition || undefined,
-        cursor: isDragging ? 'grabbing' : 'grab',
-        width: 'auto',
-        padding: '4px 8px',
-        margin: '6px',
-        justifyContent: 'center',
-        alignItems: 'center',
+        cursor: isDragging ? "grabbing" : "grab",
+        width: "auto",
+        padding: "4px 8px",
+        margin: "6px",
+        justifyContent: "center",
+        alignItems: "center",
 
-        overflow: 'hidden', //以下3つで長い文字列を省略する形に
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap'
+        overflow: "hidden", //以下3つで長い文字列を省略する形に
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
       }}
-      
       {...attributes}
       {...listeners}
     >
-      { tag.name } 
+      {tag.name}
     </div>
-  )
-}
-
+  );
+};
