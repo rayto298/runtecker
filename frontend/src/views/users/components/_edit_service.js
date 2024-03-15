@@ -41,7 +41,7 @@ export const _UsersEditService = ({ serviceName, user }) => {
       case "Mattermost":
         return "timesのリンクを入力";
       case "GitHub":
-        return "github.com/ 以降を入力";
+        return "github.com/以降を入力";
       default:
         return "アカウント名を入力";
     }
