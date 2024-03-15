@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { RoutePath } from "config/route_path.js";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { _User } from "./components/_user";
 import { UsersController } from "controllers/users_controller";
 import { useAuth } from "providers/auth";
@@ -9,19 +9,9 @@ import { _SearchForm } from "ui_components/form/_search_form"
 export const UsersIndex = () => {
   const { setToken } = useAuth();
   const [users, setUsers] = useState([]);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(new URLSearchParams());
   const location = useLocation();
   const navigate = useNavigate();
-
-  const setUsersData = useCallback(() => {
-    const query = getQuery(location.search);
-    const users = new UsersController();
-    users.getUsers(query.toString()).then((data) => {
-      if (data) {
-        setUsers(data);
-      }
-    });
-  }, []);
 
   useEffect(() => {
     const url = location.search
@@ -41,6 +31,17 @@ export const UsersIndex = () => {
     // URLパラメータが変更されたらデータを再取得
     setUsersData();
   }, [location]);
+
+  // ユーザー一覧取得
+  const setUsersData = async () => {
+    const query = getQuery(location.search);
+    const users = new UsersController();
+    await users.getUsers(query.toString()).then((data) => {
+      if (data) {
+        setUsers(data);
+      }
+    });
+  };
 
   // URLパラメータを取得
   const getQuery = (url) => {
@@ -68,7 +69,7 @@ export const UsersIndex = () => {
       <div className="relative flex flex-col">
         <div className="mb-32">
           <section className="flex flex-col justify-center items-end m-7 mr-20">
-            <_SearchForm query={query} />
+            <_SearchForm />
           </section>
           <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 grid-auto-flow justify-center items-center m-auto">
             {users.map((user) => (

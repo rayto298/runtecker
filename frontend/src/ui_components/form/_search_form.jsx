@@ -1,20 +1,26 @@
 import { RoutePath } from "config/route_path";
 import { memo, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { _InputText } from "./_input_text";
 import { _PrefectureSelect } from "./_prefecture_select";
 import { _TermSelect } from "./_term_select";
 import { TagsController } from "controllers/tags_controller";
 
-export const _SearchForm = memo(({ query }) => {
+export const _SearchForm = memo(() => {
   const [searchNickName, setSearchNickName] = useState("");
   const [searchTagByName, setSearchTagByName] = useState("");
-  const [searchPrefecture, setSearchPrefecture] = useState();
-  const [searchTerm, setSearchTerm] = useState();
+  const [searchPrefecture, setSearchPrefecture] = useState(0);
+  const [searchTerm, setSearchTerm] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    const { nickname, term, prefecture, tag_id, tag_name } = query;
+    const query = new URLSearchParams(location.search);
+    const nickname = query.get("nickname") ?? "";
+    const tag_name = query.get("tagName") ?? "";
+    const prefecture = query.get("prefecture") ?? "";
+    const term = query.get("term") ?? "";
+    const tag_id = query.get("tagId") ?? "";
 
     setSearchNickName(nickname);
     setSearchPrefecture(prefecture);
@@ -23,12 +29,13 @@ export const _SearchForm = memo(({ query }) => {
     if (!tag_name && tag_id) {
       const tagController = new TagsController();
       tagController.getTagById(tag_id).then((data) => {
+        console.log(data);
         if (data) {
           setSearchTagByName(data.name);
         }
       });
     }
-  }, [query]);
+  }, [location.search]);
 
   const handleOnSubmit = (e) => {
     e.preventDefault();

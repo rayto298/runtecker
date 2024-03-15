@@ -2,7 +2,7 @@ class Api::V1::UsersController < ApplicationController
   # GET /api/v1/users
   def index
     users = search_params_values_present? ? User.search(search_params) : User.all.order(created_at: :desc)
-    render json: users.as_json(include: %i[prefecture term tags])
+    render json: users.map(&:as_custom_json_index), status: :ok
   end
 
   # GET /api/v1/users/:id
