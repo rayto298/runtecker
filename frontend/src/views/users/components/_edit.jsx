@@ -16,7 +16,9 @@ import {
   rectSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from '@dnd-kit/utilities'
 
-export const _UsersEdit = ({ user, setUser, toggleEdit }) => {
+export const _UsersEdit = ({ user, originalData, setUser, toggleEdit }) => {
+  console.log(user); // ここで受け取ったuserオブジェクトを確認
+  console.log(originalData); // ここで受け取ったoriginalDataオブジェクトを確認
   // 都道府県の仮データ
   const prefectures = [
     { id: 1, name: "北海道" },

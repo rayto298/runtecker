@@ -12,7 +12,7 @@ class Api::V1::UsersController < ApplicationController
       render json: @user, include: {
         past_nicknames: {},
         user_social_services: {
-          #include: :social_service # これでUserSocialService経由でSocialServiceのデータを含める
+          include: :social_service # これでUserSocialService経由でSocialServiceのデータを含める
         },
         term: {},
         prefecture: {}

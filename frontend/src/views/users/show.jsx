@@ -10,7 +10,10 @@ export const UsersShow = () => {
   const [error, setError] = useState(''); // エラーメッセージを保持する状態
   const { id } = useParams();
   const [user, setUser] = useState({});
+  // 他の状態定義と同様に、加工前のデータを保持するための状態を追加
+  const [originalData, setOriginalData] = useState({});
   const [isEdit, setIsEdit] = useState(false);
+
 
   useEffect(() => {
     
@@ -31,6 +34,10 @@ export const UsersShow = () => {
           throw new Error('ネットワークレスポンスがOKではありません');
         }
         const data = await response.json();
+
+        //console.log(data); // ここでAPIから取得した加工前の生データをコンソールに出力
+         // 加工前のデータを新しい状態にセット
+        setOriginalData(data);
   
         // 既存の加工処理
       const processedData = {
@@ -46,7 +53,7 @@ export const UsersShow = () => {
          })
         };
 
-        console.log(processedData); // ここで加工後のデータをコンソールに出力
+        //console.log(processedData); // ここで加工後のデータをコンソールに出力
   
         // 足りない部分をダミーデータで補完
         const supplementedData = {
@@ -101,9 +108,9 @@ export const UsersShow = () => {
       )}
       <article className="max-w-screen-lg w-full m-auto my-10">
         <section className="bg-white rounded p-12 w-full max-w-screen-md m-auto">
-          {isEdit ?
-            <_UsersEdit user={user} setUser={setUser} toggleEdit={toggleEdit} />
-            : <_UsersDetail user={user} toggleEdit={toggleEdit} />
+          {isEdit ? // 加工前のデータはoriginalData={originalData} ・ 加工後のデータはuser={user} を渡す
+            <_UsersEdit user={user} originalData={originalData} setUser={setUser} toggleEdit={toggleEdit} />
+            : <_UsersDetail user={user} originalData={originalData} toggleEdit={toggleEdit} />
           }
         </section>
       </article>
