@@ -51,11 +51,13 @@ class Api::V1::UsersController < ApplicationController
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
 
+  # 検索用のパラメータを取得
   def search_params
     params.delete(:user) # なぜかuserが入ってくるので削除
     params.permit(:nickname, :term, :prefecture, :tag_id, :tag_name)
   end
 
+  # 検索用のパラメータが存在するか
   def search_params_values_present?
     search_params.to_h.any?{ |_, value| value.present?}
   end

@@ -10,7 +10,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :name, presence: true
 
-  # スコープ周りはDRY的にまとめられそう
+  # TODO : スコープ周りはDRY的にまとめられそう
   scope :with_nickname, ->(nickname) {
     where('nickname LIKE ?', "%#{nickname}%")
   }
@@ -78,6 +78,7 @@ class User < ApplicationRecord
 
   # ユーザーの情報をカスタムJSON形式で返す
   # これでいいのか分からん
+  # ソーシャルサービスはデフォルトタイプだけ返却するようにしています
   def as_custom_json_index
     as_json(
       only: %i[id nickname avatar],
