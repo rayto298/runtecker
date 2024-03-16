@@ -10,13 +10,24 @@ class Api::V1::UsersController < ApplicationController
     def show
       @user = User.find(params[:id])
       render json: @user, include: {
-        past_nicknames: {},
-        user_social_services: {
-          #include: :social_service # これでUserSocialService経由でSocialServiceのデータを含める
+        past_nicknames: {
+          only: [:id, :nickname] # ここで必要なフィールドを指定
         },
-        term: {},
-        prefecture: {}
-      }, methods: [:pastname]
+        user_social_services: {
+          include: {
+            social_service: {
+              only: [:id, :name, :service_type] # ここで必要なフィールドを指定
+            }
+          },
+          only: [:id, :account_name] # ここで必要なフィールドを指定
+        },
+        term: {
+          only: [:id, :name] # ここで必要なフィールドを指定
+        },
+        prefecture: {
+          only: [:id, :name] # ここで必要なフィールドを指定
+        }
+      }, methods: [:pastname], only: [:id, :name, :nickname, :profile, :term_id, :github_account, :prefecture_id, :pastname]
     end
   
     # POST /api/v1/users
