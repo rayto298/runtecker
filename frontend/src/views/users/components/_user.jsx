@@ -1,8 +1,27 @@
 import { RoutePath } from "config/route_path"
+import { memo, useEffect } from "react";
 import { Link } from "react-router-dom"
+import { IconContext } from 'react-icons'
+import { FaSquareXTwitter } from "react-icons/fa6";
+import { FaGithub } from "react-icons/fa";
+import { SiMattermost } from "react-icons/si";
 
-export const _User = (user) => {
+export const _User = memo((user) => {
   const userData = user.user;
+
+  const socialService = (name, account_name) => {
+    switch (name) {
+      case "GitHub":
+        return <li><Link to={`https://github.com/${account_name}`} className="hover:opacity-50 transition-all"><FaGithub /></Link></li>
+      case "Twitter":
+        return <li><Link to={`https://twitter.com/${account_name}`} className="hover:opacity-50 transition-all"><FaSquareXTwitter /></Link></li>
+      case "Mattermost":
+        return <li><Link to={`https://chat.runteq.jp/runteq/channels/times_${account_name}`} className="hover:opacity-50 transition-all"><SiMattermost /></Link></li>
+      default:
+        return null
+    }
+  }
+
   return (
     <div
       key={userData.id}
@@ -15,7 +34,6 @@ export const _User = (user) => {
         {userData.term.name}
       </Link>
       <div className="flex px-2 items-center gap-4">
-
         <img src={userData.avatar ?? "https://via.placeholder.com/300"}
           className="w-32 group-hover:w-36 group-hover:h-36 h-32 object-center object-cover rounded-full transition-all duration-200 delay-200 transform"
           alt="Avatar"
@@ -23,7 +41,6 @@ export const _User = (user) => {
         <div className="p-4 transition-all transform duration-200">
           <h1 className="card-title font-bold">
             <Link to={RoutePath.UsersShow.path(userData.id)} className="hover:opacity-50 transition-all">{userData.nickname}</Link>
-
           </h1>
           {userData.pastname ? <p className="text-sm">（旧：{userData.pastname}）</p> : ""}
           <Link
@@ -43,11 +60,16 @@ export const _User = (user) => {
           </Link>
         </div>
       </div>
-      <ul className="flex gap-3 justify-end items-center px-2">
-
-        <li><Link to='#' className="hover:opacity-50 transition-all">X<i className="fa-brands fa-x-twitter fa-xl" /></Link></li>
-        <li><Link to='#' className="hover:opacity-50 transition-all">MattermostLogo</Link></li>
-      </ul>
+      {
+        userData.social_services.length > 0 &&
+        <IconContext.Provider value={{ size: "25px" }}>
+          <ul className="flex gap-3 justify-end items-center px-2">
+            {userData.social_services.map((social) => (
+              socialService(social.service_name, social.account_name)
+            ))}
+          </ul>
+        </IconContext.Provider>
+      }
       <div className="px-2 pt-2 ml-auto group-hover:opacity-100 opacity-0 transform transition-all delay-300 duration-200">
         <Link to={RoutePath.UsersShow.path(userData.id)}>詳細 →</Link>
       </div>
@@ -55,7 +77,7 @@ export const _User = (user) => {
         <div className="p-2 m-4 border-t border-black">
           {userData.tags.map((tag, index) => (
             <Link
-              to={`${RoutePath.Users.path}?tag=${tag.id}`}
+              to={`${RoutePath.Users.path}?tagId=${tag.id}`}
               key={index}
               className="badge badge-outline hover:opacity-50 transition-all mr-2"
             >
@@ -66,4 +88,4 @@ export const _User = (user) => {
       }
     </div>
   )
-}
+})

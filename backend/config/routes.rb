@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       resources :users
       resources :prefectures, only: %i[index]
       resources :terms, only: %i[index show]
+      resources :tags, only: %i[show]
     end
   end
 end
