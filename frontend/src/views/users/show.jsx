@@ -10,83 +10,52 @@ export const UsersShow = () => {
   const [error, setError] = useState(''); // エラーメッセージを保持する状態
   const { id } = useParams();
   const [user, setUser] = useState({});
-  // 他の状態定義と同様に、加工前のデータを保持するための状態を追加
-  const [originalData, setOriginalData] = useState({});
   const [isEdit, setIsEdit] = useState(false);
 
-
   useEffect(() => {
-    
     const fetchUserData = async () => {
       try {
-        // 環境変数からAPI URLを取得し、ローカルストレージからトークンを取得
-        const apiUrl = process.env.REACT_APP_API_URL ;
+        const apiUrl = process.env.REACT_APP_API_URL;
         const token = localStorage.getItem("authToken");
   
         const response = await fetch(`${apiUrl}/api/v1/users/${id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // トークンをヘッダーに含める
+            Authorization: `Bearer ${token}`,
           },
         });
         if (!response.ok) {
           throw new Error('ネットワークレスポンスがOKではありません');
         }
         const data = await response.json();
-
-        //console.log(data); // ここでAPIから取得した加工前の生データをコンソールに出力
-         // 加工前のデータを新しい状態にセット
-        setOriginalData(data);
-  
-        // 既存の加工処理
-      const processedData = {
-        ...data,
-        term: data.term.name, // term情報を名前のみに加工
-        prefecture: data.prefecture.name, // prefecture情報を名前のみに加工
-        user_social_services: data.user_social_services.map(service => {
-          // ソーシャルサービス情報がundefinedでないことを確認し、加工してオブジェクトの配列に
-          return {
-             name: service.social_service ? service.social_service.name : null, 
-             account_name: service.account_name
-          };
-         })
-        };
-
-        //console.log(processedData); // ここで加工後のデータをコンソールに出力
+        console.log(data);
   
         // 足りない部分をダミーデータで補完
         const supplementedData = {
-          ...processedData,
-          // ここで足りない部分をダミーデータや既に定義されているuserDataから補完
+          ...data,
           avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/ed28808e-3784-4b35-a4cf-dc378a3cb987-profile_image-300x300.png",
           user_tags: [
-                      { id: 1, name: "Ruby"},
-                      { id: 2, name: "Ruby on Railssssssssssssssss"}, 
-                      { id: 3, name: "JavaScript"},
-                      { id: 4, name: "TypeScript"},
-                      { id: 5, name: "Vue.js"},
-                      { id: 6, name: "Nuxt.js"},
-                      { id: 7, name: "React"},
-                      { id: 8, name: "Next.js"},
-                      { id: 9, name: "Docker"},
-                      { id: 10, name: "AWS"}, 
-                      { id: 11, name: "php"}, 
-                      { id: 12, name: "Laravel"},
-                      { id: 13, name: "Python"},
-                    ]
-          // 他に足りないデータがあれば、同様に補完
-          
+            { id: 1, name: "Ruby"},
+            { id: 2, name: "Ruby on Railssssssssssssssss"}, 
+            { id: 3, name: "JavaScript"},
+            { id: 4, name: "TypeScript"},
+            { id: 5, name: "Vue.js"},
+            { id: 6, name: "Nuxt.js"},
+            { id: 7, name: "React"},
+            { id: 8, name: "Next.js"},
+            { id: 9, name: "Docker"},
+            { id: 10, name: "AWS"}, 
+            { id: 11, name: "php"}, 
+            { id: 12, name: "Laravel"},
+            { id: 13, name: "Python"},
+          ]
         };
-  
-        setUser({
-          ...supplementedData,
-          user_social_service: supplementedData.user_social_services // ここでプロパティ名を調整
-        });// 加工後のデータをセット
+        setUser(supplementedData); // 補完されたデータをセット
       } catch (err) {
         console.error("ユーザーデータの取得中にエラーが発生しました:", err);
-        setError(err.message); // エラーメッセージを状態にセット
-        setTimeout(() => navigate(RoutePath.Users.path), 3000); // 3秒後にユーザー一覧画面に遷移
+        setError(err.message);
+        setTimeout(() => navigate(RoutePath.Users.path), 3000);
       }
     };
   
@@ -108,9 +77,9 @@ export const UsersShow = () => {
       )}
       <article className="max-w-screen-lg w-full m-auto my-10">
         <section className="bg-white rounded p-12 w-full max-w-screen-md m-auto">
-          {isEdit ? // 加工前のデータはoriginalData={originalData} ・ 加工後のデータはuser={user} を渡す
-            <_UsersEdit user={user} originalData={originalData} setUser={setUser} toggleEdit={toggleEdit} />
-            : <_UsersDetail user={user} originalData={originalData} toggleEdit={toggleEdit} />
+          {isEdit ? 
+            <_UsersEdit user={user} setUser={setUser} toggleEdit={toggleEdit} />
+            : <_UsersDetail user={user} toggleEdit={toggleEdit} />
           }
         </section>
       </article>
