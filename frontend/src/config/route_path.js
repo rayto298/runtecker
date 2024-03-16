@@ -55,4 +55,8 @@ export const RoutePath = {
     path: "/not_runtecker",
     name: "Runteq案内",
   },
+  AboutUs: {
+    path: "/about_us",
+    name: "開発者紹介",
+  },
 };

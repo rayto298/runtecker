@@ -4,7 +4,6 @@ class RegistrationsController < ApplicationController
   def create
     # フロントからヘッダを介して届いたトークン情報をRailsで読み取る
     token = request.headers['Authorization']&.split(' ')&.last
-    Rails.logger.info("Token: #{token}") # データが届いていることを確認
     # トークンをデコード
     decoded_token = JwtService.decode(token)
     Rails.logger.info("フロントから送信されたToken: #{decoded_token}")
