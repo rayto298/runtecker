@@ -46,7 +46,7 @@ const developersData = [
   },
   {
     id: 7,
-    name: "Rayto",
+    name: "rayto",
     term: "50期A",
     avatar: "assets/developer/rayto.png",
     role: "エンジニア",
@@ -74,13 +74,24 @@ const DeveloperTeam = () => {
             チーム
           </a>
         </nav>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-5">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-5 style={{ perspective: '1000px' }}">
           {developersData.map((developer) => (
             <div
               id={`${developer.id}`}
               className="flex flex-col items-center p-4"
+              style={{ transformStyle: "preserve-3d" }}
             >
               <img
+                style={{
+                  transition: "transform 0.5s",
+                  transform: "rotateY(0deg)",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "rotateY(180deg)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "rotateY(0deg)")
+                }
                 className="w-36 h-36 rounded-full mb-4 shadow-xl"
                 src={developer.avatar}
                 alt={developer.name}
