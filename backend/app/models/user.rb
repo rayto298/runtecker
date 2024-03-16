@@ -1,18 +1,18 @@
 class User < ApplicationRecord
   has_many :past_nicknames, dependent: :destroy
+  has_one :user_authentication
+  validates :email, presence: true, uniqueness: true
+  validates :name, presence: true
   has_many :user_tags, dependent: :destroy
   has_many :tags, through: :user_tags
   has_many :user_social_services, dependent: :destroy
   has_many :social_services, through: :user_social_services
   belongs_to :term
   belongs_to :prefecture
-  has_one :user_authentication
-  validates :email, presence: true, uniqueness: true
-  validates :name, presence: true
 
-  # TODO : スコープ周りはDRY的にまとめられそう
   scope :with_nickname, ->(nickname) {
-    where('nickname LIKE ?', "%#{nickname}%")
+    sanitized_nickname = ActiveRecord::Base.sanitize_sql_like(nickname)
+    where('nickname LIKE ?', "%#{sanitized_nickname}%")
   }
 
   scope :with_term, ->(term_id) {
@@ -23,11 +23,11 @@ class User < ApplicationRecord
     where(prefecture_id: prefecture_id)
   }
 
-  scope :with_tag_by_id, ->(tag_id) {
+  scope :by_tag_id, ->(tag_id) {
     where(tags: { id: tag_id }).references(:tags)
   }
 
-  scope :with_tag_by_name, ->(tag_name) {
+  scope :by_tag_name, ->(tag_name) {
     where(tags: { name: tag_name }).references(:tags)
   }
 
@@ -35,7 +35,7 @@ class User < ApplicationRecord
     past_nicknames.last.nickname unless past_nicknames.empty? # past_nicknamesが空でなければ最新のnicknameを返す
   end
 
-  # ユーザーのデフォルトのソーシャルサービスを取得
+  # デフォルトのソーシャルサービスを取得
   def default_social_services
     social_services.where(service_type: 'default')
   end
@@ -62,22 +62,22 @@ class User < ApplicationRecord
 
     # タグ検索がない場合はそのまま返す
     # タグ検索のとき、ユーザーデータを再度取得しているのが重くなる可能性があったため、
-    # タグ検索以外は個々で返却するようにしています
-    return users.order(created_at: :desc) if tag_id.blank? && tag_name.blank?
+    # タグ検索以外はここで返却するようにしています
+    if tag_id.blank? && tag_name.blank?
+      users.order(created_at: :desc)
+    else
+      # タグidの検索
+      users = users.by_tag_id(tag_id) if tag_id.present?
 
-    # タグidの検索
-    users = users.with_tag_by_id(tag_id) if tag_id.present?
+      # タグネームの検索
+      users = users.by_tag_name(tag_name) if tag_name.present?
 
-    # タグネームの検索
-    users = users.with_tag_by_name(tag_name) if tag_name.present?
-
-    # タグ検索したときに、ユーザーが持つタグを全て取得するためにこのように書きました
-    # もっといい方法あったら教えて下さい
-    return User.includes(:tags).where(id: users.map(&:id)).order(created_at: :desc)
+      # タグ検索したときに、ユーザーが持つタグを全て取得するためにこのように書きました
+      User.includes(:tags).where(id: users.map(&:id)).order(created_at: :desc)
+    end
   end
 
-  # ユーザーの情報をカスタムJSON形式で返す
-  # これでいいのか分からん
+  # ユーザーの一覧用情報をカスタムJSON形式で返す
   # ソーシャルサービスはデフォルトタイプだけ返却するようにしています
   def as_custom_json_index
     as_json(
