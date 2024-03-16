@@ -54,7 +54,8 @@ export const UsersNew = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/registrations", {
+      const apiUrl = process.env.REACT_APP_API_URL;
+      const response = await fetch(`${apiUrl}/registrations`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

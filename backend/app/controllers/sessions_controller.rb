@@ -2,6 +2,8 @@ class SessionsController < ApplicationController
   skip_before_action :authenticate_request, only: [:create]
 
   def create
+    frontend_url = ENV['REACT_APP_API_URL']
+    Rails.logger.info(frontend_url)
     # OmniAuthで提供される認証情報を取得
     user_info = request.env['omniauth.auth']
     
@@ -15,7 +17,7 @@ class SessionsController < ApplicationController
     unless GithubOrgMemberCheckService.new(github_username: github_username).member?
       Rails.logger.info("RunteqのGithubメンバーでない")
       # 組織のメンバーでなければフロントのindexに遷移
-      redirect_to "http://localhost:8000/not_runtecker"
+      redirect_to "#{frontend_url}/not_runtecker"
       return
     end
 
@@ -29,11 +31,11 @@ class SessionsController < ApplicationController
     if user_authentication
       # 既に存在する場合は、特定のページにリダイレクト
       Rails.logger.info("RunteqのGithubメンバーで、かつアプリユーザー登録されている")
-      redirect_to "http://localhost:8000/users?token=#{token}"
+      redirect_to "#{frontend_url}/users?token=#{token}"
     else
       # ユーザー登録フォームページにリダイレクト
       Rails.logger.info("RunteqのGithubメンバーで、まだアプリユーザー登録されていない")
-      redirect_to "http://localhost:8000/users/new?token=#{token}"
+      redirect_to "#{frontend_url}/users/new?token=#{token}"
     end
   end
 

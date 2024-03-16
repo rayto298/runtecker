@@ -21,8 +21,8 @@ export const UserSessionsNew = () => {
 
   const handleGitHubAuth = () => {
     // Rails APIの認証エンドポイントにリダイレクト
-    // TO DO 環境変数化
-    window.location.href = "http://localhost:3000/auth/github";
+    const apiUrl = process.env.REACT_APP_API_URL;
+    window.location.href = `${apiUrl}/auth/github`;
   };
 
   return (
