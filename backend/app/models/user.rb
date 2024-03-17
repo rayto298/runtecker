@@ -95,7 +95,7 @@ class User < ApplicationRecord
         social_services: {
           only: %i[name],
           include:{
-            user_social_services:
+            user_social_services: {
             only: %i[account_name]
           }
         }
