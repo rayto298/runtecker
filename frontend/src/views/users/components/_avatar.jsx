@@ -1,6 +1,6 @@
 import Compressor from "compressorjs";
 
-export const _Avatar = ({ avatar, setAvatar }) => {
+export const _Avatar = memo(({ avatar, setAvatar }) => {
   // プレビュー画像
   const handleClickImagePreview = () => {
     let inputElement = document.createElement("input");
@@ -60,5 +60,5 @@ export const _Avatar = ({ avatar, setAvatar }) => {
         </div>
       </figure>
     </div>
-  )
-}
+  );
+});
