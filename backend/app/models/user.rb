@@ -95,10 +95,12 @@ class User < ApplicationRecord
         social_services: {
           only: %i[name],
           include:{
+            user_social_services:
             only: %i[account_name]
           }
         }
       }
+    }
     ).merge(social_services: default_social_services.map do |service|
       service.as_json(only: %i[id name]).merge(
         user_social_services: service.user_social_services.as_json(only: %i[account_name])
