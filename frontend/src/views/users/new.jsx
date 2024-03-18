@@ -1,12 +1,13 @@
-// UsersNew.js
 import { RoutePath } from "config/route_path";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../providers/auth";
 import { TermsController } from "controllers/terms_controller";
 import { PrefecturesController } from "controllers/prefectures_controller";
+import { _Avatar } from "./components/_avatar";
 
 export const UsersNew = () => {
+  const [avatar, setAvatar] = useState(); // アバター用のstate
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
@@ -24,9 +25,9 @@ export const UsersNew = () => {
   const onChangeTerm = (e) => setTermId(e.target.value);
   const onChangePrefectureId = (e) => setPrefectureId(e.target.value);
 
-  useEffect (() => {
+  useEffect(() => {
     let terms = new TermsController();
-    terms.getTerms().then((data)=>{
+    terms.getTerms().then((data) => {
       if (data) {
         setTerm(data);
       } else {
@@ -35,25 +36,26 @@ export const UsersNew = () => {
     });
 
     let prefectures = new PrefecturesController();
-    prefectures.getPrefectures().then((data)=>{
+    prefectures.getPrefectures().then((data) => {
       if (data) {
         setPrefecture(data);
       } else {
         setPrefecture([]);
       }
     })
-  
+
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // フォームのデフォルト送信を防ぐ
-  
+
     const user = {
       name,
       nickname,
       email,
       term_id: termId,
       prefecture_id: prefectureId,
+      avatar
     };
 
     try {
@@ -81,7 +83,7 @@ export const UsersNew = () => {
 
   return (
     <article>
-      <div className="flex h-screen items-center justify-center px-4">
+      <div className="flex items-center justify-center px-4 py-16">
         <div className="w-full max-w-md space-y-8">
           <div className="bg-white shadow-md rounded-md p-6">
             <h2 className="my-3 text-center text-3xl font-bold tracking-tight">
@@ -91,10 +93,10 @@ export const UsersNew = () => {
               ※がついているものは全て入力してください
             </p>
             <form className="space-y-6" onSubmit={handleSubmit}>
-              {/* 入学時期入力フォーム */}
+              <_Avatar avatar={avatar} setAvatar={setAvatar} />
               <div>
                 <div className="mt-1">
-                  <label for="name" className="block text-sm font-medium">
+                  <label htmlFor="name" className="block text-sm font-medium">
                     名前※
                   </label>
                   <input
@@ -110,7 +112,7 @@ export const UsersNew = () => {
               </div>
               <div>
                 <div className="mt-1">
-                  <label for="nickname" className="block text-sm font-medium">
+                  <label htmlFor="nickname" className="block text-sm font-medium">
                     ニックネーム※
                   </label>
                   <input
@@ -126,7 +128,7 @@ export const UsersNew = () => {
               </div>
               <div>
                 <div className="mt-1">
-                  <label for="email" className="block text-sm font-medium">
+                  <label htmlFor="email" className="block text-sm font-medium">
                     メールアドレス※
                   </label>
                   <input
