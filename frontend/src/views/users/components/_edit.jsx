@@ -134,7 +134,6 @@ export const _UsersEdit = ({ user, toggleEdit }) => {
 
       if (response.ok) {
         alert("更新しました");
-        navigate(RoutePath.Users.path);
       } else {
         alert("更新に失敗しました");
       }
@@ -142,6 +141,9 @@ export const _UsersEdit = ({ user, toggleEdit }) => {
       console.error("登録エラー", error);
       alert("更新処理中にエラーが発生しました");
     }
+
+    toggleEdit();
+    window.scrollTo(0, 0);
   };
 
   return (

@@ -76,7 +76,7 @@ export const UsersShow = () => {
       <article className="max-w-screen-lg w-full m-auto my-10">
         <section className="bg-white rounded p-12 w-full max-w-screen-md m-auto">
           {isEdit ? 
-            <_UsersEdit user={user} setUser={setUser} toggleEdit={toggleEdit} />
+            <_UsersEdit user={user} setUser={setUser} isEdit={isEdit} setIsEdit={setIsEdit} toggleEdit={toggleEdit} />
             : <_UsersDetail user={user} toggleEdit={toggleEdit} />
           }
         </section>
