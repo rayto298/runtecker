@@ -29,12 +29,10 @@ export const UsersShow = () => {
           throw new Error('ネットワークレスポンスがOKではありません');
         }
         const data = await response.json();
-        console.log(data);
   
         // 足りない部分をダミーデータで補完
         const supplementedData = {
           ...data,
-          avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/ed28808e-3784-4b35-a4cf-dc378a3cb987-profile_image-300x300.png",
           user_tags: [
             { id: 1, name: "Ruby"},
             { id: 2, name: "Ruby on Railssssssssssssssss"}, 
