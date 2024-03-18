@@ -21,10 +21,19 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { _Avatar } from "./_avatar";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom"
 
-export const _UsersEdit = ({ user, toggleEdit }) => {
+export const _UsersEdit = ({ user, toggleEdit, handleUserUpdated }) => {
 
-  const userId = user.id;
+  const { id } = useParams();
+
+  // 編集画面に遷移した時の初期状態を取得
+  const initialUserState = {
+    nickname: user.nickname,
+    prefecture_id: user.prefecture_id,
+    avatar: user.avatar,
+    profile: user.profile,
+  };
 
   //タグの仮データ
   const tagData = [
@@ -115,35 +124,46 @@ export const _UsersEdit = ({ user, toggleEdit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // フォームのデフォルト送信を防ぐ
 
-    const user = {
-      nickname,
-      prefecture_id: prefectureId,
-      avatar,
-      profile
-    };
+    const updatedFields = {};
+    if (nickname !== initialUserState.nickname) updatedFields.nickname = nickname;
+    if (prefectureId !== initialUserState.prefecture_id) updatedFields.prefecture_id = prefectureId;
+    if (avatar !== initialUserState.avatar) updatedFields.avatar = avatar;
+    if (profile !== initialUserState.profile) updatedFields.profile = profile;
 
-    try {
-      const apiUrl = process.env.REACT_APP_API_URL;
-      const response = await fetch(`${apiUrl}/api/v1/users/${userId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user }),
-      });
+    // 変更がある場合のみAPIコールを実行
+    if (Object.keys(updatedFields).length > 0) {
+      try {
+        const apiUrl = process.env.REACT_APP_API_URL;
+        const response = await fetch(`${apiUrl}/api/v1/users/${id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ user: updatedFields }),
+        });
 
-      if (response.ok) {
-        alert("更新しました");
-      } else {
-        alert("更新に失敗しました");
+        if (response.ok) {
+          // DBに保存されたユーザを取得する処理
+          handleUserUpdated();
+          alert("更新しました");
+        } else {
+          alert("更新に失敗しました");
+        }
+
+      } catch (error) {
+        console.error("更新エラー", error);
+        alert("更新処理中にエラーが発生しました");
       }
-    } catch (error) {
-      console.error("登録エラー", error);
-      alert("更新処理中にエラーが発生しました");
-    }
 
-    toggleEdit();
-    window.scrollTo(0, 0);
+      // ユーザ更新処理実行後（成功/失敗に関わらず）、ユーザ詳細画面に遷移する処理
+      navigate(RoutePath.UsersShow.path(id));
+      toggleEdit();
+      window.scrollTo(0, 0);
+
+    } else {
+      // 変更がない場合
+      alert("変更点がありません");
+    }
   };
 
   return (
