@@ -1,7 +1,8 @@
 import { RoutePath } from "config/route_path";
 import { Link } from "react-router-dom";
 import { _UsersEditService } from "./_edit_service";
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { PrefecturesController } from "controllers/prefectures_controller";
 import {
   //ここからdnd-kit
   DndContext,
@@ -19,22 +20,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-export const _UsersEdit = ({ user, originalData, setUser, toggleEdit }) => {
-  console.log(user); // ここで受け取ったuserオブジェクトを確認
-  console.log(originalData); // ここで受け取ったoriginalDataオブジェクトを確認
-  // 都道府県の仮データ
-  const prefectures = [
-    { id: 1, name: "北海道" },
-    { id: 2, name: "青森県" },
-    { id: 3, name: "岩手県" },
-    { id: 4, name: "宮城県" },
-    { id: 5, name: "長野県" },
-    { id: 6, name: "山形県" },
-    { id: 7, name: "福島県" },
-    { id: 8, name: "茨城県" },
-    { id: 9, name: "栃木県" },
-    { id: 10, name: "群馬県" },
-  ];
+export const _UsersEdit = ({ user, toggleEdit }) => {
 
   //タグの仮データ
   const tagData = [
@@ -94,10 +80,22 @@ export const _UsersEdit = ({ user, originalData, setUser, toggleEdit }) => {
   };
 
   // 都道府県
-  const [prefecture, setPrefecture] = useState(user.prefecture);
+  const [prefectures, setPrefectures] = useState([]);
+  const [prefectureId, setPrefectureId] = useState(user.prefecture.id);
   const handlePrefectureChange = (e) => {
-    setPrefecture(e.target.value);
-  };
+    setPrefectureId(e.target.value);
+  }
+
+  useEffect(() => {
+    let prefectures = new PrefecturesController();
+    prefectures.getPrefectures().then((data) => {
+      if (data) {
+        setPrefectures(data);
+      } else {
+        setPrefectures([]);
+      }
+    });
+  }, []);
 
   // アバター
   const [avatar, setAvatar] = useState(user.avatar);
@@ -147,15 +145,18 @@ export const _UsersEdit = ({ user, originalData, setUser, toggleEdit }) => {
 
         {/* 都道府県 */}
         <div className="w-1/2 flex justify-center items-center text-2xl gap-2">
-          <p>{user.term}</p>
+          <p>{user.term.name}</p>
           <select
-            className="ms-1 select text-center w-2/5 max-w-xs rounded-md text-lg"
-            value={prefecture}
-            onChange={handlePrefectureChange}
+          className="ms-1 select text-center w-2/5 max-w-xs rounded-md text-lg"
+          id="prefecture"
+          name="prefecture"
+          required
+          value={prefectureId}
+          onChange={handlePrefectureChange}
           >
-            {prefectures.map((prefecture) => (
-              <option key={prefecture.id} value={prefecture.name}>
-                {prefecture.name}
+            {prefectures.map((p) => (
+              <option value={p.id}>
+                {p.name}
               </option>
             ))}
           </select>
