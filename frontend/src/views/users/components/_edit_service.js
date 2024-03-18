@@ -9,7 +9,7 @@ import { NoteLogo } from "ui_components/icons/NoteLogo";
 export const _UsersEditService = ({ serviceName, user }) => {
  
   const getAccountName = (serviceName) => {
-    const service = user.user_social_services.find(service => service.name === serviceName);
+    const service = user.user_social_services.find(service => service.social_service.name === serviceName);
     return service ? service.account_name : "";
   };
   

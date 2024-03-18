@@ -9,7 +9,7 @@ class RegistrationsController < ApplicationController
     Rails.logger.info("フロントから送信されたToken: #{decoded_token}")
 
     # フロントのユーザー登録フォームから送信されたパラメーターを受け取る
-    user_params = params.require(:registration).require(:user).permit(:name, :nickname, :email, :term_id, :prefecture_id)
+    user_params = params.require(:registration).require(:user).permit(:name, :nickname, :email, :term_id, :prefecture_id, :avatar)
     Rails.logger.info("フロントから送信されたuser_params")
     Rails.logger.info(user_params)
     

@@ -25,7 +25,7 @@ end
 
 # social_services のシードデータ作成
 social_services = [
-  "Qiita", "Zenn", "X", "Notion", "Mattermost","GitHub"
+  "Mattermost", "GitHub", "X", "Qiita", "Zenn", "note", 
 ]
 social_services.each do |service_name|
   SocialService.find_or_create_by(name: service_name, service_type: "default")
