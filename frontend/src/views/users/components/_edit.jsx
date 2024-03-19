@@ -134,10 +134,13 @@ export const _UsersEdit = ({ user, toggleEdit, handleUserUpdated }) => {
     if (Object.keys(updatedFields).length > 0) {
       try {
         const apiUrl = process.env.REACT_APP_API_URL;
+        const token = localStorage.getItem("authToken");
+        
         const response = await fetch(`${apiUrl}/api/v1/users/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ user: updatedFields }),
         });

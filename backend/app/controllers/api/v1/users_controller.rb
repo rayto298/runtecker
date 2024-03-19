@@ -1,7 +1,4 @@
 class Api::V1::UsersController < ApplicationController
-  # skip_before_action :authenticate_request, only: [:update]
-  skip_before_action :authenticate_request
-
   # GET /api/v1/users
   def index
     users = search_params_values_present? ? User.search(search_params) : User.all.order(created_at: :desc)
