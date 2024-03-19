@@ -12,59 +12,63 @@ export const UsersShow = () => {
   const [user, setUser] = useState({});
   const [isEdit, setIsEdit] = useState(false);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const apiUrl = process.env.REACT_APP_API_URL;
-        const token = localStorage.getItem("authToken");
-  
-        const response = await fetch(`${apiUrl}/api/v1/users/${id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error('ネットワークレスポンスがOKではありません');
-        }
-        const data = await response.json();
-        console.log(data);
-  
-        // 足りない部分をダミーデータで補完
-        const supplementedData = {
-          ...data,
-          avatar: "https://static-cdn.jtvnw.net/jtv_user_pictures/ed28808e-3784-4b35-a4cf-dc378a3cb987-profile_image-300x300.png",
-          user_tags: [
-            { id: 1, name: "Ruby"},
-            { id: 2, name: "Ruby on Railssssssssssssssss"}, 
-            { id: 3, name: "JavaScript"},
-            { id: 4, name: "TypeScript"},
-            { id: 5, name: "Vue.js"},
-            { id: 6, name: "Nuxt.js"},
-            { id: 7, name: "React"},
-            { id: 8, name: "Next.js"},
-            { id: 9, name: "Docker"},
-            { id: 10, name: "AWS"}, 
-            { id: 11, name: "php"}, 
-            { id: 12, name: "Laravel"},
-            { id: 13, name: "Python"},
-          ]
-        };
-        setUser(supplementedData); // 補完されたデータをセット
-      } catch (err) {
-        console.error("ユーザーデータの取得中にエラーが発生しました:", err);
-        setError(err.message);
-        setTimeout(() => navigate(RoutePath.Users.path), 3000);
+  const fetchUserData = async () => {
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL;
+      const token = localStorage.getItem("authToken");
+
+      const response = await fetch(`${apiUrl}/api/v1/users/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('ネットワークレスポンスがOKではありません');
       }
-    };
-  
+      const data = await response.json();
+
+      // 足りない部分をダミーデータで補完
+      const supplementedData = {
+        ...data,
+        user_tags: [
+          { id: 1, name: "Ruby"},
+          { id: 2, name: "Ruby on Railssssssssssssssss"}, 
+          { id: 3, name: "JavaScript"},
+          { id: 4, name: "TypeScript"},
+          { id: 5, name: "Vue.js"},
+          { id: 6, name: "Nuxt.js"},
+          { id: 7, name: "React"},
+          { id: 8, name: "Next.js"},
+          { id: 9, name: "Docker"},
+          { id: 10, name: "AWS"}, 
+          { id: 11, name: "php"}, 
+          { id: 12, name: "Laravel"},
+          { id: 13, name: "Python"},
+        ]
+      };
+      setUser(supplementedData); // 補完されたデータをセット
+    } catch (err) {
+      console.error("ユーザーデータの取得中にエラーが発生しました:", err);
+      setError(err.message);
+      setTimeout(() => navigate(RoutePath.Users.path), 3000);
+    }
+  };
+
+  useEffect(() => {
     fetchUserData();
   }, [id, navigate]);  // idが変わったときに再度フェッチするために依存配列にidを含める// idが変わったときに再度フェッチするために依存配列にidを含める
 
   const toggleEdit = () => {
     setIsEdit(!isEdit);
   }
+
+  // ユーザの更新を検知してユーザ情報を取得し直すハンドラ
+  const handleUserUpdated = () => {
+    // ユーザー情報の再取得などの処理をここに記述
+    fetchUserData(); // ユーザー情報を再取得する関数
+  };
 
   return (
     <div>
@@ -78,7 +82,7 @@ export const UsersShow = () => {
       <article className="max-w-screen-lg w-full m-auto my-10">
         <section className="bg-white rounded p-12 w-full max-w-screen-md m-auto">
           {isEdit ? 
-            <_UsersEdit user={user} setUser={setUser} toggleEdit={toggleEdit} />
+            <_UsersEdit user={user} toggleEdit={toggleEdit} handleUserUpdated={handleUserUpdated}　/>
             : <_UsersDetail user={user} toggleEdit={toggleEdit} />
           }
         </section>
