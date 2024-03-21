@@ -14,7 +14,7 @@ const developersData = [
     name: "kzkio",
     term: "50期A",
     avatar: "assets/developer/kzkio.png",
-    role: "エンジニア",
+    role: "PUBGのカリキュラム終了勢",
   },
   {
     id: 3,
@@ -28,7 +28,7 @@ const developersData = [
     name: "とぴ",
     term: "52期A",
     avatar: "assets/developer/topi.png",
-    role: "エンジニア",
+    role: "Macに紛れるWindows民",
   },
   {
     id: 5,
@@ -49,7 +49,7 @@ const developersData = [
     name: "rayto",
     term: "50期A",
     avatar: "assets/developer/rayto.png",
-    role: "エンジニア",
+    role: "PayPay残高日本一",
   },
 ];
 
