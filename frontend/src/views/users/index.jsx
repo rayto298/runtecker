@@ -1,6 +1,6 @@
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { RoutePath } from "config/route_path.js";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { _User } from "./components/_user";
 import { UsersController } from "controllers/users_controller";
 import { useAuth } from "providers/auth";
@@ -73,19 +73,21 @@ export const UsersIndex = () => {
     return query;
   }
 
-  const handleClickPagination = (index) => {
-    const newUrl = new URLSearchParams(location.search);
-    newUrl.set("page", index + 1);
-    navigate(`${location.pathname}?${newUrl.toString()}`);
-  }
-
   return (
     <>
       <div className="relative flex flex-col">
         <div className="mb-32">
+          {/* 検索フォーム */}
           <section className="flex flex-col justify-center items-end m-7 mr-20">
             <_SearchForm />
           </section>
+
+          {/* ページネーション */}
+          <div className="ml-12">
+            <Pagination navigate={navigate} total={total.current} currentPage={currentPage.current} />
+          </div>
+
+          {/* ユーザー一覧 */}
           <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 grid-auto-flow justify-center items-center m-auto">
             {users.map((user) => (
               <_User key={user.id} user={user} />
@@ -94,28 +96,43 @@ export const UsersIndex = () => {
         </div>
 
         {/* ページネーション */}
-        <section className="flex justify-start items-center mb-12">
-          <ul className="join rounded">
-            {total.current > 12 &&
-              Array.from({ length: Math.ceil(total.current / 12) }, (_, index) => {
-                return index === currentPage.current - 1 ? (
-                  <li key={index} className="join-item btn cursor-text hover:bg-[#5050D9] bg-[#5050D9] text-white font-normal min-h-0 h-auto py-3 px-4 leading-5 text-xl">{index + 1}</li>
-                ) : (
-                  <li
-                    key={index}><button
-                      className="join-item btn bg-white text-[#5050D9] font-normal min-h-0 h-auto p-3 leading-5 py-3 px-4 text-xl"
-                      onClick={() => handleClickPagination(index)}
-                    >
-                      {index + 1}
-                    </button>
-                  </li>
-                )
-              }
-              )
-            }
-          </ul>
-        </section >
+        <div className="ml-12 mb-12">
+          <Pagination navigate={navigate} total={total.current} currentPage={currentPage.current} />
+        </div>
       </div >
     </>
   );
 };
+
+// 他のページで使用予定であれば切り離す
+const Pagination = memo(({ navigate, total, currentPage }) => {
+
+  const handleClickPagination = (index) => {
+    const newUrl = new URLSearchParams(location.search);
+    newUrl.set("page", index + 1);
+    navigate(`${location.pathname}?${newUrl.toString()}`);
+  }
+
+  return (
+    <section className="flex justify-start items-center">
+      <ul className="join rounded">
+        {total > 12 &&
+          Array.from({ length: Math.ceil(total / 12) }, (_, index) => {
+            return index === currentPage - 1 ? (
+              <li key={index} className="join-item btn cursor-text hover:bg-[#5050D9] bg-[#5050D9] text-white font-normal min-h-0 h-auto py-3 px-4 leading-5 text-xl">{index + 1}</li>
+            ) : (
+              <li
+                key={index}><button
+                  className="join-item btn bg-white text-[#5050D9] font-normal min-h-0 h-auto p-3 leading-5 py-3 px-4 text-xl"
+                  onClick={() => handleClickPagination(index)}
+                >
+                  {index + 1}
+                </button>
+              </li>
+            )
+          }
+          )
+        }
+      </ul>
+    </section >);
+});
