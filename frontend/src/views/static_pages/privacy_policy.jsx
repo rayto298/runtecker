@@ -1,4 +1,9 @@
+import React, { useEffect } from "react";
+
 export const StaticPagesPrivacyPolicy = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <>
       <div className="container mx-auto p-4">
@@ -69,28 +74,6 @@ export const StaticPagesPrivacyPolicy = () => {
         <p className="mb-4">
           運営は、必要に応じてこのプライバシーポリシーの内容を変更することがあります。この場合、変更後のプライバシーポリシーの施行時期と内容を適切な方法により周知または通知します。
         </p>
-        <h2 className="text-xl font-bold mb-4">お問い合わせ</h2>
-        <p className="mb-4">
-          ユーザーの情報の開示、情報の訂正、利用停止、削除をご希望の場合は、以下のメールアドレスにご連絡ください。
-          <br />
-          <a
-            href="mailto:e-mail@example.com"
-            className="text-blue-500 underline"
-          >
-            e-mail@example.com
-          </a>
-        </p>
-        <p className="mb-4">
-          この場合、必ず、運転免許証のご提示等運営が指定する方法により、ご本人からのご請求であることの確認をさせていただきます。なお、情報の開示請求については、開示の有無に関わらず、ご申請時に一件あたり1,000円の事務手数料を申し受けます。
-        </p>
-
-        <h2 className="text-xl font-bold mb-4">事業者の氏名</h2>
-        {/* 事業者の氏名を記載 */}
-        <p>事業者の氏名ここに記載</p>
-
-        <h2 className="text-xl font-bold mb-4">事業者の住所</h2>
-        {/* 事業者の住所を記載 */}
-        <p>事業者の住所ここに記載</p>
 
         <p className="text-right mt-4">制定日: 2024年03月20日</p>
       </div>

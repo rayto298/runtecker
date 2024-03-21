@@ -19,6 +19,7 @@ import { UserSessionsNew } from "views/user_sessions/new";
 import { StaticPagesNotRuntecker } from "views/static_pages/not_runtecker";
 import DeveloperTeam from "views/static_pages/about_us";
 import { StaticPagesPrivacyPolicy } from "views/static_pages/privacy_policy";
+import { StaticPagesTermsOfUse } from "views/static_pages/terms_of_use";
 
 const App = () => {
   return (
@@ -56,6 +57,10 @@ export const PUBLIC_ROUTES = [
       {
         path: RoutePath.PrivacyPolicy.path,
         element: <StaticPagesPrivacyPolicy />,
+      },
+      {
+        path: RoutePath.TermsOfUse.path,
+        element: <StaticPagesTermsOfUse />,
       },
     ],
   },
