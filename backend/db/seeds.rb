@@ -25,7 +25,7 @@ end
 
 # social_services のシードデータ作成
 social_services = [
-  "Mattermost", "GitHub", "X", "Qiita", "Zenn", "note", 
+  "Mattermost", "GitHub", "X", "Qiita", "Zenn", "note",
 ]
 social_services.each do |service_name|
   SocialService.find_or_create_by(name: service_name, service_type: "default")
@@ -44,22 +44,33 @@ end
 #   Tag.find_or_create_by(name: tag_name)
 # end
 
-# ユーザーのダミーデータ作成
-# 30.times do |i|
+# # ユーザーのダミーデータ作成
+# 75.times do |i|
 #   user = User.find_or_create_by(
 #     email: "test#{i + 1}@example.com",
 #     name: "ユーザー#{i + 1}",
 #     nickname: "ダミー#{i + 1}",
 #     profile: "ダミーユーザー#{i+1}です。よろしくお願いします！",
 #     term_id: Term.find_by(name: terms.sample).id,
-#     prefecture_id:  Prefecture.find_by(name: prefectures.sample).id
+#     prefecture_id:  Prefecture.find_by(name: prefectures.sample).id,
 #   )
+
+#   # ユーザーのソーシャルサービスのダミー
+#   social_services.each do |service_name|
+#     UserSocialService.find_or_create_by(
+#       user_id: user.id,
+#       social_service_id: SocialService.find_by(name: service_name).id,
+#       account_name: "test_account_#{service_name}_#{i + 1}"
+#     )
+#   end
+
 #   # ユーザータグのダミーデータ作成
 #   count = rand(1..5)
+#   tags = Tag.find(Tag.pluck(:id).sample(count))
 #   count.times do |j|
 #     UserTag.find_or_create_by(
 #       user_id: user.id,
-#       tag_id: Tag.find_by(name: tags.sample).id,
+#       tag_id: tags[j].id,
 #       position: j + 1
 #     )
 #   end

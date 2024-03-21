@@ -1,6 +1,6 @@
 
 export class UsersController {
-  getUsers = async (params) => {
+  getUsersAndTotalCount = async (params) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/v1/users?${params}`, {
         method: "GET",
@@ -13,7 +13,7 @@ export class UsersController {
         throw new Error("HTTP status " + response.status);
       }
       const data = await response.json();
-      return data;
+      return { users: data.users, total: data.total };
     } catch (error) {
       console.error(error);
       return null;

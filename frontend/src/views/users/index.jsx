@@ -1,6 +1,6 @@
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { RoutePath } from "config/route_path.js";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { _User } from "./components/_user";
 import { UsersController } from "controllers/users_controller";
 import { useAuth } from "providers/auth";
@@ -9,7 +9,8 @@ import { _SearchForm } from "ui_components/form/_search_form"
 export const UsersIndex = () => {
   const { setToken } = useAuth();
   const [users, setUsers] = useState([]);
-  const [query, setQuery] = useState(new URLSearchParams());
+  const total = useRef(0);
+  const currentPage = useRef(1);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -35,10 +36,17 @@ export const UsersIndex = () => {
   // ユーザー一覧取得
   const setUsersData = async () => {
     const query = getQuery(location.search);
+    currentPage.current = query.get("page") || 1;
     const users = new UsersController();
-    await users.getUsers(query.toString()).then((data) => {
+    await users.getUsersAndTotalCount(query.toString()).then((data) => {
       if (data) {
-        setUsers(data);
+        setUsers(data.users);
+        total.current = data.total;
+        window.scrollTo({
+          top: 0,
+        });
+      } else {
+        setUsers([]);
       }
     });
   };
@@ -51,15 +59,16 @@ export const UsersIndex = () => {
     const queryPrefecture = params.get("prefecture") ?? "";
     const queryTagById = params.get("tagId") ?? "";
     const queryTagByName = params.get("tagName") ?? "";
+    const queryPage = params.get("page") ?? "";
 
     const query = new URLSearchParams({
       nickname: queryNickName,
       term: queryTerm,
       prefecture: queryPrefecture,
       tag_id: queryTagById,
-      tag_name: queryTagByName
+      tag_name: queryTagByName,
+      page: queryPage
     });
-    setQuery(query);
 
     return query;
   }
@@ -68,29 +77,62 @@ export const UsersIndex = () => {
     <>
       <div className="relative flex flex-col">
         <div className="mb-32">
+          {/* 検索フォーム */}
           <section className="flex flex-col justify-center items-end m-7 mr-20">
             <_SearchForm />
           </section>
+
+          {/* ページネーション */}
+          <div className="ml-12">
+            <Pagination navigate={navigate} total={total.current} currentPage={currentPage.current} />
+          </div>
+
+          {/* ユーザー一覧 */}
           <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 grid-auto-flow justify-center items-center m-auto">
             {users.map((user) => (
               <_User key={user.id} user={user} />
             ))}
           </section>
         </div>
-        {/* TODO : ページネーションは今後追加できたらいいな */}
-        <section className="flex justify-start items-center text-md mb-12">
-          <div className="join rounded">
-            <span className="join-item btn cursor-text hover:bg-[#5050D9] bg-[#5050D9] text-white font-normal min-h-0 h-auto px-3 py-3">1</span>
-            <Link className="join-item btn bg-white text-[#5050D9] font-normal min-h-0 h-auto px-3 py-3">2</Link>
-            <Link className="join-item btn bg-white text-[#5050D9] font-normal min-h-0 h-auto px-3 py-3">3</Link>
-            <Link className="join-item btn bg-white text-[#5050D9] font-normal min-h-0 h-auto px-3 py-3">4</Link>
-            <Link className="join-item btn bg-white text-[#5050D9] font-normal min-h-0 h-auto px-3 py-3">5</Link>
-            <Link className="join-item btn bg-white text-[#5050D9] font-normal min-h-0 h-auto px-3 py-3">...</Link>
-            <Link className="join-item btn bg-white text-[#5050D9] font-normal min-h-0 h-auto px-3 py-3">次へ</Link>
-            <Link className="join-item btn bg-white text-[#5050D9] font-normal min-h-0 h-auto px-3 py-3">最後</Link>
-          </div>
-        </section >
+
+        {/* ページネーション */}
+        <div className="ml-12 mb-12">
+          <Pagination navigate={navigate} total={total.current} currentPage={currentPage.current} />
+        </div>
       </div >
     </>
   );
 };
+
+// 他のページで使用予定であれば切り離す
+const Pagination = memo(({ navigate, total, currentPage }) => {
+
+  const handleClickPagination = (index) => {
+    const newUrl = new URLSearchParams(location.search);
+    newUrl.set("page", index + 1);
+    navigate(`${location.pathname}?${newUrl.toString()}`);
+  }
+
+  return (
+    <section className="flex justify-start items-center">
+      <ul className="join rounded">
+        {total > 12 &&
+          Array.from({ length: Math.ceil(total / 12) }, (_, index) => {
+            return index === currentPage - 1 ? (
+              <li key={index} className="join-item btn cursor-text hover:bg-[#5050D9] bg-[#5050D9] text-white font-normal min-h-0 h-auto py-3 px-4 leading-5 text-xl">{index + 1}</li>
+            ) : (
+              <li
+                key={index}><button
+                  className="join-item btn bg-white text-[#5050D9] font-normal min-h-0 h-auto p-3 leading-5 py-3 px-4 text-xl"
+                  onClick={() => handleClickPagination(index)}
+                >
+                  {index + 1}
+                </button>
+              </li>
+            )
+          }
+          )
+        }
+      </ul>
+    </section >);
+});

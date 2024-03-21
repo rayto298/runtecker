@@ -1,5 +1,5 @@
 import { RoutePath } from "config/route_path"
-import { memo, useEffect } from "react";
+import { memo } from "react";
 import { Link } from "react-router-dom"
 import { IconContext } from 'react-icons'
 import { FaSquareXTwitter } from "react-icons/fa6";
@@ -8,15 +8,20 @@ import { SiMattermost } from "react-icons/si";
 
 export const _User = memo((user) => {
   const userData = user.user;
+  // ソーシャルサービスの並び順
+  const matterMost = userData.social_services?.find((social) => social.name === "Mattermost");
+  const twitter = userData.social_services?.find((social) => social.name === "X");
+  const github = userData.social_services?.find((social) => social.name === "GitHub");
+  const socialServices = [matterMost, github, twitter];
 
   const socialService = (name, account_name) => {
     switch (name) {
-      case "GitHub":
-        return <li><Link to={`https://github.com/${account_name}`} className="hover:opacity-50 transition-all"><FaGithub /></Link></li>
-      case "Twitter":
-        return <li><Link to={`https://twitter.com/${account_name}`} className="hover:opacity-50 transition-all"><FaSquareXTwitter /></Link></li>
       case "Mattermost":
-        return <li><Link to={`https://chat.runteq.jp/runteq/channels/times_${account_name}`} className="hover:opacity-50 transition-all"><SiMattermost /></Link></li>
+        return <Link to={`https://chat.runteq.jp/runteq/channels/times_${account_name}`} className="hover:opacity-50 transition-all"><SiMattermost /></Link>
+      case "GitHub":
+        return <Link to={`https://github.com/${account_name}`} className="hover:opacity-50 transition-all"><FaGithub /></Link>
+      case "X":
+        return <Link to={`https://twitter.com/${account_name}`} className="hover:opacity-50 transition-all"><FaSquareXTwitter /></Link>
       default:
         return null
     }
@@ -64,8 +69,8 @@ export const _User = memo((user) => {
         userData.social_services.length > 0 &&
         <IconContext.Provider value={{ size: "25px" }}>
           <ul className="flex gap-3 justify-end items-center px-2">
-            {userData.social_services.map((social) => (
-              socialService(social.service_name, social.account_name)
+            {socialServices.map((social, index) => (
+              <li key={index}>{socialService(social.name, social.account_name)}</li>
             ))}
           </ul>
         </IconContext.Provider>

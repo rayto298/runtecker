@@ -31,6 +31,13 @@ class User < ApplicationRecord
     where(tags: { name: tag_name }).references(:tags)
   }
 
+  scope :per_page, ->(page) {
+    page = page.to_i
+    page = 1 if page < 1
+    # 12件ずつ表示する
+    limit(12).offset(12 * (page - 1))
+  }
+
   def pastname
     past_nicknames.last.nickname unless past_nicknames.empty? # past_nicknamesが空でなければ最新のnicknameを返す
   end
@@ -91,19 +98,12 @@ class User < ApplicationRecord
         },
         tags: {
           only: %i[id name]
-        },
-        social_services: {
-          only: %i[name],
-          include:{
-            user_social_services: {
-            only: %i[account_name]
-          }
         }
       }
-    }
     ).merge(social_services: default_social_services.map do |service|
+      user_social_service = user_social_services.find_by(social_service: service)
       service.as_json(only: %i[id name]).merge(
-        user_social_services: service.user_social_services.as_json(only: %i[account_name])
+        account_name: user_social_service ? user_social_service.account_name : nil
       )
     end)
   end
