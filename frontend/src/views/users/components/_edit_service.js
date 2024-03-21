@@ -57,7 +57,6 @@ export const _UsersEditService = ({ serviceName, user }) => {
         name="userID"
         placeholder={getPlaceholderText(serviceName)}
         type="text"
-        required
         value={account}
         onChange={handleAccountChange}
         className="input w-4/5 rounded-md"

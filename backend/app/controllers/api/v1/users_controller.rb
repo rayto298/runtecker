@@ -27,13 +27,13 @@ class Api::V1::UsersController < ApplicationController
       prefecture: {
         only: [:id, :name] # ここで必要なフィールドを指定
       }
-    }, methods: [:pastname], only: [:id, :name, :nickname, :profile, :term_id, :github_account, :prefecture_id, :pastname]
+    }, methods: [:pastname], only: [:id, :name, :nickname, :profile, :term_id, :github_account, :prefecture_id, :pastname, :avatar]
   end
 
   # PATCH/PUT /api/v1/users/:id
   def update
     @user = User.find(params[:id])
-    if @user.update(user_params)
+    if @user.update(update_params)
       render json: @user
     else
       render json: @user.errors, status: :unprocessable_entity
@@ -51,6 +51,10 @@ class Api::V1::UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
+  end
+
+  def update_params
+    params.require(:user).permit(:nickname, :prefecture_id, :avatar, :profile)
   end
 
   # 検索用のパラメータを取得

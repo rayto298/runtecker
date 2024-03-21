@@ -1,4 +1,5 @@
 import Compressor from "compressorjs";
+import { memo } from "react";
 
 export const _Avatar = memo(({ avatar, setAvatar }) => {
   // プレビュー画像
@@ -48,6 +49,7 @@ export const _Avatar = memo(({ avatar, setAvatar }) => {
       <figure className="w-full">
         <div className="text-center flex justify-center items-center">
           <button
+            type="button"
             className="bg-opacity-100 text-center hover:bg-opacity-100 transition-all w-auto h-auto relative flex justify-center items-center"
             onClick={handleClickImagePreview}
           >
