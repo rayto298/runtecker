@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
   skip_before_action :authenticate_request, only: [:create]
 
   def create
-    frontend_url = ENV['REACT_APP_API_URL']
+    frontend_url = ENV['FRONT_URL']
     Rails.logger.info(frontend_url)
     # OmniAuthで提供される認証情報を取得
     user_info = request.env['omniauth.auth']
