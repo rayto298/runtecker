@@ -4,6 +4,7 @@ import { _UsersEdit } from "./components/_edit"
 import { _UsersDetail } from "./components/_user_detail"
 import { useNavigate } from 'react-router-dom';
 import { RoutePath } from "config/route_path.js"; // RoutePathのインポートパスに置き換えてください
+import { API_URL } from "config/setting";
 
 export const UsersShow = () => {
   const navigate = useNavigate(); // useNavigateフックからnavigate関数を取得
@@ -14,10 +15,9 @@ export const UsersShow = () => {
 
   const fetchUserData = async () => {
     try {
-      const apiUrl = process.env.REACT_APP_API_URL;
       const token = localStorage.getItem("authToken");
 
-      const response = await fetch(`${apiUrl}/api/v1/users/${id}`, {
+      const response = await fetch(`${API_URL}/api/v1/users/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

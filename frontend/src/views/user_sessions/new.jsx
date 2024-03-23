@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../providers/auth";
 import { RoutePath } from "config/route_path";
+import { API_URL } from "config/setting";
 
 export const UserSessionsNew = () => {
   const navigate = useNavigate();
@@ -21,8 +22,7 @@ export const UserSessionsNew = () => {
 
   const handleGitHubAuth = () => {
     // Rails APIの認証エンドポイントにリダイレクト
-    const apiUrl = process.env.REACT_APP_API_URL;
-    window.location.href = `${apiUrl}/auth/github`;
+    window.location.href = `${API_URL}/auth/github`;
   };
 
   return (

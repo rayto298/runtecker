@@ -1,7 +1,9 @@
+import { API_URL } from "config/setting";
+
 export class TermsController {
   getTerms = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/v1/terms`, {
+      const response = await fetch(`${API_URL}/api/v1/terms`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -1,8 +1,9 @@
+import { API_URL } from "config/setting";
 
 export class UsersController {
   getUsersAndTotalCount = async (params) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/v1/users?${params}`, {
+      const response = await fetch(`${API_URL}/api/v1/users?${params}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

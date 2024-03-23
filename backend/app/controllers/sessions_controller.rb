@@ -17,7 +17,7 @@ class SessionsController < ApplicationController
     unless GithubOrgMemberCheckService.new(github_username: github_username).member?
       Rails.logger.info("RunteqのGithubメンバーでない")
       # 組織のメンバーでなければフロントのindexに遷移
-      redirect_to "#{frontend_url}/not_runtecker"
+      redirect_to "#{frontend_url}/not_runtecker", allow_other_host: true
       return
     end
 
@@ -31,11 +31,11 @@ class SessionsController < ApplicationController
     if user_authentication
       # 既に存在する場合は、特定のページにリダイレクト
       Rails.logger.info("RunteqのGithubメンバーで、かつアプリユーザー登録されている")
-      redirect_to "#{frontend_url}/users?token=#{token}"
+      redirect_to "#{frontend_url}/users?token=#{token}", allow_other_host: true
     else
       # ユーザー登録フォームページにリダイレクト
       Rails.logger.info("RunteqのGithubメンバーで、まだアプリユーザー登録されていない")
-      redirect_to "#{frontend_url}/users/new?token=#{token}"
+      redirect_to "#{frontend_url}/users/new?token=#{token}", allow_other_host: true
     end
   end
 
