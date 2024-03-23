@@ -21,7 +21,7 @@ export const UserSessionsNew = () => {
 
   const handleGitHubAuth = () => {
     // Rails APIの認証エンドポイントにリダイレクト
-    const apiUrl = process.env.REACT_APP_API_URL ?? "https://runtecker-backend-cc31bca7f384.herokuapp.com";
+    const apiUrl = process.env.REACT_APP_API_URL;
     window.location.href = `${apiUrl}/auth/github`;
   };
 
