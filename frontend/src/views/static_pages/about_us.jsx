@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 // 開発者データの例
 const developersData = [
@@ -14,21 +14,21 @@ const developersData = [
     name: "kzkio",
     term: "50期A",
     avatar: "assets/developer/kzkio.png",
-    role: "エンジニア",
+    role: "PUBGのカリキュラム終了勢",
   },
   {
     id: 3,
     name: "SawaD",
     term: "50期A",
     avatar: "assets/developer/sawaD.png",
-    role: "エンジニア",
+    role: "最近まで先生だった人",
   },
   {
     id: 4,
     name: "とぴ",
     term: "52期A",
     avatar: "assets/developer/topi.png",
-    role: "エンジニア",
+    role: "Macに紛れるWindows民",
   },
   {
     id: 5,
@@ -42,18 +42,21 @@ const developersData = [
     name: "MaTTa",
     term: "50期B",
     avatar: "assets/developer/MaTTa.png",
-    role: "エンジニア",
+    role: "からあげデータサイエンティスト",
   },
   {
     id: 7,
     name: "rayto",
     term: "50期A",
     avatar: "assets/developer/rayto.png",
-    role: "エンジニア",
+    role: "PayPay残高日本一",
   },
 ];
 
 const DeveloperTeam = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="container mx-auto py-8 px-4">
       <h2 className="my-5 text-xl text-gray-800 font-bold tracking-tight">
