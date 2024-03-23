@@ -1,7 +1,9 @@
+import { API_URL } from "config/settings";
+
 export class PrefecturesController {
   getPrefectures = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/v1/prefectures`, {
+      const response = await fetch(`${API_URL}}/api/v1/prefectures`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
