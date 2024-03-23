@@ -1,6 +1,4 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authenticate_request
-  
   # GET /api/v1/users
   def index
     page = search_params[:page] || 1
@@ -56,7 +54,6 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update_params
-    # params.require(:user).permit(:nickname, :prefecture_id, :avatar, :profile)
     params.require(:user).permit(:nickname, :prefecture_id, :avatar, :profile, user_social_services_attributes: [:id, :social_service_id, :account_name])
   end
 
