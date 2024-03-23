@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../providers/auth";
 import { RoutePath } from "config/route_path";
-import { API_URL } from "config/setting";
+import { API_URL } from "config/settings";
 
 export const UserSessionsNew = () => {
   const navigate = useNavigate();

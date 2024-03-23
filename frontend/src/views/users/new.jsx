@@ -5,7 +5,7 @@ import { useAuth } from "../../providers/auth";
 import { TermsController } from "controllers/terms_controller";
 import { PrefecturesController } from "controllers/prefectures_controller";
 import { _Avatar } from "./components/_avatar";
-import { API_URL } from "config/setting";
+import { API_URL } from "config/settings";
 
 export const UsersNew = () => {
   const [avatar, setAvatar] = useState(); // アバター用のstate

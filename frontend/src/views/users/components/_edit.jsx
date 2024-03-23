@@ -22,7 +22,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { _Avatar } from "./_avatar";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom"
-import { API_URL } from "config/setting";
+import { API_URL } from "config/settings";
 
 export const _UsersEdit = ({ user, toggleEdit, handleUserUpdated }) => {
 
@@ -135,7 +135,7 @@ export const _UsersEdit = ({ user, toggleEdit, handleUserUpdated }) => {
     if (Object.keys(updatedFields).length > 0) {
       try {
         const token = localStorage.getItem("authToken");
-        
+
         const response = await fetch(`${API_URL}/api/v1/users/${id}`, {
           method: "PATCH",
           headers: {

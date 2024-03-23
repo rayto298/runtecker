@@ -4,7 +4,7 @@ import { _UsersEdit } from "./components/_edit"
 import { _UsersDetail } from "./components/_user_detail"
 import { useNavigate } from 'react-router-dom';
 import { RoutePath } from "config/route_path.js"; // RoutePathのインポートパスに置き換えてください
-import { API_URL } from "config/setting";
+import { API_URL } from "config/settings";
 
 export const UsersShow = () => {
   const navigate = useNavigate(); // useNavigateフックからnavigate関数を取得
@@ -33,19 +33,19 @@ export const UsersShow = () => {
       const supplementedData = {
         ...data,
         user_tags: [
-          { id: 1, name: "Ruby"},
-          { id: 2, name: "Ruby on Railssssssssssssssss"}, 
-          { id: 3, name: "JavaScript"},
-          { id: 4, name: "TypeScript"},
-          { id: 5, name: "Vue.js"},
-          { id: 6, name: "Nuxt.js"},
-          { id: 7, name: "React"},
-          { id: 8, name: "Next.js"},
-          { id: 9, name: "Docker"},
-          { id: 10, name: "AWS"}, 
-          { id: 11, name: "php"}, 
-          { id: 12, name: "Laravel"},
-          { id: 13, name: "Python"},
+          { id: 1, name: "Ruby" },
+          { id: 2, name: "Ruby on Railssssssssssssssss" },
+          { id: 3, name: "JavaScript" },
+          { id: 4, name: "TypeScript" },
+          { id: 5, name: "Vue.js" },
+          { id: 6, name: "Nuxt.js" },
+          { id: 7, name: "React" },
+          { id: 8, name: "Next.js" },
+          { id: 9, name: "Docker" },
+          { id: 10, name: "AWS" },
+          { id: 11, name: "php" },
+          { id: 12, name: "Laravel" },
+          { id: 13, name: "Python" },
         ]
       };
       setUser(supplementedData); // 補完されたデータをセット
@@ -81,8 +81,8 @@ export const UsersShow = () => {
       )}
       <article className="max-w-screen-lg w-full m-auto my-10">
         <section className="bg-white rounded p-12 w-full max-w-screen-md m-auto">
-          {isEdit ? 
-            <_UsersEdit user={user} toggleEdit={toggleEdit} handleUserUpdated={handleUserUpdated}　/>
+          {isEdit ?
+            <_UsersEdit user={user} toggleEdit={toggleEdit} handleUserUpdated={handleUserUpdated} />
             : <_UsersDetail user={user} toggleEdit={toggleEdit} />
           }
         </section>

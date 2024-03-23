@@ -1,4 +1,4 @@
-import { API_URL } from "config/setting";
+import { API_URL } from "config/settings";
 
 export class TermsController {
   getTerms = async () => {
