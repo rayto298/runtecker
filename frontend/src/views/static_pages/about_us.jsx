@@ -7,7 +7,7 @@ const developersData = [
     name: "えふぐー",
     term: "50期B",
     avatar: "assets/developer/f_taka.png",
-    role: "エンジニア",
+    role: "元・f_taka",
   },
   {
     id: 2,
@@ -35,7 +35,7 @@ const developersData = [
     name: "ほのか",
     term: "50期B",
     avatar: "assets/developer/honoka.png",
-    role: "エンジニア",
+    role: "夢は全ディスニー制覇",
   },
   {
     id: 6,
