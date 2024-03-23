@@ -8,7 +8,7 @@ export const _UsersDetail = ({ user, toggleEdit }) => {
   const getSocialServiceUrl = (social_type, account_name) => {
     switch (social_type) {
       case "Mattermost":
-        return `https://chat.runteq.jp/runteq/channels/times_${account_name}`;
+        return `${account_name}`;
       case "GitHub":
         return `https://github.com/${account_name}`;
       case "X":
