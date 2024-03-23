@@ -5,6 +5,7 @@ import { useAuth } from "../../providers/auth";
 import { TermsController } from "controllers/terms_controller";
 import { PrefecturesController } from "controllers/prefectures_controller";
 import { _Avatar } from "./components/_avatar";
+import { useForm } from "react-hook-form";
 
 export const UsersNew = () => {
   const [avatar, setAvatar] = useState(); // アバター用のstate
@@ -24,6 +25,21 @@ export const UsersNew = () => {
   const onChangeEmail = (e) => setEmail(e.target.value);
   const onChangeTerm = (e) => setTermId(e.target.value);
   const onChangePrefectureId = (e) => setPrefectureId(e.target.value);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: "",
+      nickname: "",
+      email: "",
+      term: "",
+      prefecture: ""
+    },
+  });
 
   useEffect(() => {
     let terms = new TermsController();
@@ -46,8 +62,8 @@ export const UsersNew = () => {
 
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // フォームのデフォルト送信を防ぐ
+  const handleOnSubmit = async (e) => {
+    // e.preventDefault(); // フォームのデフォルト送信を防ぐ
 
     const user = {
       name,
@@ -92,7 +108,7 @@ export const UsersNew = () => {
             <p className="p-2 form-red-600">
               ※がついているものは全て入力してください
             </p>
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            <form className="space-y-6" onSubmit={handleSubmit(handleOnSubmit)}>
               <_Avatar avatar={avatar} setAvatar={setAvatar} />
               <div>
                 <div className="mt-1">
@@ -100,14 +116,15 @@ export const UsersNew = () => {
                     名前※
                   </label>
                   <input
-                    name="name"
-                    type="name"
-                    required
+                    type="text"
+                    id="name"
                     value={name}
+                    {...register("name", { required: true, minLength: 1 })}
                     onChange={onChangeName}
                     className="h-10 px-2 py-3 mt-1 block w-full rounded-md border border-gray-300 shadow-sm"
                     placeholder="フルネームで入力してください"
                   />
+                  {errors.name && <p className="text-red-600">※名前は必須項目です</p>}
                 </div>
               </div>
               <div>
@@ -116,14 +133,15 @@ export const UsersNew = () => {
                     ニックネーム※
                   </label>
                   <input
-                    name="nickname"
-                    type="name"
-                    required
+                    type="text"
+                    id="nickname"
                     value={nickname}
+                    { ...register('nickname', { required: true, minLength: 1 }) }
                     onChange={onChangeNickname}
                     className="h-10 px-2 py-3 mt-1 block w-full rounded-md border border-gray-300 shadow-sm"
                     placeholder="RUNTECKERで表示したい名前を入力してください"
                   />
+                  {errors.nickname && <p className="text-red-600">※1文字以上のニックネームを入力してください</p>}
                 </div>
               </div>
               <div>
@@ -132,14 +150,15 @@ export const UsersNew = () => {
                     メールアドレス※
                   </label>
                   <input
-                    name="email"
                     type="email"
-                    required
+                    id="email"
                     value={email}
+                    { ...register('email', { required: true }) }
                     onChange={onChangeEmail}
                     className="h-10 px-2 py-3 mt-1 block w-full rounded-md border border-gray-300 shadow-sm"
                     placeholder="メールアドレスを入力してください"
                   />
+                  {errors.email && <p className="text-red-600">※メールアドレスは必須項目です</p>}
                 </div>
               </div>
               <div>
@@ -148,9 +167,8 @@ export const UsersNew = () => {
                 </label>
                 <select
                   id="term"
-                  name="term_id"
-                  required
                   value={termId}
+                  { ...register('term', { required: true }) }
                   onChange={onChangeTerm}
                   className="h-10 px-2 mt-1 block w-full rounded-md border border-gray-300 shadow-sm"
                 >
@@ -161,6 +179,7 @@ export const UsersNew = () => {
                     </option>
                   ))}
                 </select>
+                {errors.term && <p className="text-red-600">※入学時期の選択は必須項目です</p>}
               </div>
 
               {/* 都道府県選択フォーム */}
@@ -173,9 +192,8 @@ export const UsersNew = () => {
                 </label>
                 <select
                   id="prefecture"
-                  name="prefecture_id"
-                  required
                   value={prefectureId}
+                  { ...register('prefecture', { required: true }) }
                   onChange={onChangePrefectureId}
                   className="h-10 px-2 mt-1 block w-full rounded-md border border-gray-300 shadow-sm"
                 >
@@ -186,6 +204,7 @@ export const UsersNew = () => {
                     </option>
                   ))}
                 </select>
+                {errors.prefecture && <p className="text-red-600">※居住地の選択は必須項目です</p>}
               </div>
 
               <div>
