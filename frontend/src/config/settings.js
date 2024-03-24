@@ -1,0 +1,1 @@
+export const API_URL = process.env.REACT_APP_API_URL || 'https://runtecker-backend-cc31bca7f384.herokuapp.com';

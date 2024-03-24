@@ -29,6 +29,7 @@ import { FaGithub } from "react-icons/fa";
 import { QiitaLogo } from "ui_components/icons/QiitaLogo";
 import { ZennLogo } from "ui_components/icons/ZennLogo";
 import { NoteLogo } from "ui_components/icons/NoteLogo";
+import { API_URL } from "config/settings";
 
 export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpdated }) => {
 
@@ -252,11 +253,10 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
     // 変更がある場合のみAPIコールを実行
     if (Object.keys(updatedFields).filter(key => updatedFields[key] !== undefined).length > 0) {
       try {
-        console.log(updatedFields);
         const apiUrl = process.env.REACT_APP_API_URL;
         const token = localStorage.getItem("authToken");
-        
-        const response = await fetch(`${apiUrl}/api/v1/users/${id}`, {
+
+        const response = await fetch(`${API_URL}/api/v1/users/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",

@@ -1,7 +1,9 @@
+import { API_URL } from "config/settings";
+
 export class TagsController {
   getTagById = async (id) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/v1/tags/${id}`, {
+      const response = await fetch(`${API_URL}/api/v1/tags/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
