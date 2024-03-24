@@ -17,7 +17,7 @@ export const _User = memo((user) => {
   const socialService = (name, account_name) => {
     switch (name) {
       case "Mattermost":
-        return <Link to={`https://chat.runteq.jp/runteq/channels/times_${account_name}`} className="hover:opacity-50 transition-all"><SiMattermost /></Link>
+        return <Link to={`${account_name}`} className="hover:opacity-50 transition-all"><SiMattermost /></Link>
       case "GitHub":
         return <Link to={`https://github.com/${account_name}`} className="hover:opacity-50 transition-all"><FaGithub /></Link>
       case "X":
@@ -70,7 +70,7 @@ export const _User = memo((user) => {
         <IconContext.Provider value={{ size: "25px" }}>
           <ul className="flex gap-3 justify-end items-center px-2">
             {socialServices.map((social, index) => (
-              <li key={index}>{socialService(social.name, social.account_name)}</li>
+              <li key={index}>{socialService(social?.name, social?.account_name)}</li>
             ))}
           </ul>
         </IconContext.Provider>
