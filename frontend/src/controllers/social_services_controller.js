@@ -1,7 +1,7 @@
 export class SocialServicesController {
   getSocialServices = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/v1/social_services`, {
+      const response = await fetch(`${API_URL}/api/v1/social_services`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
