@@ -1,3 +1,5 @@
+import { API_URL } from "config/settings";
+
 export class SocialServicesController {
   getSocialServices = async () => {
     try {
