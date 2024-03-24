@@ -23,12 +23,6 @@ import { CSS } from "@dnd-kit/utilities";
 import { _Avatar } from "./_avatar";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom"
-import { SiMattermost } from "react-icons/si";
-import { RiTwitterXFill } from "react-icons/ri";
-import { FaGithub } from "react-icons/fa";
-import { QiitaLogo } from "ui_components/icons/QiitaLogo";
-import { ZennLogo } from "ui_components/icons/ZennLogo";
-import { NoteLogo } from "ui_components/icons/NoteLogo";
 import { API_URL } from "config/settings";
 
 export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpdated }) => {
@@ -232,13 +226,23 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
         }
       }
     });
-  
+
+    // PastNickname更新用の配列
+    let pastNicknameAttributes = [];
+
+    if (nickname !== initialUserState.nickname) {
+      pastNicknameAttributes.push({
+        nickname: initialUserState.nickname
+      });
+    }
+
     return {
       nickname: nickname !== initialUserState.nickname ? nickname : undefined,
       prefecture_id: Number(prefectureId) !== Number(initialUserState.prefecture_id) ? prefectureId : undefined,
       avatar: avatar !== initialUserState.avatar ? avatar : undefined,
       profile: profile !== initialUserState.profile ? profile : undefined,
       user_social_services_attributes: userSocialServicesAttributes.length > 0 ? userSocialServicesAttributes : undefined,
+      past_nicknames_attributes: pastNicknameAttributes.length > 0 ? pastNicknameAttributes : undefined,
     };
   }
 
