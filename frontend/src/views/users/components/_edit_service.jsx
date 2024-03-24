@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { SiMattermost } from "react-icons/si";
 import { RiTwitterXFill } from "react-icons/ri";
 import { FaGithub } from "react-icons/fa";
@@ -6,19 +5,8 @@ import { QiitaLogo } from "ui_components/icons/QiitaLogo";
 import { ZennLogo } from "ui_components/icons/ZennLogo";
 import { NoteLogo } from "ui_components/icons/NoteLogo";
 
-export const _UsersEditService = ({ serviceName, user }) => {
+export const _UsersEditService = ({ serviceName, account, handleAccountChange }) => {
  
-  const getAccountName = (serviceName) => {
-    const service = user.user_social_services.find(service => service.social_service.name === serviceName);
-    return service ? service.account_name : "";
-  };
-  
-  const [account, setAccount] = useState(getAccountName(serviceName));
-  
-  const handleAccountChange = (e) => {
-    setAccount(e.target.value);
-  };
-
   const getServiceLogo = (serviceName) => {
     switch (serviceName) {
       case "Mattermost":
@@ -53,8 +41,6 @@ export const _UsersEditService = ({ serviceName, user }) => {
         {getServiceLogo(serviceName)}
       </div>
       <input
-        id="userID"
-        name="userID"
         placeholder={getPlaceholderText(serviceName)}
         type="text"
         value={account}

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { _UsersEditService } from "./_edit_service";
 import { useState, useEffect, useCallback } from "react";
 import { PrefecturesController } from "controllers/prefectures_controller";
+import { SocialServicesController } from "controllers/social_services_controller";
 import {
   //ここからdnd-kit
   DndContext,
@@ -22,19 +23,40 @@ import { CSS } from "@dnd-kit/utilities";
 import { _Avatar } from "./_avatar";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom"
+import { SiMattermost } from "react-icons/si";
+import { RiTwitterXFill } from "react-icons/ri";
+import { FaGithub } from "react-icons/fa";
+import { QiitaLogo } from "ui_components/icons/QiitaLogo";
+import { ZennLogo } from "ui_components/icons/ZennLogo";
+import { NoteLogo } from "ui_components/icons/NoteLogo";
 import { API_URL } from "config/settings";
 
-export const _UsersEdit = ({ user, toggleEdit, handleUserUpdated }) => {
+export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpdated }) => {
 
   const { id } = useParams();
 
-  // 編集画面に遷移した時の初期状態を取得
+  const getAccountName = (serviceName) => {
+    const service = user.user_social_services.find(service => service.social_service.name === serviceName);
+    return service ? service.account_name : "";
+  };
+
+  // 編集画面に遷移した時のユーザ情報を保持（ユーザが編集したかを判定するために使用）
   const initialUserState = {
     nickname: user.nickname,
     prefecture_id: user.prefecture_id,
     avatar: user.avatar,
     profile: user.profile,
   };
+
+  // 編集画面に遷移した時のUserSocialServiceのアカウント名の情報を保持（ユーザが編集したかを判定するために使用）
+  const initialAccountName = {
+    mattermostAccount: getAccountName("Mattermost"),
+    githubAccount: getAccountName("GitHub"),
+    xAccount: getAccountName("X"),
+    qiitaAccount: getAccountName("Qiita"),
+    zennAccount: getAccountName("Zenn"),
+    noteAccount: getAccountName("note"),
+  }
 
   //タグの仮データ
   const tagData = [
@@ -120,20 +142,118 @@ export const _UsersEdit = ({ user, toggleEdit, handleUserUpdated }) => {
     setProfile(e.target.value);
   };
 
-  // フォーム送信
+  // ソーシャルサービス
+  const [socialServices, setSocialServices] = useState([]);
+
+  useEffect(() => {
+    let socialServices = new SocialServicesController();
+    socialServices.getSocialServices().then((data) => {
+      if (data) {
+        setSocialServices(data);
+      } else {
+        setSocialServices([]);
+      }
+    });
+  }, []);
+
+  const getUserSocialServiceId = (serviceName) => {
+    const service = user.user_social_services.find(service => service.social_service.name === serviceName);
+    return service ? service.id : "";
+  };
+
+  const getSocialServiceId = (serviceName) => {
+    const socialService = socialServices.find(socialService => socialService.name === serviceName);
+    return socialService ? socialService.id : "";
+  }
+
+  // Mattermost
+  const [mattermostAccount, setMattermostAccount] = useState(getAccountName("Mattermost"));
+  const handleMattermostAccountChange = (e) => {
+    setMattermostAccount(e.target.value);
+  };
+
+  // GitHub
+  const [githubAccount, setGithubAccount] = useState(getAccountName("GitHub"));
+  const handleGithubAccountChange = (e) => {
+    setGithubAccount(e.target.value);
+  };
+
+  // X
+  const [xAccount, setXAccount] = useState(getAccountName("X"));
+  const handleXAccountChange = (e) => {
+    setXAccount(e.target.value);
+  };
+
+  // Qiita
+  const [qiitaAccount, setQiitaAccount] = useState(getAccountName("Qiita"));
+  const handleQiitaAccountChange = (e) => {
+    setQiitaAccount(e.target.value);
+  };
+
+  // Zenn
+  const [zennAccount, setZennAccount] = useState(getAccountName("Zenn"));
+  const handleZennAccountChange = (e) => {
+    setZennAccount(e.target.value);
+  };
+
+  // note
+  const [noteAccount, setNoteAccount] = useState(getAccountName("note"));
+  const handleNoteAccountChange = (e) => {
+    setNoteAccount(e.target.value);
+  };
+
+  // フォーム内でユーザが編集したフィールドを取得する関数
+  const generateUpdatedFields = () => {
+
+    const socialServicesInfo = [
+      { serviceName: "Mattermost", currentAccountName: mattermostAccount, initialAccountName: initialAccountName.mattermostAccount },
+      { serviceName: "GitHub", currentAccountName: githubAccount, initialAccountName: initialAccountName.githubAccount },
+      { serviceName: "X", currentAccountName: xAccount, initialAccountName: initialAccountName.xAccount },
+      { serviceName: "Qiita", currentAccountName: qiitaAccount, initialAccountName: initialAccountName.qiitaAccount },
+      { serviceName: "Zenn", currentAccountName: zennAccount, initialAccountName: initialAccountName.zennAccount },
+      { serviceName: "note", currentAccountName: noteAccount, initialAccountName: initialAccountName.noteAccount },
+    ];
+  
+    let userSocialServicesAttributes = [];
+  
+    socialServicesInfo.forEach(({ serviceName, currentAccountName, initialAccountName }) => {
+      const userSocialServiceId = getUserSocialServiceId(serviceName);
+      if (initialAccountName !== currentAccountName) {
+        if (userSocialServiceId) {
+          userSocialServicesAttributes.push({
+            id: userSocialServiceId,
+            account_name: currentAccountName
+          });
+        } else {
+          userSocialServicesAttributes.push({
+            social_service_id: getSocialServiceId(serviceName),
+            account_name: currentAccountName
+          });
+        }
+      }
+    });
+  
+    return {
+      nickname: nickname !== initialUserState.nickname ? nickname : undefined,
+      prefecture_id: Number(prefectureId) !== Number(initialUserState.prefecture_id) ? prefectureId : undefined,
+      avatar: avatar !== initialUserState.avatar ? avatar : undefined,
+      profile: profile !== initialUserState.profile ? profile : undefined,
+      user_social_services_attributes: userSocialServicesAttributes.length > 0 ? userSocialServicesAttributes : undefined,
+    };
+  }
+
+  // フォーム送信処理
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault(); // フォームのデフォルト送信を防ぐ
 
-    const updatedFields = {};
-    if (nickname !== initialUserState.nickname) updatedFields.nickname = nickname;
-    if (prefectureId !== initialUserState.prefecture_id) updatedFields.prefecture_id = prefectureId;
-    if (avatar !== initialUserState.avatar) updatedFields.avatar = avatar;
-    if (profile !== initialUserState.profile) updatedFields.profile = profile;
+    // フォーム内でユーザが編集したフィールドを取得
+    const updatedFields = generateUpdatedFields();
 
     // 変更がある場合のみAPIコールを実行
-    if (Object.keys(updatedFields).length > 0) {
+    if (Object.keys(updatedFields).filter(key => updatedFields[key] !== undefined).length > 0) {
       try {
+        const apiUrl = process.env.REACT_APP_API_URL;
         const token = localStorage.getItem("authToken");
 
         const response = await fetch(`${API_URL}/api/v1/users/${id}`, {
@@ -148,9 +268,9 @@ export const _UsersEdit = ({ user, toggleEdit, handleUserUpdated }) => {
         if (response.ok) {
           // DBに保存されたユーザを取得する処理
           handleUserUpdated();
-          alert("更新しました");
+          alert("ユーザ情報を更新しました");
         } else {
-          alert("更新に失敗しました");
+          alert("ユーザ情報の更新に失敗しました");
         }
 
       } catch (error) {
@@ -169,10 +289,29 @@ export const _UsersEdit = ({ user, toggleEdit, handleUserUpdated }) => {
     }
   };
 
+  // 戻るボタンが押された時の処理
+  const toggleEditConfirm = () => {
+
+    // フォーム内でユーザが編集したフィールドを取得
+    const updatedFields = generateUpdatedFields();
+
+      // 編集されたフィールドがあるかを判定
+    if (Object.keys(updatedFields).filter(key => updatedFields[key] !== undefined).length > 0) {
+
+      // 編集されたフィールドがあったら、確認メッセージを出す
+      const isConfirmed = window.confirm('変更内容が破棄されますがよろしいですか？');
+      if (isConfirmed) {
+        setIsEdit(!isEdit);
+      }
+    } else {
+      setIsEdit(!isEdit);
+    }
+  }
+
   return (
     <>
       <div className="w-full text-end">
-        <button onClick={toggleEdit} className="btn text-xs">
+        <button onClick={toggleEditConfirm} className="btn text-xs">
           戻る
         </button>
       </div>
@@ -217,14 +356,14 @@ export const _UsersEdit = ({ user, toggleEdit, handleUserUpdated }) => {
         {/* サービスのリンク */}
         <div className="flex justify-center">
           <div className="w-5/12 pe-8">
-            <_UsersEditService serviceName="Mattermost" user={user} />
-            <_UsersEditService serviceName="GitHub" user={user} />
-            <_UsersEditService serviceName="X" user={user} />
+            <_UsersEditService serviceName="Mattermost" account={mattermostAccount} handleAccountChange={handleMattermostAccountChange} />
+            <_UsersEditService serviceName="GitHub" account={githubAccount} handleAccountChange={handleGithubAccountChange} />
+            <_UsersEditService serviceName="X" account={xAccount} handleAccountChange={handleXAccountChange} />
           </div>
-          <div className="w-5/12">
-            <_UsersEditService serviceName="Qiita" user={user} />
-            <_UsersEditService serviceName="Zenn" user={user} />
-            <_UsersEditService serviceName="note" user={user} />
+          <div className="w-5/12 pe-8">
+            <_UsersEditService serviceName="Qiita" account={qiitaAccount} handleAccountChange={handleQiitaAccountChange} />
+            <_UsersEditService serviceName="Zenn" account={zennAccount} handleAccountChange={handleZennAccountChange} />
+            <_UsersEditService serviceName="note" account={noteAccount} handleAccountChange={handleNoteAccountChange} />
           </div>
         </div>
 

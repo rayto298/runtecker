@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :social_services, through: :user_social_services
   belongs_to :term
   belongs_to :prefecture
+  accepts_nested_attributes_for :user_social_services
 
   scope :with_nickname, ->(nickname) {
     sanitized_nickname = ActiveRecord::Base.sanitize_sql_like(nickname)
