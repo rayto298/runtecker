@@ -4,9 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { SiGoogleforms } from "react-icons/si";
 
+
 export const _Headers = () => {
-  const { token, setToken, logout } = useAuth();
+  const { token, setToken, logout ,user} = useAuth();
   const navigate = useNavigate();
+  
+  console.log(user)
 
   useEffect(() => {
     // TODO : 暫定処理
