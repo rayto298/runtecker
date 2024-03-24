@@ -6,10 +6,10 @@ import { SiGoogleforms } from "react-icons/si";
 
 
 export const _Headers = () => {
-  const { token, setToken, logout ,user} = useAuth();
+  const { token, setToken, logout ,currentUser} = useAuth();
   const navigate = useNavigate();
   
-  console.log(user)
+  console.log(currentUser)
 
   useEffect(() => {
     // TODO : 暫定処理

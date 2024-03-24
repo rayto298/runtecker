@@ -9,7 +9,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState("");
-  const [user, setUser] = useState(null); 
+  const [currentUser, setCurrentUser] = useState(null); 
 
   useEffect(() => {
     // URLからクエリパラメータを解析してトークンを取得
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
       },
     })
     .then((response) => response.json())
-    .then((data) => setUser(data.user))
+    .then((data) => setCurrentUser(data.user))
     .catch((error) => console.error("Error fetching user:", error));
   }
 }, [token]); // 依存配列にtokenを指定
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, logout, setToken, user }}>
+    <AuthContext.Provider value={{ token, logout, setToken, currentUser }}>
       {children}
     </AuthContext.Provider>
   );
