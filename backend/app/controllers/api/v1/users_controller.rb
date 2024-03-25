@@ -47,6 +47,16 @@ class Api::V1::UsersController < ApplicationController
     head :no_content
   end
 
+  # /api/v1/users/current
+
+  def current
+    if @current_user
+      render json: { user: @current_user }
+    else
+      render json: { error: 'Not Authorized' }, status: :unauthorized
+    end
+  end
+
   private
 
   def user_params
@@ -54,7 +64,11 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update_params
-    params.require(:user).permit(:nickname, :prefecture_id, :avatar, :profile, user_social_services_attributes: [:id, :social_service_id, :account_name])
+    params.require(:user).permit(
+      :nickname, :prefecture_id, :avatar, :profile, 
+      user_social_services_attributes: [:id, :social_service_id, :account_name],
+      past_nicknames_attributes: [:nickname]
+    )
   end
 
   # 検索用のパラメータを取得
