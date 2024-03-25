@@ -6,7 +6,7 @@ import ReactGA from 'react-ga4'; // ReactGA をインポート
 
 export const App = () => {
     useEffect(() => {
-      ReactGA.initialize('G-F7P97W3Z2VZ'); // GA4のトラッキングIDで初期化
+      ReactGA.initialize('G-F7P97W3Z2V'); // GA4のトラッキングIDで初期化
     }, []);
 
   return (
