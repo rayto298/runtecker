@@ -13,11 +13,13 @@ Rails.application.routes.draw do
   # ユーザー登録のルート(API)
   namespace :api do
     namespace :v1 do
+      get 'users/current', to: 'users#current'
       resources :users
       resources :prefectures, only: %i[index]
       resources :terms, only: %i[index show]
       resources :tags, only: %i[show]
       resources :social_services, only: %i[index]
+      
     end
   end
 end

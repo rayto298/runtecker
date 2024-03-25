@@ -47,6 +47,16 @@ class Api::V1::UsersController < ApplicationController
     head :no_content
   end
 
+  # /api/v1/users/current
+
+  def current
+    if @current_user
+      render json: { user: @current_user }
+    else
+      render json: { error: 'Not Authorized' }, status: :unauthorized
+    end
+  end
+
   private
 
   def user_params
