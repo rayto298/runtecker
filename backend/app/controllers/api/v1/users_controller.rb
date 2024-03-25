@@ -54,7 +54,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update_params
-    params.require(:user).permit(:nickname, :prefecture_id, :avatar, :profile)
+    params.require(:user).permit(:nickname, :prefecture_id, :avatar, :profile, user_social_services_attributes: [:id, :social_service_id, :account_name])
   end
 
   # 検索用のパラメータを取得

@@ -6,6 +6,7 @@ import { TermsController } from "controllers/terms_controller";
 import { PrefecturesController } from "controllers/prefectures_controller";
 import { _Avatar } from "./components/_avatar";
 import { useForm } from "react-hook-form";
+import { API_URL } from "config/settings";
 
 export const UsersNew = () => {
   const [avatar, setAvatar] = useState(); // アバター用のstate
@@ -75,8 +76,7 @@ export const UsersNew = () => {
     };
 
     try {
-      const apiUrl = process.env.REACT_APP_API_URL;
-      const response = await fetch(`${apiUrl}/registrations`, {
+      const response = await fetch(`${API_URL}/registrations`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

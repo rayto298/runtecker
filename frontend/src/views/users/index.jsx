@@ -84,7 +84,7 @@ export const UsersIndex = () => {
 
           {/* ページネーション */}
           <div className="ml-12">
-            <Pagination navigate={navigate} total={total.current} currentPage={currentPage.current} />
+            <Pagination navigate={navigate} total={total.current} currentPage={currentPage.current} location={location} />
           </div>
 
           {/* ユーザー一覧 */}
@@ -97,7 +97,7 @@ export const UsersIndex = () => {
 
         {/* ページネーション */}
         <div className="ml-12 mb-12">
-          <Pagination navigate={navigate} total={total.current} currentPage={currentPage.current} />
+          <Pagination navigate={navigate} total={total.current} currentPage={currentPage.current} location={location} />
         </div>
       </div >
     </>
@@ -105,7 +105,7 @@ export const UsersIndex = () => {
 };
 
 // 他のページで使用予定であれば切り離す
-const Pagination = memo(({ navigate, total, currentPage }) => {
+const Pagination = memo(({ navigate, total, currentPage, location }) => {
 
   const handleClickPagination = (index) => {
     const newUrl = new URLSearchParams(location.search);

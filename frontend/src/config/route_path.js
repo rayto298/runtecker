@@ -59,4 +59,12 @@ export const RoutePath = {
     path: "/about_us",
     name: "開発者紹介",
   },
+  PrivacyPolicy: {
+    path: "/privacy_policy",
+    name: "privacyポリシー",
+  },
+  TermsOfUse: {
+    path: "/terms_of_use",
+    name: "利用規約",
+  },
 };

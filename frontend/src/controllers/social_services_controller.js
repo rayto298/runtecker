@@ -1,9 +1,9 @@
 import { API_URL } from "config/settings";
 
-export class TermsController {
-  getTerms = async () => {
+export class SocialServicesController {
+  getSocialServices = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/v1/terms`, {
+      const response = await fetch(`${API_URL}/api/v1/social_services`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
