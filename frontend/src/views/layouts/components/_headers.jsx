@@ -56,7 +56,7 @@ export const _Headers = () => {
         </nav>
       </div>
       <div className="flex items-center h-full">
-        <Link className="flex justify-center items-center bg-runteq-primary px-4 h-full text-white text-sm">
+        <Link to={RoutePath.ContactUs.path} className="flex justify-center items-center bg-runteq-primary px-4 h-full text-white text-sm">
           <span className="text-xl mr-2"><SiGoogleforms /></span>お問い合わせ
         </Link>
         {token ? (

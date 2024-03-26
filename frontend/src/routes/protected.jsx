@@ -18,6 +18,7 @@ import { StaticPagesIndex } from "views/static_pages";
 import { StaticPagesNotfound } from "views/static_pages/not_found";
 import { StaticPagesPrivacyPolicy } from "views/static_pages/privacy_policy";
 import { StaticPagesTermsOfUse } from "views/static_pages/terms_of_use";
+import { ContactUs } from "views/static_pages/contact_us";
 
 const App = () => {
   return (
@@ -54,6 +55,7 @@ export const PROTECTED_ROUTES = [
         path: RoutePath.TermsOfUse.path,
         element: <StaticPagesTermsOfUse />,
       },
+      { path: RoutePath.ContactUs.path, element: <ContactUs /> },
     ],
   },
 ];
