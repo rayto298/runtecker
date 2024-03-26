@@ -85,8 +85,7 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   useEffect(() => {
-    const otherTags = tagData.filter(tag => !userTags.includes(tag));
-    console.log("test!")
+    const otherTags = tags.filter(tag => !userTags.some(userTag => userTag.id === tag.id));
     setTags(otherTags);
   },[userTags])
 
@@ -107,7 +106,8 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
           const activeTag = userTags.findIndex((tag) => tag.id === active.id);
           const overTag = userTags.findIndex((tag) => tag.id === over.id);
           const newTags = arrayMove(userTags, activeTag, overTag);
-          console.log('最新の並び順: ' + newTags); //arrayMoveの返り値をnewTagsに受けてあげればログ出力できる。userTagsは非同期更新なので出力しても元の状態のまま。
+          
+          newTags.forEach((tags) => console.log(tags.id + " : " + tags.name));
           return newTags;
         })
         //dnd-kit/sortableからインポートしたarrayMove()を呼び出して入れ替え処理を行う
