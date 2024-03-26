@@ -40,18 +40,9 @@ export const PUBLIC_ROUTES = [
       { path: RoutePath.UsersNew.path, element: <UsersNew /> },
       { path: RoutePath.Home.path, element: <StaticPagesIndex /> },
       { path: RoutePath.AboutUs.path, element: <DeveloperTeam /> },
-      {
-        path: RoutePath.NotRuntecker.path,
-        element: <StaticPagesNotRuntecker />,
-      },
-      {
-        path: RoutePath.PrivacyPolicy.path,
-        element: <StaticPagesPrivacyPolicy />,
-      },
-      {
-        path: RoutePath.TermsOfUse.path,
-        element: <StaticPagesTermsOfUse />,
-      },
+      { path: RoutePath.NotRuntecker.path, element: <StaticPagesNotRuntecker />, },
+      { path: RoutePath.PrivacyPolicy.path, element: <StaticPagesPrivacyPolicy />, },
+      { path: RoutePath.TermsOfUse.path, element: <StaticPagesTermsOfUse />, },
       { path: RoutePath.NotFound.path, element: <StaticPagesNotfound /> },
     ],
   },
