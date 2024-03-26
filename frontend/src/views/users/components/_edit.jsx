@@ -24,6 +24,8 @@ import { _Avatar } from "./_avatar";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom"
 import { API_URL } from "config/settings";
+import { Autocomplete, TextField, Button } from "@mui/material";
+
 
 export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpdated }) => {
 
@@ -53,7 +55,7 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
   }
 
   //タグの仮データ
-  const tagData = [
+  const tagData = [ //タグ全てのデータ
     { id: 1, name: "Ruby" },
     { id: 2, name: "Ruby on Railssssssssssssssss" },
     { id: 3, name: "JavaScript" },
@@ -68,9 +70,24 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
     { id: 12, name: "Laravel" },
     { id: 13, name: "Python" },
   ];
+  const initUserTags = [ //ユーザーの編集前状態のタグ
+    { id: 2, name: "Ruby on Railssssssssssssssss" },
+    { id: 4, name: "TypeScript" },
+    { id: 6, name: "Nuxt.js" },
+    { id: 9, name: "Docker" },
+    { id: 12, name: "Laravel" },
+  ];
+
   const [tags, setTags] = useState(tagData);
+  const [userTags, setUserTags] = useState(initUserTags);
   const [activeId, setActiveId] = useState(null);
+  const [inputValue, setInputValue] = useState('');
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+
+  useEffect(() => {
+    const otherTags = tagData.filter(tag => !userTags.includes(tag));
+    setTags(otherTags);
+  },[userTags])
 
   //ドラッグが始まったときの処理
   const handleDragStart = useCallback((event) => {
@@ -80,28 +97,46 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
 
   //ドラッグが終わる時の処理
   const handleDragEnd = useCallback((event) => {
-    if (event.active && event.over) {
-      //これナシだと，掴まず軽くタップした時にエラーになる
-      const { active, over } = event;
-      if (active.id !== over?.id) {
-        console.log("active.id = " + active.id);
-        console.log("over.id = " + over.id);
-        setTags((tags) => {
-          const activeTag = tags.findIndex((tag) => tag.id === active.id);
-          const overTag = tags.findIndex((tag) => tag.id === over.id);
-          const newTags = arrayMove(tags, activeTag, overTag);
-          newTags.forEach((tags) => console.log(tags.id + " : " + tags.name));
+    // console.log(activeId); //⭐activeIdは非同期に更新されるのでここではnullのまま。処理で使うならactive.idにする
+    if(event.active && event.over){ //よりセーフティに。これナシだと，掴まず軽くタップした時にエラーになる
+      const { active, over } = event; //イベントハンドラーからドラッグ中の要素と重なった先の要素を取得
+  
+      if (active.id !== over?.id) { //2つが一致しないとき（?.でoverがnullでもエラーを吐かない）
+        setUserTags((userTags) => {
+          const newTags = arrayMove(userTags, userTags.indexOf(active.id), userTags.indexOf(over.id));
+          console.log('最新の並び順: ' + newTags); //arrayMoveの返り値をnewTagsに受けてあげればログ出力できる。userTagsは非同期更新なので出力しても元の状態のまま。
           return newTags;
-        });
+        })
+        //dnd-kit/sortableからインポートしたarrayMove()を呼び出して入れ替え処理を行う
       }
+      console.log('activeIdは非同期なのでnullのまま: ' + activeId)
     }
-    setActiveId(null); //activeIdをリセット
+    setActiveId(null); //activeIdをリセット      
   }, []);
 
   //ドラッグがキャンセルされた時の処理（activeIdをリセットするだけ）
   const handleDragCancel = useCallback(() => {
     setActiveId(null);
   }, []);
+
+  const handleAddTag = () => {
+    if (inputValue.trim() !== '') {
+      setUserTags((prevUserTags) => [...prevUserTags, inputValue.trim()]);
+      if (!tags.includes(inputValue.trim())) {
+        setTags((prevTags) => [...prevTags, inputValue.trim()]);
+      }
+      setInputValue(null);
+    }
+  };
+
+  const customIsOptionEqualToValue = (option, value) => {
+    // 空文字列の場合は無視する
+    if (value === '') {
+      return true; // trueを返すことで一致とみなされず、無視されます
+    }
+    // それ以外の場合はデフォルトの比較を行う
+    return option === value;
+  };
 
   // ニックネーム
   const [nickname, setNickname] = useState(user.nickname);
@@ -397,7 +432,7 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
             onDragEnd={handleDragEnd}
             onDragCancel={handleDragCancel}
           >
-            <SortableContext items={tags} strategy={rectSortingStrategy}>
+            <SortableContext items={userTags} strategy={rectSortingStrategy}>
               <div
                 style={{
                   display: "grid",
@@ -405,13 +440,24 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
                   margin: "20px",
                 }}
               >
-                {tags.map((tag) => (
+                {userTags.map((tag) => (
                   <SortableItem key={tag.id} tag={tag} />
                 ))}
               </div>
             </SortableContext>
           </DndContext>
         </div>
+        {/* タグ登録フォーム */}
+        {/* <div>
+          <Autocomplete
+          options={tags}
+          getOptionLabel={(option) => option.name} // オブジェクトから表示する値を指定
+          isOptionEqualToValue={customIsOptionEqualToValue}
+          renderInput={(params) => <TextField {...params} label="タグを選択または新規作成" />}
+          ></Autocomplete>
+          <Button onClick={handleAddTag}>登録</Button>
+        </div> */}
+
         {/* 自己紹介 */}
         <textarea
           className="textarea w-full rounded-md"
