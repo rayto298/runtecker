@@ -81,11 +81,12 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
   const [tags, setTags] = useState(tagData);
   const [userTags, setUserTags] = useState(initUserTags);
   const [activeId, setActiveId] = useState(null);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(''); // Autocomplete の入力値の状態変数
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   useEffect(() => {
     const otherTags = tagData.filter(tag => !userTags.includes(tag));
+    console.log("test!")
     setTags(otherTags);
   },[userTags])
 
@@ -103,7 +104,9 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
   
       if (active.id !== over?.id) { //2つが一致しないとき（?.でoverがnullでもエラーを吐かない）
         setUserTags((userTags) => {
-          const newTags = arrayMove(userTags, userTags.indexOf(active.id), userTags.indexOf(over.id));
+          const activeTag = userTags.findIndex((tag) => tag.id === active.id);
+          const overTag = userTags.findIndex((tag) => tag.id === over.id);
+          const newTags = arrayMove(userTags, activeTag, overTag);
           console.log('最新の並び順: ' + newTags); //arrayMoveの返り値をnewTagsに受けてあげればログ出力できる。userTagsは非同期更新なので出力しても元の状態のまま。
           return newTags;
         })
@@ -448,15 +451,17 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
           </DndContext>
         </div>
         {/* タグ登録フォーム */}
-        {/* <div>
+        <div>
           <Autocomplete
+          id="tag-form"
+          freeSolo
           options={tags}
           getOptionLabel={(option) => option.name} // オブジェクトから表示する値を指定
           isOptionEqualToValue={customIsOptionEqualToValue}
           renderInput={(params) => <TextField {...params} label="タグを選択または新規作成" />}
           ></Autocomplete>
           <Button onClick={handleAddTag}>登録</Button>
-        </div> */}
+        </div>
 
         {/* 自己紹介 */}
         <textarea
