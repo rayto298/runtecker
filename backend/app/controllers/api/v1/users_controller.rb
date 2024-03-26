@@ -1,5 +1,4 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authenticate_request
   # GET /api/v1/users
   def index
     page = search_params[:page] || 1
