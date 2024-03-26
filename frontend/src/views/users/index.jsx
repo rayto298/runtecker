@@ -59,6 +59,7 @@ export const UsersIndex = () => {
     const queryPrefecture = params.get("prefecture") ?? "";
     const queryTagById = params.get("tagId") ?? "";
     const queryTagByName = params.get("tagName") ?? "";
+    const queryAccountName = params.get("accountName") ?? "";
     const queryPage = params.get("page") ?? "";
 
     const query = new URLSearchParams({
@@ -67,6 +68,7 @@ export const UsersIndex = () => {
       prefecture: queryPrefecture,
       tag_id: queryTagById,
       tag_name: queryTagByName,
+      account_name: queryAccountName,
       page: queryPage
     });
 
