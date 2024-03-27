@@ -35,6 +35,13 @@ export const PROTECTED_ROUTES = [
     children: [
       { path: RoutePath.Login.path, element: <UserSessionsNew /> },
       { path: RoutePath.Home.path, element: <StaticPagesIndex /> },
+      { path: RoutePath.Users.path, element: <UsersIndex /> },
+      { path: RoutePath.UsersNew.path, element: <UsersNew /> },
+      { path: RoutePath.UsersShow.path(), element: <UsersShow /> },
+      { path: RoutePath.PrivacyPolicy.path, element: <StaticPagesPrivacyPolicy />, },
+      { path: RoutePath.TermsOfUse.path, element: <StaticPagesTermsOfUse />, },
+      { path: RoutePath.AboutUs.path, element: <DeveloperTeam /> },
+      { path: RoutePath.NotFound.path, element: <StaticPagesNotfound /> },
       { path: RoutePath.Curriculums.path, element: <CurriculumsIndex /> },
       { path: RoutePath.Events.path, element: <EventsIndex /> },
       { path: RoutePath.EventsShow.path(), element: <EventsShow /> },
@@ -42,18 +49,6 @@ export const PROTECTED_ROUTES = [
       { path: RoutePath.JobMeasuresShow.path(), element: <JobMeasuresShow /> },
       { path: RoutePath.Recruits.path, element: <RecruitsIndex /> },
       { path: RoutePath.RecruitsShow.path(), element: <RecruitsShow /> },
-      { path: RoutePath.Users.path, element: <UsersIndex /> },
-      { path: RoutePath.UsersNew.path, element: <UsersNew /> },
-      { path: RoutePath.UsersShow.path(), element: <UsersShow /> },
-      { path: RoutePath.NotFound.path, element: <StaticPagesNotfound /> },
-      {
-        path: RoutePath.PrivacyPolicy.path,
-        element: <StaticPagesPrivacyPolicy />,
-      },
-      {
-        path: RoutePath.TermsOfUse.path,
-        element: <StaticPagesTermsOfUse />,
-      },
     ],
   },
 ];

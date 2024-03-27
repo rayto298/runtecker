@@ -74,7 +74,7 @@ class Api::V1::UsersController < ApplicationController
   # 検索用のパラメータを取得
   def search_params
     params.delete(:user) # なぜかuserが入ってくるので削除
-    params.permit(:nickname, :term, :prefecture, :tag_id, :tag_name,:page)
+    params.permit(:nickname, :term, :prefecture, :tag_id, :tag_name, :page, :account_name)
   end
 
   # 検索用のパラメータが存在するか

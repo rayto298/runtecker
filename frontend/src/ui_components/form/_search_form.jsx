@@ -11,6 +11,7 @@ export const _SearchForm = memo(() => {
   const [searchTagByName, setSearchTagByName] = useState("");
   const [searchPrefecture, setSearchPrefecture] = useState(0);
   const [searchTerm, setSearchTerm] = useState(0);
+  const [searchAccountName, setSearchAccountName] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -21,6 +22,7 @@ export const _SearchForm = memo(() => {
     const prefecture = query.get("prefecture") ?? "";
     const term = query.get("term") ?? "";
     const tag_id = query.get("tagId") ?? "";
+    const account_name = query.get("accounName") ?? "";
 
     setSearchNickName(nickname);
     setSearchPrefecture(prefecture);
@@ -52,6 +54,9 @@ export const _SearchForm = memo(() => {
     if (searchTerm) {
       query += query === "?" ? `term=${searchTerm}` : `&term=${searchTerm}`
     }
+    if (searchAccountName) {
+      query += query === "?" ? `accountName=${searchAccountName}` : `&accountName=${searchAccountName}`
+    }
     navigate(RoutePath.Users.path + query);
   }
 
@@ -59,6 +64,7 @@ export const _SearchForm = memo(() => {
     <form className="flex gap-2 w-full" onSubmit={handleOnSubmit}>
       <_InputText id="search_nickname" text={searchNickName} setText={setSearchNickName} placeholder="ニックネーム" />
       <_InputText id="search_tag" text={searchTagByName} setText={setSearchTagByName} placeholder="タグ" />
+      <_InputText id="search_account" text={searchAccountName} setText={setSearchAccountName} placeholder="SNSアカウント名" />
       <_PrefectureSelect selectPrefecture={searchPrefecture} setSelectPrefecture={setSearchPrefecture} />
       <_TermSelect selectTerm={searchTerm} setSelectTerm={setSearchTerm} />
       <SearchButton className="btn bg-[#5050D9] rounded text-white px-6 tracking-wider hover:bg-[#5050D9]">
