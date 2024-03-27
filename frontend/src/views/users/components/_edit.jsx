@@ -247,20 +247,31 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
     ];
   
     let userSocialServicesAttributes = [];
+    let userSocialServicesToDelete = [];
   
     socialServicesInfo.forEach(({ serviceName, currentAccountName, initialAccountName }) => {
       const userSocialServiceId = getUserSocialServiceId(serviceName);
-      if (initialAccountName !== currentAccountName) {
-        if (userSocialServiceId) {
-          userSocialServicesAttributes.push({
-            id: userSocialServiceId,
-            account_name: currentAccountName
-          });
+      // currentAccountNameが空、またはスペースのみの場合に対応
+      const trimmedAccountName = currentAccountName.trim();
+      if (initialAccountName !== trimmedAccountName) {
+        if (trimmedAccountName === "") {
+          // アカウント名が空になっている（またはスペースのみだった）場合、削除リストに追加
+          if (userSocialServiceId) {
+            userSocialServicesToDelete.push(userSocialServiceId);
+          }
         } else {
-          userSocialServicesAttributes.push({
-            social_service_id: getSocialServiceId(serviceName),
-            account_name: currentAccountName
-          });
+          // 更新または新規追加の属性
+          if (userSocialServiceId) {
+            userSocialServicesAttributes.push({
+              id: userSocialServiceId,
+              account_name: trimmedAccountName
+            });
+          } else {
+            userSocialServicesAttributes.push({
+              social_service_id: getSocialServiceId(serviceName),
+              account_name: trimmedAccountName
+            });
+          }
         }
       }
     });
@@ -279,8 +290,9 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
       prefecture_id: Number(prefectureId) !== Number(initialUserState.prefecture_id) ? prefectureId : undefined,
       avatar: avatar !== initialUserState.avatar ? avatar : undefined,
       profile: profile !== initialUserState.profile ? profile : undefined,
-      user_social_services_attributes: userSocialServicesAttributes.length > 0 ? userSocialServicesAttributes : undefined,
       past_nicknames_attributes: pastNicknameAttributes.length > 0 ? pastNicknameAttributes : undefined,
+      user_social_services_attributes: userSocialServicesAttributes.length > 0 ? userSocialServicesAttributes : undefined,
+      user_social_services_to_delete: userSocialServicesToDelete.length > 0 ? userSocialServicesToDelete : undefined,
     };
   }
 
@@ -297,6 +309,7 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
       try {
         const apiUrl = process.env.REACT_APP_API_URL;
         const token = localStorage.getItem("authToken");
+        console.log(updatedFields);
 
         const response = await fetch(`${API_URL}/api/v1/users/${id}`, {
           method: "PATCH",
