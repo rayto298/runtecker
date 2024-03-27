@@ -295,7 +295,6 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
     // 変更がある場合のみAPIコールを実行
     if (Object.keys(updatedFields).filter(key => updatedFields[key] !== undefined).length > 0) {
       try {
-        const apiUrl = process.env.REACT_APP_API_URL;
         const token = localStorage.getItem("authToken");
 
         const response = await fetch(`${API_URL}/api/v1/users/${id}`, {
@@ -409,20 +408,6 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
           </div>
         </div>
 
-        {/* タグ */}
-        {/* {user.user_tags?.length > 0 && (
-          <div className="text-center my-2">
-            {user.user_tags.map((tag, index) => (
-              <Link
-                to={`${RoutePath.Users.path}?tag=${tag.id}`}
-                key={index}
-                className="bg-gray-200 text-xs px-2 py-1 rounded-full m-1"
-              >
-                {tag.name}
-              </Link>
-            ))}
-          </div>
-        )} */}
         {/* タグ（仮データ） */}
         <div
           className="sortable-item-wrapper"

@@ -2,9 +2,12 @@ import { RoutePath } from "config/route_path";
 import { useAuth } from "providers/auth";
 import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
-import { FaSquareXTwitter } from "react-icons/fa6";
+import { RiTwitterXFill } from "react-icons/ri";
 import { SiMattermost } from "react-icons/si";
 import { Link } from "react-router-dom";
+import { NoteLogo } from "ui_components/icons/NoteLogo";
+import { QiitaLogo } from "ui_components/icons/QiitaLogo";
+import { ZennLogo } from "ui_components/icons/ZennLogo";
 
 export const _UsersDetail = ({ user, toggleEdit }) => {
   const { currentUser } = useAuth();
@@ -12,53 +15,34 @@ export const _UsersDetail = ({ user, toggleEdit }) => {
   const [socialServiceLinks, setSocialServiceLinks] = useState([]);
 
   useEffect(() => {
-    const processedUserSocialServices = user?.user_social_services?.map(service => {
+    if (!user) return;
+    const userSocialServices = user?.user_social_services?.map(service => {
       const socialType = service.social_service?.name;
       return {
         name: socialType,
         account_name: service.account_name,
-        url: getSocialServiceUrl(socialType, service.account_name),
       };
     }).sort((a, b) => {
       return serviceDisplayOrder.indexOf(a.name) - serviceDisplayOrder.indexOf(b.name);
     }) || [];
-    setSocialServiceLinks(processedUserSocialServices);
-  }, []);
+    setSocialServiceLinks(userSocialServices);
+  }, [user]);
 
-  // ソーシャルメディアのURLを取得する関数
-  const getSocialServiceUrl = (social_type, account_name) => {
-    switch (social_type) {
-      case "Mattermost":
-        return `${account_name}`;
-      case "GitHub":
-        return `https://github.com/${account_name}`;
-      case "X":
-        return `https://twitter.com/${account_name}`;
-      case "Qiita":
-        return `https://qiita.com/${account_name}`;
-      case "Zenn":
-        return `https://zenn.dev/${account_name}`;
-      case "note":
-        return `https://note.com/${account_name}`;
-      default:
-        return "";
-    }
-  };
-
+  // ソーシャルサービスの種類に応じてアイコンを返す関数
   const getSocialService = (social_type, account_name) => {
     switch (social_type) {
       case "Mattermost":
-        return <Link to={`https://chat.runteq.jp/runteq/channels/times_${account_name}`}><SiMattermost /></Link>;
+        return <Link to={`https://chat.runteq.jp/runteq/channels/times_${account_name}`} target="_blank"><SiMattermost /></Link>;
       case "GitHub":
-        return <Link to={`https://github.com/${account_name}`} className="hover:opacity-50 transition-all"><FaGithub /></Link>;
+        return <Link to={`https://github.com/${account_name}`} target="_blank" className="hover:opacity-50 transition-all"><FaGithub /></Link>;
       case "X":
-        return <Link to={`https://twitter.com/${account_name}`} className="hover:opacity-50 transition-all"><FaSquareXTwitter /></Link>;
+        return <Link to={`https://twitter.com/${account_name}`} target="_blank" className="hover:opacity-50 transition-all"><RiTwitterXFill /></Link>;
       case "Qiita":
-        return;
+        return <Link to={`https://qiita.com/${account_name}`} target="_blank" className="hover:opacity-50 transition-all"><QiitaLogo /></Link>;
       case "Zenn":
-        return;
+        return <Link to={`https://zenn.dev/${account_name}`} target="_blank" className="hover:opacity-50 transition-all"><ZennLogo /></Link>;
       case "note":
-        return;
+        return <Link to={`https://note.com/${account_name}`} target="_blank" className="hover:opacity-50 transition-all"><NoteLogo /></Link>;
       default:
         return;
     }
@@ -90,17 +74,15 @@ export const _UsersDetail = ({ user, toggleEdit }) => {
         <ul className="flex gap-3 w-full justify-center items-center">
           {socialServiceLinks.map((service, index) => (
             <li key={index}>
-              <a href={service.url} className="hover:opacity-50 transition-all text-blue-500" target="_blank" rel="noopener noreferrer">
-                {service.name}
-              </a>
+              {getSocialService(service.name, service.account_name)}
             </li>
           ))}
         </ul>
       </div>
       {user?.user_tags?.length > 0 &&
-        <div className="text-center my-2" style={{ display: 'flex', flexWrap: 'wrap' }}>
+        <div className="text-center my-2 flex flex-wrap">
           {user?.user_tags.map((tag, index) => (
-            <Link to={`${RoutePath.Users.path}?tag=${tag.id}`} key={index} className="bg-gray-200 text-s px-2 py-1 rounded-full m-1">{tag.name}</Link>
+            <Link to={`${RoutePath.Users.path}?tagId=${tag.id}`} key={index} className="bg-gray-200 text-s px-2 py-1 rounded-full m-1">{tag.name}</Link>
           ))}
         </div>}
       {user?.profile &&
