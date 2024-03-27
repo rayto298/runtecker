@@ -3,8 +3,8 @@ import { useEffect, useState } from "react"
 import { _UsersEdit } from "./components/_edit"
 import { _UsersDetail } from "./components/_user_detail"
 import { useNavigate } from 'react-router-dom';
-import { RoutePath } from "config/route_path.js"; // RoutePathのインポートパスに置き換えてください
-import { API_URL } from "config/settings";
+import { RoutePath } from "config/route_path";
+import { UsersController } from "controllers/users_controller";
 
 export const UsersShow = () => {
   const navigate = useNavigate(); // useNavigateフックからnavigate関数を取得
@@ -15,42 +15,10 @@ export const UsersShow = () => {
 
   const fetchUserData = async () => {
     try {
-      const token = localStorage.getItem("authToken");
-
-      const response = await fetch(`${API_URL}/api/v1/users/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error('ネットワークレスポンスがOKではありません');
-      }
-      const data = await response.json();
-
-      // 足りない部分をダミーデータで補完
-      const supplementedData = {
-        ...data,
-        user_tags: [
-          { id: 1, name: "Ruby" },
-          { id: 2, name: "Ruby on Railssssssssssssssss" },
-          { id: 3, name: "JavaScript" },
-          { id: 4, name: "TypeScript" },
-          { id: 5, name: "Vue.js" },
-          { id: 6, name: "Nuxt.js" },
-          { id: 7, name: "React" },
-          { id: 8, name: "Next.js" },
-          { id: 9, name: "Docker" },
-          { id: 10, name: "AWS" },
-          { id: 11, name: "php" },
-          { id: 12, name: "Laravel" },
-          { id: 13, name: "Python" },
-        ]
-      };
-      setUser(supplementedData); // 補完されたデータをセット
+      const userController = new UsersController();
+      const { user } = await userController.getUserById(id);
+      setUser(user);
     } catch (err) {
-      console.error("ユーザーデータの取得中にエラーが発生しました:", err);
       setError(err.message);
       setTimeout(() => navigate(RoutePath.Users.path), 3000);
     }
@@ -81,7 +49,7 @@ export const UsersShow = () => {
       )}
       <article className="max-w-screen-lg w-full m-auto my-10">
         <section className="bg-white rounded p-12 w-full max-w-screen-md m-auto">
-          {isEdit ? 
+          {isEdit ?
             <_UsersEdit user={user} toggleEdit={toggleEdit} isEdit={isEdit} setIsEdit={setIsEdit} handleUserUpdated={handleUserUpdated} />
             : <_UsersDetail user={user} toggleEdit={toggleEdit} />
           }

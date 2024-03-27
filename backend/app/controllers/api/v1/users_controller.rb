@@ -8,8 +8,8 @@ class Api::V1::UsersController < ApplicationController
 
   # GET /api/v1/users/:id
   def show
-    @user = User.find(params[:id])
-    render json: @user, include: {
+    user = User.find(params[:id])
+    render json: user, include: {
       past_nicknames: {
         only: [:id, :nickname] # ここで必要なフィールドを指定
       },

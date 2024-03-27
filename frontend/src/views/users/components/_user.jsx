@@ -17,13 +17,13 @@ export const _User = memo((user) => {
   const socialService = (name, account_name) => {
     switch (name) {
       case "Mattermost":
-        return <Link to={`${account_name}`} className="hover:opacity-50 transition-all"><SiMattermost /></Link>
+        return <Link to={`https://chat.runteq.jp/runteq/channels/times_${account_name}`} className="hover:opacity-50 transition-all"><SiMattermost /></Link>;
       case "GitHub":
-        return <Link to={`https://github.com/${account_name}`} className="hover:opacity-50 transition-all"><FaGithub /></Link>
+        return <Link to={`https://github.com/${account_name}`} className="hover:opacity-50 transition-all"><FaGithub /></Link>;
       case "X":
-        return <Link to={`https://twitter.com/${account_name}`} className="hover:opacity-50 transition-all"><FaSquareXTwitter /></Link>
+        return <Link to={`https://twitter.com/${account_name}`} className="hover:opacity-50 transition-all"><FaSquareXTwitter /></Link>;
       default:
-        return null
+        return null;
     }
   }
 
