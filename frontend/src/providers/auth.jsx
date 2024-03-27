@@ -9,7 +9,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState("");
-  const [currentUser, setCurrentUser] = useState(null); 
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     // URLからクエリパラメータを解析してトークンを取得
@@ -22,18 +22,19 @@ export const AuthProvider = ({ children }) => {
   }, []);
   useEffect(() => {
     if (token) {
-    fetch(`${API_URL}/api/v1/users/current`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then((response) => response.json())
-    .then((data) => setCurrentUser(data.user))
-    .catch((error) => console.error("Error fetching user:", error));
-  }
-}, [token]); // 依存配列にtokenを指定
+      fetch(`${API_URL}/api/v1/users/current`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setCurrentUser(data.user))
+        .catch((error) => console.error("Error fetching user:", error));
+    }
+  }, [token]); // 依存配列にtokenを指定
 
   const logout = () => {
+    setCurrentUser(null); // ユーザー情報をクリア
     setToken(""); // トークンをクリア
     localStorage.removeItem("authToken"); // localStorageからトークンを削除
   };
