@@ -39,7 +39,7 @@ export const _User = memo((user) => {
         {userData.term.name}
       </Link>
       <div className="flex px-2 items-center gap-4">
-        <img src={userData.avatar ?? "https://via.placeholder.com/300"}
+        <img src={userData.avatar ?? "https://placehold.jp/ff7300/ffffff/300x300.jpg?text=Avatar"}
           className="w-32 group-hover:w-36 group-hover:h-36 h-32 object-center object-cover rounded-full transition-all duration-200 delay-200 transform"
           alt="Avatar"
         />

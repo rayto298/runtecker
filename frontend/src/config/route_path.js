@@ -67,4 +67,8 @@ export const RoutePath = {
     path: "/terms_of_use",
     name: "利用規約",
   },
+  ContactUs: {
+    path: "/contact_us",
+    name: "お問い合わせ"
+  },
 };

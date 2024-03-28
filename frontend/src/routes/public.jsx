@@ -11,6 +11,7 @@ import { StaticPagesNotRuntecker } from "views/static_pages/not_runtecker";
 import DeveloperTeam from "views/static_pages/about_us";
 import { StaticPagesPrivacyPolicy } from "views/static_pages/privacy_policy";
 import { StaticPagesTermsOfUse } from "views/static_pages/terms_of_use";
+import { ContactUs } from "views/static_pages/contact_us";
 
 const App = () => {
   return (
@@ -30,6 +31,11 @@ export const PUBLIC_ROUTES = [
       { path: RoutePath.UsersNew.path, element: <UsersNew /> },
       { path: RoutePath.Home.path, element: <StaticPagesIndex /> },
       { path: RoutePath.AboutUs.path, element: <DeveloperTeam /> },
+      { path: RoutePath.NotRuntecker.path, element: <StaticPagesNotRuntecker />, },
+      { path: RoutePath.PrivacyPolicy.path, element: <StaticPagesPrivacyPolicy />, },
+      { path: RoutePath.TermsOfUse.path,
+        element: <StaticPagesTermsOfUse />, },
+      { path: RoutePath.ContactUs.path, element: <ContactUs /> },
       { path: RoutePath.NotRuntecker.path, element: <StaticPagesNotRuntecker />, },
       { path: RoutePath.PrivacyPolicy.path, element: <StaticPagesPrivacyPolicy />, },
       { path: RoutePath.TermsOfUse.path, element: <StaticPagesTermsOfUse />, },

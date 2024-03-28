@@ -53,8 +53,8 @@ export const _Headers = memo(() => {
           </ul>
         </nav>
       </div>
-      <div className="flex items-center h-full mr-4">
-        <Link className="flex justify-center items-center bg-runteq-primary px-4 h-full text-white text-sm border-r border-slate-100">
+      <div className="flex items-center h-full">
+        <Link to={RoutePath.ContactUs.path} className="flex justify-center items-center bg-runteq-primary px-4 h-full text-white text-sm">
           <span className="text-xl mr-2"><SiGoogleforms /></span>お問い合わせ
         </Link>
         {currentUser ? (

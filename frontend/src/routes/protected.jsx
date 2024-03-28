@@ -18,6 +18,7 @@ import { StaticPagesIndex } from "views/static_pages";
 import { StaticPagesNotfound } from "views/static_pages/not_found";
 import { StaticPagesPrivacyPolicy } from "views/static_pages/privacy_policy";
 import { StaticPagesTermsOfUse } from "views/static_pages/terms_of_use";
+import { ContactUs } from "views/static_pages/contact_us";
 import DeveloperTeam from "views/static_pages/about_us";
 
 const App = () => {
@@ -50,6 +51,13 @@ export const PROTECTED_ROUTES = [
       { path: RoutePath.JobMeasuresShow.path(), element: <JobMeasuresShow /> },
       { path: RoutePath.Recruits.path, element: <RecruitsIndex /> },
       { path: RoutePath.RecruitsShow.path(), element: <RecruitsShow /> },
+      { path: RoutePath.Users.path, element: <UsersIndex /> },
+      { path: RoutePath.UsersNew.path, element: <UsersNew /> },
+      { path: RoutePath.UsersShow.path(), element: <UsersShow /> },
+      { path: RoutePath.NotFound.path, element: <StaticPagesNotfound /> },
+      { path: RoutePath.PrivacyPolicy.path, element: <StaticPagesPrivacyPolicy />, },
+      { path: RoutePath.TermsOfUse.path, element: <StaticPagesTermsOfUse />, },
+      { path: RoutePath.ContactUs.path, element: <ContactUs /> },
     ],
   },
 ];
