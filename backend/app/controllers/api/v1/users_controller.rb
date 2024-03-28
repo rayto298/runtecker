@@ -41,7 +41,16 @@ class Api::V1::UsersController < ApplicationController
   # PATCH/PUT /api/v1/users/:id
   def update
     @user = User.find(params[:id])
-    if @user.update(update_params)
+
+    # 設定されていたSNSアカウント名が空になっていた場合、UserSocialServiceから該当レコードを削除する処理
+    if params[:user][:user_social_services_to_delete].present?
+      params[:user][:user_social_services_to_delete].each do |id|
+        user_social_service = @user.user_social_services.find_by(id: id)
+        user_social_service.destroy if user_social_service
+      end
+    end
+    
+    if @user.update(update_params.except(:user_social_services_to_delete))
       render json: @user
     else
       render json: @user.errors, status: :unprocessable_entity
@@ -74,8 +83,9 @@ class Api::V1::UsersController < ApplicationController
   def update_params
     params.require(:user).permit(
       :nickname, :prefecture_id, :avatar, :profile, 
+      past_nicknames_attributes: [:nickname],
       user_social_services_attributes: [:id, :social_service_id, :account_name],
-      past_nicknames_attributes: [:nickname]
+      user_social_services_to_delete: [:id]
     )
   end
 
