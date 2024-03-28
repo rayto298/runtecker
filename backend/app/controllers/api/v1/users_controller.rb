@@ -8,24 +8,32 @@ class Api::V1::UsersController < ApplicationController
 
   # GET /api/v1/users/:id
   def show
-    @user = User.find(params[:id])
-    render json: @user, include: {
+    user = User.find(params[:id])
+    render json: user, include: {
       past_nicknames: {
-        only: [:id, :nickname] # ここで必要なフィールドを指定
+        only: [:id, :nickname]
       },
       user_social_services: {
         include: {
           social_service: {
-            only: [:id, :name, :service_type] # ここで必要なフィールドを指定
+            only: [:id, :name, :service_type]
           }
         },
-        only: [:id, :account_name] # ここで必要なフィールドを指定
+        only: [:id, :account_name]
       },
       term: {
-        only: [:id, :name] # ここで必要なフィールドを指定
+        only: [:id, :name]
       },
       prefecture: {
-        only: [:id, :name] # ここで必要なフィールドを指定
+        only: [:id, :name]
+      },
+      user_tags:{
+        only: [:position],
+        include: {
+          tag: {
+            only: [:id, :name]
+          }
+        }
       }
     }, methods: [:pastname], only: [:id, :name, :nickname, :profile, :term_id, :github_account, :prefecture_id, :pastname, :avatar]
   end

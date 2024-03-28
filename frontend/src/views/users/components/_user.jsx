@@ -2,9 +2,9 @@ import { RoutePath } from "config/route_path"
 import { memo } from "react";
 import { Link } from "react-router-dom"
 import { IconContext } from 'react-icons'
-import { FaSquareXTwitter } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa";
 import { SiMattermost } from "react-icons/si";
+import { RiTwitterXFill } from "react-icons/ri";
 
 export const _User = memo((user) => {
   const userData = user.user;
@@ -17,13 +17,13 @@ export const _User = memo((user) => {
   const socialService = (name, account_name) => {
     switch (name) {
       case "Mattermost":
-        return <Link to={`${account_name}`} className="hover:opacity-50 transition-all"><SiMattermost /></Link>
+        return <Link to={`https://chat.runteq.jp/runteq/channels/times_${account_name}`} className="hover:opacity-50 transition-all"><SiMattermost /></Link>;
       case "GitHub":
-        return <Link to={`https://github.com/${account_name}`} className="hover:opacity-50 transition-all"><FaGithub /></Link>
+        return <Link to={`https://github.com/${account_name}`} className="hover:opacity-50 transition-all"><FaGithub /></Link>;
       case "X":
-        return <Link to={`https://twitter.com/${account_name}`} className="hover:opacity-50 transition-all"><FaSquareXTwitter /></Link>
+        return <Link to={`https://twitter.com/${account_name}`} className="hover:opacity-50 transition-all"><RiTwitterXFill /></Link>;
       default:
-        return null
+        return null;
     }
   }
 
