@@ -8,8 +8,8 @@ import ReactGA from 'react-ga4'; // ReactGA をインポート
 
 export const AppRoutes = () => {
   const location = useLocation();
-  const { auth } = useAuth(); // 認証状態をuseAuthフックから取得
-  const routes = auth ? PROTECTED_ROUTES : PUBLIC_ROUTES; // 認証状態に応じてルートを切り替え
+  const { currentUser } = useAuth(); // 認証状態をuseAuthフックから取得
+  const routes = currentUser ? PROTECTED_ROUTES : PUBLIC_ROUTES; // 認証状態に応じてルートを切り替え
   const element = useRoutes([...routes]);
 
   useEffect(() => {

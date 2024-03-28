@@ -60,7 +60,7 @@ export const _UsersDetail = ({ user, toggleEdit }) => {
       </div>
       <div className="py-4 w-full">
         <figure className="w-full">
-          <img src={user?.avatar} className="m-auto h-[300px] w-auto" />
+          <img src={user?.avatar || 'https://placehold.jp/ff7300/ffffff/300x300.jpg?text=Avatar'} className="m-auto h-[300px] w-auto" />
         </figure>
       </div>
         <div className="w-full">

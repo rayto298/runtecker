@@ -54,3 +54,12 @@ body {
 .border-runteq-primary-dark {
   border-color: var(--runteq-primary-dark);
 }
+
+/* _headers */
+/* daisyUIのクラスに上書き */
+.menu li > *:not(ul, .menu-title, details, .btn):active,
+.menu li > *:not(ul, .menu-title, details, .btn).active,
+.menu li > details > summary:active {
+  background-color: var(--runteq-primary);
+  color: white;
+}

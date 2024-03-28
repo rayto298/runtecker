@@ -58,6 +58,7 @@ class User < ApplicationRecord
     prefecture = params[:prefecture]
     tag_id = params[:tag_id]
     tag_name = params[:tag_name]
+    account_name = params[:account_name]
 
     users = User.distinct.includes(:tags, :prefecture, :term)
 
@@ -69,6 +70,9 @@ class User < ApplicationRecord
 
     # 入学期のid検索
     users = users.with_term(term) if term.present?
+
+    # SNSアカウント名の検索
+    users = users.joins(:user_social_services).where(user_social_services: { account_name: account_name }) if account_name.present?
 
     # タグ検索がない場合はそのまま返す
     # タグ検索のとき、ユーザーデータを再度取得しているのが重くなる可能性があったため、
