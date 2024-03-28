@@ -50,7 +50,6 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
     noteAccount: getAccountName("note"),
   }
 
-
   // ニックネーム
   const [nickname, setNickname] = useState(user.nickname);
   const handleNicknameChange = (e) => {

@@ -20,7 +20,10 @@ export const UsersShow = () => {
       setUser(user);
     } catch (err) {
       setError(err.message);
-      //setTimeout(() => navigate(RoutePath.Users.path), 3000);
+      const timeoutId = setTimeout(() => {
+        navigate(RoutePath.Users.path);
+        clearTimeout(timeoutId);
+      }, 3000);
     }
   };
 
