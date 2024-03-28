@@ -1,7 +1,21 @@
 import { RoutePath } from "config/route_path";
-import { Link,useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { marked } from "marked";
+import DOMPurify from 'dompurify';
 
 export const _UsersDetail = ({ user, toggleEdit }) => {
+
+ function MarkdownToHtml({ markdownText }) {
+  // マークダウンテキストが null または undefined の場合、空の文字列を使用
+  const safeMarkdownText = markdownText ?? '';
+
+  // マークダウンをHTMLに変換し、サニタイズ
+  const rawHtml = marked(safeMarkdownText);
+  const sanitizedHtml = DOMPurify.sanitize(rawHtml);
+
+   // サニタイズされたHTMLをレンダリング
+  return <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />;
+}
 
   const navigate = useNavigate(); // useNavigateフックを使用してnavigate関数を取得
   // ソーシャルメディアのURLを取得する関数
@@ -81,8 +95,8 @@ export const _UsersDetail = ({ user, toggleEdit }) => {
           ))}
         </div>}
       {user?.profile &&
-        <div className="my-5 bg-slate-100 p-4 rounded">
-          <p className="text-start break-words">{user.profile}</p>
+        <div className="my-5 bg-slate-100 p-4 rounded markdown-content">
+          <MarkdownToHtml markdownText={user.profile} />     
         </div>}
     </>
   );
