@@ -12,40 +12,39 @@ import {
   arrayMove,
   SortableContext,
   rectSortingStrategy,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Autocomplete, TextField, Button } from "@mui/material";
 import { TagsController } from "controllers/tags_controller";
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { BsList } from "react-icons/bs";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 
 export const _UsersTagEdit = memo(({ userTags, setUserTags }) => {
   const [activeId, setActiveId] = useState(null);
   const [inputValue, setInputValue] = useState(''); // Autocomplete の入力値の状態変数
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+  const [allTags, setAllTags] = useState([]); // 全件取得したタグの配列
   const [autocompleteTags, setAutocompleteTags] = useState([]);
-  const [tagsCount, setTagsCount] = useState(0);
-  const TAGS_LIMIT = 20; // 一度に取得するタグの数
 
-  const fetchData = useCallback(() => {
+  const fetchData = useCallback(async () => {
     const tagsController = new TagsController();
-    let count = 1000; // 既存のタグidと被らないように大きな数値を初期値に設定
-
-    // 全取得はタグが増えれば増えるほど通信が重くなるので、制限してタグを取得
-    // tagsController.getTagsLimit(TAGS_LIMIT).then((data) => {
-    //   const tags = data.map((tag) => {
-    //     return { id: count++, name: tag.name };
-    //   });
-    //   setAutocompleteTags(tags);
-    // });
-
     // 全件取得
-    tagsController.getTagsAll().then((data) => {
+    let autoTags = [];
+    let count = 1;
+    await tagsController.getTagsAll().then((data) => {
       const tags = data.map((tag) => {
         return { id: count++, name: tag.name };
       });
-      setAutocompleteTags(tags);
+      autoTags = tags;
     });
+    setAllTags(autoTags);
 
+    let newTags = autoTags.filter((tag) => {
+      return !userTags.some((userTag) => userTag.name === tag.name);
+    });
+    setAutocompleteTags(newTags);
   }, []);
 
   useEffect(() => {
@@ -54,13 +53,11 @@ export const _UsersTagEdit = memo(({ userTags, setUserTags }) => {
 
   useEffect(() => {
     // userTagsのidの最大値を確認
-    let count = 0;
-    userTags.forEach((tag) => {
-      if (tag.id > count) {
-        count = tag.id;
-      }
+    if (userTags.length === 0) return;
+    let newTags = allTags.filter((tag) => {
+      return !userTags.some((userTag) => userTag.name === tag.name);
     });
-    setTagsCount(count + 1);
+    setAutocompleteTags(newTags);
   }, [userTags]);
 
   //ドラッグが始まったときの処理
@@ -98,22 +95,44 @@ export const _UsersTagEdit = memo(({ userTags, setUserTags }) => {
     if (!inputValue) return;
     // 新しい値がuserTagsにすでに存在するかどうかをチェック
     const newValueArray = inputValue.split(/[,、]/);
-    let count = tagsCount;
+    let tagsId = getTagsId();
     newValueArray.forEach((value) => {
+      if (!value.trim()) return; // trim()を追加して余分な空白を削除
       if (userTags.some(tag => tag.name === value.trim())) { // trim()を追加して余分な空白を削除
         alert(`${value}は既に登録されています`);
         return;
       }
-      setUserTags((prevUserTags) => [...prevUserTags, { id: count++, name: value }]);
-      setTagsCount(count);
+      setUserTags((prevUserTags) => [...prevUserTags, { id: tagsId++, name: value }]);
     });
-
-    setInputValue("");
+    resetForm();
   };
+
+  // タグのidの最大値を設定
+  // NOTE : タグのidはユーザータグのidと被らないように設定
+  //        タグの数からid設定すると、最大値となるidがユーザータグのidと被る可能性があるため
+  const getTagsId = () => {
+    let count = 1;
+    userTags.forEach((tag) => {
+      if (tag.id > count) {
+        count = tag.id;
+      }
+    });
+    return count++;
+  }
+
+  // フォームリセット
+  const resetForm = () => {
+    setInputValue("");
+  }
+
+  // タグ削除ハンドル
+  const handleDelete = (id) => {
+    setUserTags((prevUserTags) => prevUserTags.filter((tag) => tag.id !== id));
+  }
 
   return (
     <>
-      <div
+      {userTags?.length > 0 && <div
         className="sortable-item-wrapper"
         style={{ margin: "4px", width: "auto" }}
       >
@@ -124,21 +143,15 @@ export const _UsersTagEdit = memo(({ userTags, setUserTags }) => {
           onDragEnd={handleDragEnd}
           onDragCancel={handleDragCancel}
         >
-          <SortableContext items={userTags} strategy={rectSortingStrategy}>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(5, 1fr)",
-                margin: "20px",
-              }}
-            >
-              {userTags?.map((tag, index) => (
-                <SortableItem key={tag.id} tag={tag} />
+          <SortableContext items={userTags} strategy={verticalListSortingStrategy}>
+            <div className="m-[20px]" >
+              {userTags?.map((tag) => (
+                <SortableItem key={tag.id} tag={tag} handleDelete={handleDelete} />
               ))}
             </div>
           </SortableContext>
         </DndContext>
-      </div>
+      </div>}
       <div>
         <Autocomplete
           id="tag-form"
@@ -155,6 +168,7 @@ export const _UsersTagEdit = memo(({ userTags, setUserTags }) => {
           onInputChange={(event, newInputValue) => {
             setInputValue(newInputValue);
           }}
+          inputValue={inputValue}
         />
         <Button onClick={handleAddTag}>登録</Button>
       </div>
@@ -162,7 +176,7 @@ export const _UsersTagEdit = memo(({ userTags, setUserTags }) => {
   )
 });
 
-export const SortableItem = ({ tag }) => {
+export const SortableItem = ({ tag, handleDelete }) => {
   const {
     attributes, //これによって要素がドラッグ可能に
     isDragging, //現在の要素がドラッグ中かどうかを示すbool値
@@ -174,26 +188,18 @@ export const SortableItem = ({ tag }) => {
 
   return (
     <div
-      className="bg-gray-200 text-s text-center px-2 py-1 rounded-full m-1 hover:transform hover:-translate-y-0.5"
+      className="bg-gray-200 text-s px-1 py-2 rounded-full m-1.5 hover:transform hover:-translate-y-0.5 flex justify-between items-center w-auto"
       ref={setNodeRef}
       style={{
         transform: CSS.Translate.toString(transform), //これで掴んで動かすアニメーションが実現
         transition: transition || undefined,
-        cursor: isDragging ? "grabbing" : "grab",
-        width: "auto",
-        padding: "4px 8px",
-        margin: "6px",
-        justifyContent: "center",
-        alignItems: "center",
-
-        overflow: "hidden", //以下3つで長い文字列を省略する形に
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
       }}
-      {...attributes}
-      {...listeners}
     >
-      {tag.name}
+      <button type="button" className="px-2 text-gray-500"
+        {...attributes}
+        {...listeners}><BsList /></button>
+      <span className="truncate text-start mx-3">{tag.name}</span>
+      <button type="button" onClick={() => handleDelete(tag.id)} className="px-2 text-gray-500"><AiOutlineCloseCircle /></button>
     </div>
   );
 };

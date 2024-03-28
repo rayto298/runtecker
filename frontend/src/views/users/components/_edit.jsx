@@ -22,7 +22,7 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
         return { id: count++, name: tag.tag.name };
       });
     } else {
-      newTags = [{}];
+      newTags = [];
     }
     return newTags;
   });

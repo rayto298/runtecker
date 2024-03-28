@@ -91,7 +91,7 @@ export const _UsersDetail = ({ user, toggleEdit }) => {
       {user?.user_tags?.length > 0 &&
         <div className="text-center my-2 flex flex-wrap">
           {user?.user_tags.map((tag, index) => (
-            <Link to={`${RoutePath.Users.path}?tagId=${tag.tag.id}`} key={index} className="bg-gray-200 text-s px-2 py-1 rounded-full m-1">{tag.tag.name}</Link>
+            <Link to={`${RoutePath.Users.path}?tagId=${tag.tag.id}`} key={index} className="bg-gray-200 text-s px-4 py-2 rounded-full m-1">{tag.tag.name}</Link>
           ))}
         </div>}
       {user?.profile &&

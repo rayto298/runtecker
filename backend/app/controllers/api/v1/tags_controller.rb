@@ -13,9 +13,6 @@ class Api::V1::TagsController < ApplicationController
     # ============================================ #
     # よく使われているタグを制限付きで取得する場合 #
     # ============================================ #
-    limit = params[:limit].to_i || 20
-    # 制限有りの場合は下記を使う
-    # user_tags = UserTag.group(:tag_id).count.sort_by { |_, v| -v }.first(limit)
     # 制限なしバージョン
     user_tags = UserTag.group(:tag_id).count.sort_by { |_, v| -v }
     # nameを取得
