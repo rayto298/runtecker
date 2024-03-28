@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { RiTwitterXFill } from "react-icons/ri";
 import { SiMattermost } from "react-icons/si";
-import { Link } from "react-router-dom";
 import { NoteLogo } from "ui_components/icons/NoteLogo";
 import { QiitaLogo } from "ui_components/icons/QiitaLogo";
 import { ZennLogo } from "ui_components/icons/ZennLogo";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { marked } from "marked";
 import DOMPurify from 'dompurify';
 
