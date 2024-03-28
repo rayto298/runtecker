@@ -6,15 +6,15 @@ import DOMPurify from 'dompurify';
 export const _UsersDetail = ({ user, toggleEdit }) => {
 
  function MarkdownToHtml({ markdownText }) {
-  // マークダウンをHTMLに変換
-  const rawHtml = marked(markdownText)
-  // HTMLをサニタイズ
+  // マークダウンテキストが null または undefined の場合、空の文字列を使用
+  const safeMarkdownText = markdownText ?? '';
+
+  // マークダウンをHTMLに変換し、サニタイズ
+  const rawHtml = marked(safeMarkdownText);
   const sanitizedHtml = DOMPurify.sanitize(rawHtml);
+
+   // サニタイズされたHTMLをレンダリング
   return <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />;
-}
-  function MarkdownRenderer({ markdown }) {
-  const html = marked(markdown || ''); // markdownがundefinedの場合は空文字列を渡す
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
   const navigate = useNavigate(); // useNavigateフックを使用してnavigate関数を取得
@@ -96,8 +96,7 @@ export const _UsersDetail = ({ user, toggleEdit }) => {
         </div>}
       {user?.profile &&
         <div className="my-5 bg-slate-100 p-4 rounded markdown-content">
-          <MarkdownRenderer markdown={user.profile} />
-          
+          <MarkdownToHtml markdownText={user.profile} />     
         </div>}
     </>
   );
