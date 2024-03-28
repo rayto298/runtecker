@@ -49,8 +49,16 @@ class Api::V1::UsersController < ApplicationController
         user_social_service.destroy if user_social_service
       end
     end
-    
-    if @user.update(update_params.except(:user_social_services_to_delete))
+
+    # ユーザータグの更新
+    tags = update_params[:tag_names]
+    Rails.logger.info('================== tags ==================')
+    Rails.logger.info(tags)
+    if tags.present?
+      @user.update_user_tags(@user.id, tags)
+    end
+
+    if @user.update(update_params.except(:user_social_services_to_delete, :tag_names))
       render json: @user
     else
       render json: @user.errors, status: :unprocessable_entity
@@ -82,7 +90,7 @@ class Api::V1::UsersController < ApplicationController
 
   def update_params
     params.require(:user).permit(
-      :nickname, :prefecture_id, :avatar, :profile, 
+      :nickname, :prefecture_id, :avatar, :profile, tag_names: [],
       past_nicknames_attributes: [:nickname],
       user_social_services_attributes: [:id, :social_service_id, :account_name],
       user_social_services_to_delete: [:id]

@@ -193,6 +193,9 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
       });
     }
 
+    // ユーザータグ更新用の配列
+    let tag_names = userTags.map((tag) => tag.name);
+
     return {
       nickname: nickname !== initialUserState.nickname ? nickname : undefined,
       prefecture_id: Number(prefectureId) !== Number(initialUserState.prefecture_id) ? prefectureId : undefined,
@@ -201,6 +204,7 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
       past_nicknames_attributes: pastNicknameAttributes.length > 0 ? pastNicknameAttributes : undefined,
       user_social_services_attributes: userSocialServicesAttributes.length > 0 ? userSocialServicesAttributes : undefined,
       user_social_services_to_delete: userSocialServicesToDelete.length > 0 ? userSocialServicesToDelete : undefined,
+      tag_names: tag_names.length > 0 ? tag_names : undefined,
     };
   }
 
@@ -340,7 +344,7 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
           onChange={handleProfileChange}
         />
         <div className="w-full text-center">
-          <button type="submit" className="btn btn-primary text-xs mt-3">
+          <button type="submit" className="btn bg-runteq-primary text-white text-xs mt-3">
             変更内容を保存
           </button>
         </div>
