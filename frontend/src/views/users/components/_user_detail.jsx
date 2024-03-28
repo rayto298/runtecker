@@ -26,7 +26,16 @@ export const _UsersDetail = ({ user, toggleEdit }) => {
       return serviceDisplayOrder.indexOf(a.name) - serviceDisplayOrder.indexOf(b.name);
     }) || [];
     setSocialServiceLinks(userSocialServices);
+
+    // ユーザータグのソート
+    // NOTE : 詳細及び編集画面はフロントでソート処理しているようなので合わせています
+    userTagsSortByPosition();
   }, [user]);
+
+  const userTagsSortByPosition = () => {
+    const userTags = user?.user_tags || [];
+    return userTags.sort((a, b) => a.position - b.position);
+  };
 
   // ソーシャルサービスの種類に応じてアイコンを返す関数
   const getSocialService = (social_type, account_name) => {
@@ -82,7 +91,7 @@ export const _UsersDetail = ({ user, toggleEdit }) => {
       {user?.user_tags?.length > 0 &&
         <div className="text-center my-2 flex flex-wrap">
           {user?.user_tags.map((tag, index) => (
-            <Link to={`${RoutePath.Users.path}?tagId=${tag.id}`} key={index} className="bg-gray-200 text-s px-2 py-1 rounded-full m-1">{tag.name}</Link>
+            <Link to={`${RoutePath.Users.path}?tagId=${tag.tag.id}`} key={index} className="bg-gray-200 text-s px-2 py-1 rounded-full m-1">{tag.tag.name}</Link>
           ))}
         </div>}
       {user?.profile &&

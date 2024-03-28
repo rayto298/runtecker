@@ -1,35 +1,31 @@
 import { RoutePath } from "config/route_path";
-import { Link } from "react-router-dom";
 import { _UsersEditService } from "./_edit_service";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { PrefecturesController } from "controllers/prefectures_controller";
 import { SocialServicesController } from "controllers/social_services_controller";
-import {
-  //ここからdnd-kit
-  DndContext,
-  closestCenter,
-  MouseSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  useSortable,
-  arrayMove,
-  SortableContext,
-  rectSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { _Avatar } from "./_avatar";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom"
 import { API_URL } from "config/settings";
-import { Autocomplete, TextField, Button } from "@mui/material";
-
+import { _UsersTagEdit } from "./_tag_edit";
 
 export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpdated }) => {
 
   const { id } = useParams();
+  // タグ
+  const [userTags, setUserTags] = useState(() => {
+    let newTags = [];
+    // 既存のtagのidだと後から追加されたタグに対応しにくいため、idを振り直す
+    let count = 1;
+    if (user.user_tags?.length > 0) {
+      newTags = user.user_tags.map((tag) => {
+        return { id: count++, name: tag.tag.name };
+      });
+    } else {
+      newTags = [{}];
+    }
+    return newTags;
+  });
 
   const getAccountName = (serviceName) => {
     const service = user.user_social_services.find(service => service.social_service.name === serviceName);
@@ -54,92 +50,6 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
     noteAccount: getAccountName("note"),
   }
 
-  //タグの仮データ
-  const tagData = [ //タグ全てのデータ
-    { id: 1, name: "Ruby" },
-    { id: 2, name: "Ruby on Railssssssssssssssss" },
-    { id: 3, name: "JavaScript" },
-    { id: 4, name: "TypeScript" },
-    { id: 5, name: "Vue.js" },
-    { id: 6, name: "Nuxt.js" },
-    { id: 7, name: "React" },
-    { id: 8, name: "Next.js" },
-    { id: 9, name: "Docker" },
-    { id: 10, name: "AWS" },
-    { id: 11, name: "php" },
-    { id: 12, name: "Laravel" },
-    { id: 13, name: "Python" },
-  ];
-  const initUserTags = [ //ユーザーの編集前状態のタグ
-    { id: 2, name: "Ruby on Railssssssssssssssss" },
-    { id: 4, name: "TypeScript" },
-    { id: 6, name: "Nuxt.js" },
-    { id: 9, name: "Docker" },
-    { id: 12, name: "Laravel" },
-  ];
-
-  const [tags, setTags] = useState(tagData);
-  const [userTags, setUserTags] = useState(initUserTags);
-  const [activeId, setActiveId] = useState(null);
-  const [inputValue, setInputValue] = useState(''); // Autocomplete の入力値の状態変数
-  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
-
-  useEffect(() => {
-    const otherTags = tags.filter(tag => !userTags.some(userTag => userTag.id === tag.id));
-    setTags(otherTags);
-  },[userTags])
-
-  //ドラッグが始まったときの処理
-  const handleDragStart = useCallback((event) => {
-    console.log("つかんだタグ: " + event.active.id);
-    setActiveId(event.active.id);
-  }, []);
-
-  //ドラッグが終わる時の処理
-  const handleDragEnd = useCallback((event) => {
-    // console.log(activeId); //⭐activeIdは非同期に更新されるのでここではnullのまま。処理で使うならactive.idにする
-    if(event.active && event.over){ //よりセーフティに。これナシだと，掴まず軽くタップした時にエラーになる
-      const { active, over } = event; //イベントハンドラーからドラッグ中の要素と重なった先の要素を取得
-  
-      if (active.id !== over?.id) { //2つが一致しないとき（?.でoverがnullでもエラーを吐かない）
-        setUserTags((userTags) => {
-          const activeTag = userTags.findIndex((tag) => tag.id === active.id);
-          const overTag = userTags.findIndex((tag) => tag.id === over.id);
-          const newTags = arrayMove(userTags, activeTag, overTag);
-          
-          newTags.forEach((tags) => console.log(tags.id + " : " + tags.name));
-          return newTags;
-        })
-        //dnd-kit/sortableからインポートしたarrayMove()を呼び出して入れ替え処理を行う
-      }
-      console.log('activeIdは非同期なのでnullのまま: ' + activeId)
-    }
-    setActiveId(null); //activeIdをリセット      
-  }, []);
-
-  //ドラッグがキャンセルされた時の処理（activeIdをリセットするだけ）
-  const handleDragCancel = useCallback(() => {
-    setActiveId(null);
-  }, []);
-
-  const handleAddTag = () => {
-    if (inputValue.trim() !== '') {
-      setUserTags((prevUserTags) => [...prevUserTags, inputValue.trim()]);
-      if (!tags.includes(inputValue.trim())) {
-        setTags((prevTags) => [...prevTags, inputValue.trim()]);
-      }
-      setInputValue(null);
-    }
-  };
-
-  const customIsOptionEqualToValue = (option, value) => {
-    // 空文字列の場合は無視する
-    if (value === '') {
-      return true; // trueを返すことで一致とみなされず、無視されます
-    }
-    // それ以外の場合はデフォルトの比較を行う
-    return option === value;
-  };
 
   // ニックネーム
   const [nickname, setNickname] = useState(user.nickname);
@@ -245,9 +155,9 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
       { serviceName: "Zenn", currentAccountName: zennAccount, initialAccountName: initialAccountName.zennAccount },
       { serviceName: "note", currentAccountName: noteAccount, initialAccountName: initialAccountName.noteAccount },
     ];
-  
+
     let userSocialServicesAttributes = [];
-  
+
     socialServicesInfo.forEach(({ serviceName, currentAccountName, initialAccountName }) => {
       const userSocialServiceId = getUserSocialServiceId(serviceName);
       if (initialAccountName !== currentAccountName) {
@@ -336,7 +246,7 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
     // フォーム内でユーザが編集したフィールドを取得
     const updatedFields = generateUpdatedFields();
 
-      // 編集されたフィールドがあるかを判定
+    // 編集されたフィールドがあるかを判定
     if (Object.keys(updatedFields).filter(key => updatedFields[key] !== undefined).length > 0) {
 
       // 編集されたフィールドがあったら、確認メッセージを出す
@@ -408,45 +318,8 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
           </div>
         </div>
 
-        {/* タグ（仮データ） */}
-        <div
-          className="sortable-item-wrapper"
-          style={{ margin: "4px", width: "auto" }}
-        >
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-            onDragCancel={handleDragCancel}
-          >
-            <SortableContext items={userTags} strategy={rectSortingStrategy}>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(5, 1fr)",
-                  margin: "20px",
-                }}
-              >
-                {userTags.map((tag) => (
-                  <SortableItem key={tag.id} tag={tag} />
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
-        </div>
-        {/* タグ登録フォーム */}
-        <div>
-          <Autocomplete
-          id="tag-form"
-          freeSolo
-          options={tags}
-          getOptionLabel={(option) => option.name} // オブジェクトから表示する値を指定
-          isOptionEqualToValue={customIsOptionEqualToValue}
-          renderInput={(params) => <TextField {...params} label="タグを選択または新規作成" />}
-          ></Autocomplete>
-          <Button onClick={handleAddTag}>登録</Button>
-        </div>
+        {/* タグ */}
+        <_UsersTagEdit userTags={userTags} setUserTags={setUserTags} />
 
         {/* 自己紹介 */}
         <textarea
@@ -462,41 +335,5 @@ export const _UsersEdit = ({ user, toggleEdit, isEdit, setIsEdit, handleUserUpda
         </div>
       </form>
     </>
-  );
-};
-
-export const SortableItem = ({ tag }) => {
-  const {
-    attributes, //これによって要素がドラッグ可能に
-    isDragging, //現在の要素がドラッグ中かどうかを示すbool値
-    listeners, //ドラッグ中に発生したイベントリスナー
-    setNodeRef, //ドラッグ可能な要素のDOMノードを設定するための関数
-    transform, //ドラッグ中の要素の変換情報。ドラッグ中に移動させるためのスタイルを設定できる
-    transition, //ドラッグ中の要素に対する遷移情報。要素の移動にトランジションを追加できる
-  } = useSortable({ id: tag.id });
-
-  return (
-    <div
-      className="bg-gray-200 text-s text-center px-2 py-1 rounded-full m-1 hover:transform hover:-translate-y-0.5"
-      ref={setNodeRef}
-      style={{
-        transform: CSS.Translate.toString(transform), //これで掴んで動かすアニメーションが実現
-        transition: transition || undefined,
-        cursor: isDragging ? "grabbing" : "grab",
-        width: "auto",
-        padding: "4px 8px",
-        margin: "6px",
-        justifyContent: "center",
-        alignItems: "center",
-
-        overflow: "hidden", //以下3つで長い文字列を省略する形に
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-      }}
-      {...attributes}
-      {...listeners}
-    >
-      {tag.name}
-    </div>
   );
 };
