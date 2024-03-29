@@ -45,6 +45,18 @@ class User < ApplicationRecord
     past_nicknames.last.nickname unless past_nicknames.empty? # past_nicknamesが空でなければ最新のnicknameを返す
   end
 
+  def update_user_tags(user_id, tag_names)
+    # 既存のユーザータグを削除
+    user_tags = UserTag.where(user_id: user_id)
+    user_tags.destroy_all
+
+    # 新しいユーザータグを登録
+    tag_names.each do |tag_name|
+      tag = Tag.find_or_create_by(name: tag_name)
+      UserTag.create!(user_id: user_id, tag_id: tag.id)
+    end
+  end
+
   # デフォルトのソーシャルサービスを取得
   def default_social_services
     social_services.where(service_type: 'default')

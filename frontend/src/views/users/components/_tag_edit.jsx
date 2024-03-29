@@ -11,7 +11,6 @@ import {
   useSortable,
   arrayMove,
   SortableContext,
-  rectSortingStrategy,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -111,13 +110,13 @@ export const _UsersTagEdit = memo(({ userTags, setUserTags }) => {
   // NOTE : タグのidはユーザータグのidと被らないように設定
   //        タグの数からid設定すると、最大値となるidがユーザータグのidと被る可能性があるため
   const getTagsId = () => {
-    let count = 1;
+    let count = 0;
     userTags.forEach((tag) => {
-      if (tag.id > count) {
+      if (tag.id >= count) {
         count = tag.id;
       }
     });
-    return count++;
+    return ++count;
   }
 
   // フォームリセット
@@ -152,25 +151,27 @@ export const _UsersTagEdit = memo(({ userTags, setUserTags }) => {
           </SortableContext>
         </DndContext>
       </div>}
-      <div>
-        <Autocomplete
-          id="tag-form"
-          freeSolo
-          options={autocompleteTags.map((tag) => tag.name)} // optionsをtagオブジェクトのname配列に変更
-          getOptionLabel={(option) => option}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="タグを新規作成"
-              variant="outlined"
-            />
-          )}
-          onInputChange={(event, newInputValue) => {
-            setInputValue(newInputValue);
-          }}
-          inputValue={inputValue}
-        />
-        <Button onClick={handleAddTag}>登録</Button>
+      <div className="flex justify-center items-center">
+        <div className="w-5/6">
+          <Autocomplete
+            id="tag-form"
+            freeSolo
+            options={autocompleteTags.map((tag) => tag.name)} // optionsをtagオブジェクトのname配列に変更
+            getOptionLabel={(option) => option}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="タグを新規作成"
+                variant="outlined"
+              />
+            )}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
+            }}
+            inputValue={inputValue}
+          />
+        </div>
+        <button className="btn rounded bg-primary ml-2 text-white" onClick={handleAddTag} type="button">追加</button>
       </div>
     </>
   )
@@ -179,8 +180,8 @@ export const _UsersTagEdit = memo(({ userTags, setUserTags }) => {
 export const SortableItem = ({ tag, handleDelete }) => {
   const {
     attributes, //これによって要素がドラッグ可能に
-    isDragging, //現在の要素がドラッグ中かどうかを示すbool値
     listeners, //ドラッグ中に発生したイベントリスナー
+    isDragging, //ドラッグ中かどうかを示す真偽値
     setNodeRef, //ドラッグ可能な要素のDOMノードを設定するための関数
     transform, //ドラッグ中の要素の変換情報。ドラッグ中に移動させるためのスタイルを設定できる
     transition, //ドラッグ中の要素に対する遷移情報。要素の移動にトランジションを追加できる
@@ -195,7 +196,7 @@ export const SortableItem = ({ tag, handleDelete }) => {
         transition: transition || undefined,
       }}
     >
-      <button type="button" className="px-2 text-gray-500"
+      <button type="button" className={`px-2 text-gray-500 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
         {...attributes}
         {...listeners}><BsList /></button>
       <span className="truncate text-start mx-3">{tag.name}</span>

@@ -75,13 +75,13 @@ export const _UsersDetail = ({ user, toggleEdit }) => {
   return (
     <>
       <div className="w-full flex justify-between items-center">
-        <Link to={RoutePath.Users.path} className="text-blue-500 text-xs hover:opacity-60 transition-all">戻る</Link>
-        {currentUser.id === user.id && <button onClick={toggleEdit} className="btn text-xs">編集</button>}
+        <Link to={RoutePath.Users.path} className="btn text-xs">戻る</Link>
+        {currentUser.id === user.id && <button onClick={toggleEdit} className="btn text-xs bg-runteq-primary text-white">編集</button>}
       </div>
       <div className="flex justify-between w-full">
         <div className="flex w-1/2 flex-col items-center justify-center">
           <h2 className="text-2xl font-semibold">{user?.nickname}</h2>
-          <p className="text-sm">（旧：{user?.pastname}）</p>
+          {user?.pastname && <p className="text-sm">（旧：{user.pastname}）</p>}
         </div>
 
         <div className="w-1/2 flex justify-center items-center text-2xl gap-2">
