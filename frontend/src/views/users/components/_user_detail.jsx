@@ -56,11 +56,11 @@ export const _UsersDetail = ({ user, toggleEdit }) => {
   const getSocialService = (social_type, account_name) => {
     switch (social_type) {
       case "Mattermost":
-        return <Link to={`https://chat.runteq.jp/runteq/channels/times_${account_name}`} target="_blank"><SiMattermost /></Link>;
+        return <Link to={`https://chat.runteq.jp/runteq/channels/times_${account_name}`} target="_blank" className="hover:opacity-50 transition-all"><SiMattermost className="w-6 h-6" /></Link>;
       case "GitHub":
-        return <Link to={`https://github.com/${account_name}`} target="_blank" className="hover:opacity-50 transition-all"><FaGithub /></Link>;
+        return <Link to={`https://github.com/${account_name}`} target="_blank" className="hover:opacity-50 transition-all"><FaGithub className="w-6 h-6" /></Link>;
       case "X":
-        return <Link to={`https://twitter.com/${account_name}`} target="_blank" className="hover:opacity-50 transition-all"><RiTwitterXFill /></Link>;
+        return <Link to={`https://twitter.com/${account_name}`} target="_blank" className="hover:opacity-50 transition-all"><RiTwitterXFill className="w-6 h-6" /></Link>;
       case "Qiita":
         return <Link to={`https://qiita.com/${account_name}`} target="_blank" className="hover:opacity-50 transition-all"><QiitaLogo /></Link>;
       case "Zenn":
