@@ -86,24 +86,13 @@ export const _User = memo((user) => {
         <Link to={RoutePath.UsersShow.path(userData.id)}>詳細 →</Link>
       </div>
       {userData.tags?.length > 0 &&
-        // <div className="p-2 m-4 border-t border-black">
-        //   {userData.tags.map((tag, index) => (
-        //     <Link
-        //       to={`${RoutePath.Users.path}?tagId=${tag.id}`}
-        //       key={index}
-        //       className="badge badge-outline hover:opacity-50 transition-all mr-2"
-        //     >
-        //       {tag.name}
-        //     </Link>
-        //   ))}
-        // </div>
         <div className="p-2 m-4 border-t border-black">
-          {userData.tags.slice(0, maxTagsToShow).map((tag, index) => ( // タグを最大数までスライスして表示
+          {userData.tags.slice(0, maxTagsToShow).map((tag, index) => (
             <Link
               to={`${RoutePath.Users.path}?tagId=${tag.id}`}
               key={index}
               className="badge badge-outline hover:opacity-50 transition-all mr-2"
-              title={tag.name.length > maxTagLength ? tag.name : null} // タグが長すぎる場合にはタイトル属性を追加
+              title={tag.name.length > maxTagLength ? tag.name : null} // タグが長すぎる場合に省略
             >
               {tag.name.length > maxTagLength ? `${tag.name.slice(0, maxTagLength)}...` : tag.name}
             </Link>
