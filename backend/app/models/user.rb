@@ -7,6 +7,8 @@ class User < ApplicationRecord
   has_many :tags, through: :user_tags
   has_many :user_social_services, dependent: :destroy
   has_many :social_services, through: :user_social_services
+  has_many :user_similarities, dependent: :destroy
+  has_many :target_users, through: :user_similarities
   belongs_to :term
   belongs_to :prefecture
   # ユーザ更新時にuser以外のテーブルも更新できるようにするための設定
