@@ -43,13 +43,15 @@ class User < ApplicationRecord
     limit(12).offset(12 * (page - 1))
   }
 
-  scope :similar_users, ->(user_id) do # user_idの他のユーザーを類似度の高い順に取得
+  # user_idにとっての他のユーザーを，類似度の高い順に取得
+  scope :similar_users, ->(user_id) do 
     similar_user_ids = UserSimilarity.where(user_id: user_id)
                                       .where.not(similarity: 0)
                                       .order(similarity: :desc)
                                       .pluck(:target_user_id) # 他のユーザーidの配列を返す
-    where(id: similar_user_ids).sort_by { |user| similar_user_ids.index(user.id) }
-    # このsort_byをしないと，where句だけでは結局id順に作成されてしまう
+
+    where(id: similar_user_ids).in_order_of(:id, similar_user_ids)
+    # この処理を加えないと，where句だけでは結局id順に作成されてしまう
   end
 
   def pastname
@@ -136,5 +138,15 @@ class User < ApplicationRecord
         account_name: user_social_service ? user_social_service.account_name : nil
       )
     end)
+  end
+
+  def get_similar_users
+    similar_user_ids = UserSimilarity.where(user_id: self.id)
+                                      .where.not(similarity: 0)
+                                      .order(similarity: :desc)
+                                      .pluck(:target_user_id) # 他のユーザーidの配列を返す
+    User.where(id: arr).in_order_of(:id, similar_user_ids)
+    # この処理を加えないと，where句だけでは結局id順に作成されてしまう
+
   end
 end

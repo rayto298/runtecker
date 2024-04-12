@@ -2,8 +2,11 @@ class Api::V1::UsersController < ApplicationController
   # GET /api/v1/users
   def index
     page = search_params[:page] || 1
-    users = search_params_values_present? ? User.search(search_params) : User.all.order(created_at: :desc)
+    # users = search_params_values_present? ? User.search(search_params) : User.all.order(created_at: :desc)
+
+    users = User.similar_users(@current_user)
     render json: {users: users.per_page(page).map(&:as_custom_json_index), total: users.count}, status: :ok
+
   end
 
   # GET /api/v1/users/:id
@@ -12,7 +15,7 @@ class Api::V1::UsersController < ApplicationController
     render json: user, include: {
       past_nicknames: {
         only: [:id, :nickname]
-      },
+      }, 
       user_social_services: {
         include: {
           social_service: {
