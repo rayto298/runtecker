@@ -19,6 +19,8 @@ namespace :user_similarity do
         end
 
         user_similarity.update(similarity: similarity)
+
+        puts "user_similarity updated!"
       end
     end
   end
