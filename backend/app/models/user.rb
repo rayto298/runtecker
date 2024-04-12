@@ -43,6 +43,15 @@ class User < ApplicationRecord
     limit(12).offset(12 * (page - 1))
   }
 
+  scope :similar_users, ->(user_id) do # user_idの他のユーザーを類似度の高い順に取得
+    similar_user_ids = UserSimilarity.where(user_id: user_id)
+                                      .where.not(similarity: 0)
+                                      .order(similarity: :desc)
+                                      .pluck(:target_user_id) # 他のユーザーidの配列を返す
+    where(id: similar_user_ids).sort_by { |user| similar_user_ids.index(user.id) }
+    # このsort_byをしないと，where句だけでは結局id順に作成されてしまう
+  end
+
   def pastname
     past_nicknames.last.nickname unless past_nicknames.empty? # past_nicknamesが空でなければ最新のnicknameを返す
   end
