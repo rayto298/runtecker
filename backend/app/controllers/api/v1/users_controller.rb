@@ -2,9 +2,19 @@ class Api::V1::UsersController < ApplicationController
   # GET /api/v1/users
   def index
     page = search_params[:page] || 1
-    # users = search_params_values_present? ? User.search(search_params) : User.all.order(created_at: :desc)
+    order_by = order_params[:order_by]
+    Rails.logger.info('================== order_by ==================')
+    Rails.logger.info(order_by)
+    users = if order_by == "createdAt" 
+              User.all.order(created_at: :asc)
+            else 
+              User.all.order(created_at: :desc)
+            end
 
-    users = User.similar_users(@current_user)
+    if search_params_values_present?
+      users = users.search(search_params)
+    end
+    # users = User.similar_users(@current_user)
     render json: {users: users.per_page(page).map(&:as_custom_json_index), total: users.count}, status: :ok
 
   end
@@ -96,7 +106,7 @@ class Api::V1::UsersController < ApplicationController
       :nickname, :prefecture_id, :avatar, :profile, tag_names: [],
       past_nicknames_attributes: [:nickname],
       user_social_services_attributes: [:id, :social_service_id, :account_name],
-      user_social_services_to_delete: [:id]
+      user_social_services_to_delete: [:id],
     )
   end
 
@@ -110,5 +120,10 @@ class Api::V1::UsersController < ApplicationController
   def search_params_values_present?
     # ページネーションのパラメータは除外
     search_params.except(:page).to_h.any?{ |_, value| value.present?}
+  end
+
+  # 並び順のパラメータを取得
+  def order_params
+    params.permit(:order_by)
   end
 end
