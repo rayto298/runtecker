@@ -14,8 +14,8 @@ export const UsersIndex = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // 並び順を制御するuseStateを仮置き
-  const [orderBy, setOrderBy] = useState('createdAt'); // 初期値は新着順
+  // // 並び順を制御するuseStateを仮置き
+  // const [orderBy, setOrderBy] = useState('createdAt'); // 初期値は新着順
 
   useEffect(() => {
     const url = location.search
@@ -64,7 +64,7 @@ export const UsersIndex = () => {
     const queryTagByName = params.get("tagName") ?? "";
     const queryAccountName = params.get("accountName") ?? "";
     const queryPage = params.get("page") ?? "";
-    const queryOrderBy = params.get("orderBy") ?? "";
+    // const queryOrderBy = params.get("orderBy") ?? "";
 
     const query = new URLSearchParams({
       nickname: queryNickName,
@@ -75,20 +75,20 @@ export const UsersIndex = () => {
       account_name: queryAccountName,
       page: queryPage,
 
-      order_by: queryOrderBy //新たに並び順パラメータを追加
+      // order_by: queryOrderBy //新たに並び順パラメータを追加
     });
 
     return query;
   }
 
-  // 並び順の変更
-  const changeOrder = (e) => {
-    setOrderBy(e.target.value);
-    // URLパラメータを更新
-    const query = getQuery(location.search);
-    query.set("orderBy", e.target.value);
-    console.log(query)
-  }
+  // // 並び順の変更
+  // const changeOrder = (e) => {
+  //   setOrderBy(e.target.value);
+  //   // URLパラメータを更新
+  //   const query = getQuery(location.search);
+  //   query.set("orderBy", e.target.value);
+  //   console.log(query)
+  // }
 
   return (
     <>
@@ -104,14 +104,14 @@ export const UsersIndex = () => {
             <Pagination navigate={navigate} total={total.current} currentPage={currentPage.current} location={location} />
           </div>
 
-          {/* 並び順設定 */}
+          {/* 並び順設定 
           <div className="ml-12">
             <select value={orderBy} onChange={changeOrder}>
               <option value="createdAt">新着順</option>
               <option value="recommend">おすすめ</option>
               <option value="random">ランダム</option>
             </select>
-          </div>
+          </div> */}
 
           {/* ユーザー一覧 */}
           <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 grid-auto-flow justify-center items-center m-auto">

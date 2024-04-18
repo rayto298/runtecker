@@ -2,19 +2,17 @@ class Api::V1::UsersController < ApplicationController
   # GET /api/v1/users
   def index
     page = search_params[:page] || 1
-    order_by = order_params[:order_by]
-    Rails.logger.info('================== order_by ==================')
-    Rails.logger.info(order_by)
-    users = if order_by == "createdAt" 
-              User.all.order(created_at: :asc)
-            else 
-              User.all.order(created_at: :desc)
-            end
 
     if search_params_values_present?
       users = users.search(search_params)
+    else
+      users = User.all
     end
-    # users = User.similar_users(@current_user)
+    
+    # ここのorder_byの処理
+    order_by = search_params[:order_by] || 'desc'
+    users = users.order(created_at: order_by)
+
     render json: {users: users.per_page(page).map(&:as_custom_json_index), total: users.count}, status: :ok
 
   end
@@ -113,17 +111,17 @@ class Api::V1::UsersController < ApplicationController
   # 検索用のパラメータを取得
   def search_params
     params.delete(:user) # なぜかuserが入ってくるので削除
-    params.permit(:nickname, :term, :prefecture, :tag_id, :tag_name, :page, :account_name)
+    params.permit(:nickname, :term, :prefecture, :tag_id, :tag_name, :page, :account_name, :order_by)
   end
 
   # 検索用のパラメータが存在するか
   def search_params_values_present?
     # ページネーションのパラメータは除外
-    search_params.except(:page).to_h.any?{ |_, value| value.present?}
+    search_params.except(:page, :order_by).to_h.any?{ |_, value| value.present?}
   end
 
-  # 並び順のパラメータを取得
-  def order_params
-    params.permit(:order_by)
-  end
+  # # 並び順のパラメータを取得
+  # def order_params
+  #   params.permit(:order_by)
+  # end
 end
