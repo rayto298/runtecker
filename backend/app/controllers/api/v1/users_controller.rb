@@ -10,7 +10,7 @@ class Api::V1::UsersController < ApplicationController
     end
     
     # ここのorder_byの処理
-    order_by = search_params[:order_by] || 'desc'
+    order_by = search_params[:order_by].present? ? search_params[:order_by] : 'desc'
     users = users.order(created_at: order_by)
 
     render json: {users: users.per_page(page).map(&:as_custom_json_index), total: users.count}, status: :ok
