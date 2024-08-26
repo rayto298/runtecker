@@ -1,5 +1,5 @@
-# "1期" から "60期"、"Pro-1" から "Pro-5" までのTermを作成し、"運営" を追加
-terms = (1..60).map { |i| "#{i}期" } + (1..9).map { |i| "Pro-#{i}" } + ["運営"]
+# "1期" から "65期"を追加
+terms = (1..65).map { |i| "#{i}期" }
 terms.each do |term_name|
   Term.find_or_create_by(name: term_name)
 end
